@@ -1,0 +1,3 @@
+top.shareus.common.swagger.config.SwaggerAutoConfiguration
+top.shareus.common.swagger.config.SwaggerWebConfiguration
+top.shareus.common.swagger.config.SwaggerBeanPostProcessor
