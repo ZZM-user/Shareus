@@ -104,7 +104,6 @@ const checkboxString = computed(() => {
 })
 watch(() => props.cron.day, value => changeRadioValue(value))
 watch([radioValue, cycleTotal, averageTotal, workdayTotal, checkboxString], () => onRadioChange())
-
 function changeRadioValue(value) {
   if (value === "*") {
     radioValue.value = 1
@@ -131,7 +130,6 @@ function changeRadioValue(value) {
     radioValue.value = 7
   }
 }
-
 // 单选按钮值变化时
 function onRadioChange() {
   if (radioValue.value === 2 && props.cron.week === '?') {
@@ -175,7 +173,6 @@ function onRadioChange() {
 .el-input-number--small, .el-select, .el-select--small {
   margin: 0 0.2rem;
 }
-
 .el-select, .el-select--small {
   width: 18.8rem;
 }

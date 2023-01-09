@@ -3,7 +3,7 @@
     <p class="title">最近5次运行时间</p>
     <ul class="popup-result-scroll">
       <template v-if='isShow'>
-        <li v-for='item in resultList' :key="item">{{item}}</li>
+        <li v-for='item in resultList' :key="item">{{ item }}</li>
       </template>
       <li v-else>计算结果中...</li>
     </ul>
@@ -23,7 +23,6 @@ const dateArr = ref([])
 const resultList = ref([])
 const isShow = ref(false)
 watch(() => props.ex, () => expressionChange())
-
 // 表达式值变化时，开始去计算结果
 function expressionChange() {
   // 计算开始-隐藏结果
@@ -329,7 +328,6 @@ function expressionChange() {
   // 计算完成-显示结果
   isShow.value = true;
 }
-
 // 用于计算某位数字在数组中的索引
 function getIndex(arr, value) {
   if (value <= arr[0] || value > arr[arr.length - 1]) {
@@ -342,7 +340,6 @@ function getIndex(arr, value) {
     }
   }
 }
-
 // 获取"年"数组
 function getYearArr(rule, year) {
   dateArr.value[5] = getOrderArr(year, year + 100);
@@ -356,7 +353,6 @@ function getYearArr(rule, year) {
     }
   }
 }
-
 // 获取"月"数组
 function getMonthArr(rule) {
   dateArr.value[4] = getOrderArr(1, 12);
@@ -368,7 +364,6 @@ function getMonthArr(rule) {
     dateArr.value[4] = getAssignArr(rule)
   }
 }
-
 // 获取"日"数组-主要为日期规则
 function getWeekArr(rule) {
   // 只有当日期规则的两个值均为“”时则表达日期是有选项的
@@ -397,7 +392,6 @@ function getWeekArr(rule) {
     }
   }
 }
-
 // 获取"日"数组-少量为日期规则
 function getDayArr(rule) {
   dateArr.value[3] = getOrderArr(1, 31);
@@ -424,7 +418,6 @@ function getDayArr(rule) {
     dayRuleSup.value = 'null';
   }
 }
-
 // 获取"时"数组
 function getHourArr(rule) {
   dateArr.value[2] = getOrderArr(0, 23);
@@ -436,7 +429,6 @@ function getHourArr(rule) {
     dateArr.value[2] = getAssignArr(rule)
   }
 }
-
 // 获取"分"数组
 function getMinArr(rule) {
   dateArr.value[1] = getOrderArr(0, 59);
@@ -448,7 +440,6 @@ function getMinArr(rule) {
     dateArr.value[1] = getAssignArr(rule)
   }
 }
-
 // 获取"秒"数组
 function getSecondArr(rule) {
   dateArr.value[0] = getOrderArr(0, 59);
@@ -460,7 +451,6 @@ function getSecondArr(rule) {
     dateArr.value[0] = getAssignArr(rule)
   }
 }
-
 // 根据传进来的min-max返回一个顺序的数组
 function getOrderArr(min, max) {
   let arr = [];
@@ -469,7 +459,6 @@ function getOrderArr(min, max) {
   }
   return arr;
 }
-
 // 根据规则中指定的零散值返回一个数组
 function getAssignArr(rule) {
   let arr = [];
@@ -480,7 +469,6 @@ function getAssignArr(rule) {
   arr.sort(compare)
   return arr;
 }
-
 // 根据一定算术规则计算返回一个数组
 function getAverageArr(rule, limit) {
   let arr = [];
@@ -493,7 +481,6 @@ function getAverageArr(rule, limit) {
   }
   return arr;
 }
-
 // 根据规则返回一个具有周期性的数组
 function getCycleArr(rule, limit, status) {
   // status--表示是否从0开始（则从1开始）
@@ -514,7 +501,6 @@ function getCycleArr(rule, limit, status) {
   arr.sort(compare)
   return arr;
 }
-
 // 比较数字大小（用于Array.sort）
 function compare(value1, value2) {
   if (value2 - value1 > 0) {
@@ -523,7 +509,6 @@ function compare(value1, value2) {
     return 1;
   }
 }
-
 // 格式化日期格式如：2017-9-19 18:04:33
 function formatDate(value, type) {
   // 计算日期相关值
@@ -543,14 +528,12 @@ function formatDate(value, type) {
     return week + 1;
   }
 }
-
 // 检查日期是否存在
 function checkDate(value) {
   let time = new Date(value);
   let format = formatDate(time)
   return value === format;
 }
-
 onMounted(() => {
   expressionChange()
 })

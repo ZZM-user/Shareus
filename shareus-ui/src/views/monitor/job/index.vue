@@ -177,7 +177,7 @@
                               <template #content>
                                  <div>
                                     Bean调用示例：ryTask.ryParams('ry')
-                                    <br/>Class类调用示例：top.shareus.quartz.task.RyTask.ryParams('ry')
+                                    <br/>Class类调用示例：com.ruoyi.quartz.task.RyTask.ryParams('ry')
                                     <br/>参数说明：支持字符串，布尔类型，长整型，浮点型，整型
                                  </div>
                               </template>
@@ -296,7 +296,7 @@
 </template>
 
 <script setup name="Job">
-import {listJob, getJob, delJob, addJob, updateJob, runJob, changeJobStatus} from "@/api/monitor/job";
+import {addJob, changeJobStatus, delJob, getJob, listJob, runJob, updateJob} from "@/api/monitor/job";
 import Crontab from '@/components/Crontab'
 
 const router = useRouter();

@@ -261,10 +261,10 @@ import {
   changeRoleStatus,
   dataScope,
   delRole,
+  deptTreeSelect,
   getRole,
   listRole,
-  updateRole,
-  deptTreeSelect
+  updateRole
 } from "@/api/system/role";
 import {roleMenuTreeselect, treeselect as menuTreeselect} from "@/api/system/menu";
 

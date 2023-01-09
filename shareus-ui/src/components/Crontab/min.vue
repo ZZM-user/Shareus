@@ -79,7 +79,6 @@ const checkboxString = computed(() => {
 })
 watch(() => props.cron.min, value => changeRadioValue(value))
 watch([radioValue, cycleTotal, averageTotal, checkboxString], () => onRadioChange())
-
 function changeRadioValue(value) {
   if (value === '*') {
     radioValue.value = 1
@@ -98,7 +97,6 @@ function changeRadioValue(value) {
     radioValue.value = 4
   }
 }
-
 function onRadioChange() {
   switch (radioValue.value) {
     case 1:
@@ -126,7 +124,6 @@ function onRadioChange() {
 .el-input-number--small, .el-select, .el-select--small {
   margin: 0 0.2rem;
 }
-
 .el-select, .el-select--small {
   width: 19.8rem;
 }

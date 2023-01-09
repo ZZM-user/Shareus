@@ -85,7 +85,7 @@
       <el-table-column type="selection" align="center" width="55"></el-table-column>
       <el-table-column label="序号" type="index" width="50" align="center">
         <template #default="scope">
-          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+          <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -162,9 +162,8 @@
 </template>
 
 <script setup name="Gen">
-import {listTable, previewTable, delTable, genCode, synchDb} from "@/api/tool/gen";
+import {delTable, genCode, listTable, previewTable, synchDb} from "@/api/tool/gen";
 import router from "@/router";
-import importTable from "./importTable";
 
 const route = useRoute();
 const {proxy} = getCurrentInstance();

@@ -127,7 +127,7 @@
 </template>
 
 <script setup name="Logininfor">
-import {list, delLogininfor, cleanLogininfor, unlockLogininfor} from "@/api/system/logininfor";
+import {cleanLogininfor, delLogininfor, list, unlockLogininfor} from "@/api/system/logininfor";
 
 const {proxy} = getCurrentInstance();
 const {sys_common_status} = proxy.useDict("sys_common_status");

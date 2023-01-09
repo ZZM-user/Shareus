@@ -22,7 +22,7 @@
               :label="item.value"
               :value="item.key"
               :disabled="item.key === 7"
-          >{{item.value}}
+          >{{ item.value }}
           </el-option>
         </el-select>
         -
@@ -33,7 +33,7 @@
               :label="item.value"
               :value="item.key"
               :disabled="item.key <= cycle01"
-          >{{item.value}}
+          >{{ item.value }}
           </el-option>
         </el-select>
       </el-radio>

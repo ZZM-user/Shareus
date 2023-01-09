@@ -31,7 +31,9 @@
               <li class="list-group-item">
                 <svg-icon icon-class="tree"/>
                 所属部门
-                <div class="pull-right" v-if="state.user.dept">{{ state.user.dept.deptName }} / {{ state.postGroup }}
+                <div v-if="state.user.dept" class="pull-right">{{ state.user.dept.deptName }} / {{
+                    state.postGroup
+                  }}
                 </div>
               </li>
               <li class="list-group-item">
@@ -70,9 +72,6 @@
 </template>
 
 <script setup name="Profile">
-import userAvatar from "./userAvatar";
-import userInfo from "./userInfo";
-import resetPwd from "./resetPwd";
 import {getUserProfile} from "@/api/system/user";
 
 const activeTab = ref("userinfo");

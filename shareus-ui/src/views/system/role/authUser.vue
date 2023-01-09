@@ -96,7 +96,6 @@
 </template>
 
 <script setup name="AuthUser">
-import selectUser from "./selectUser";
 import {allocatedUserList, authUserCancel, authUserCancelAll} from "@/api/system/role";
 
 const route = useRoute();

@@ -352,14 +352,14 @@
 <script setup name="User">
 import {getToken} from "@/utils/auth";
 import {
+  addUser,
   changeUserStatus,
+  delUser,
+  deptTreeSelect,
+  getUser,
   listUser,
   resetUserPwd,
-  delUser,
-  getUser,
-  updateUser,
-  addUser,
-  deptTreeSelect
+  updateUser
 } from "@/api/system/user";
 
 const router = useRouter();

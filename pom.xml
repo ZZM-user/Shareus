@@ -232,6 +232,7 @@
         <module>shareus-modules</module>
         <module>shareus-api</module>
         <module>shareus-common</module>
+        <module>shareus-mirai</module>
     </modules>
     <packaging>pom</packaging>
 
