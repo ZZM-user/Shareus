@@ -11,6 +11,7 @@ import top.shareus.common.log.enums.BusinessType;
 import top.shareus.common.security.annotation.RequiresPermissions;
 import top.shareus.mirai.domain.QueryLog;
 import top.shareus.mirai.service.IQueryLogService;
+import top.shareus.mirai.vo.BatchChangeStatusVO;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -88,4 +89,15 @@ public class QueryLogController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(queryLogService.deleteQueryLogByIds(ids));
     }
+
+    /**
+     * 修改求文日志状态
+     */
+    @RequiresPermissions("mirai:qiuwen_log:edit")
+    @Log(title = "求文日志", businessType = BusinessType.UPDATE)
+    @PostMapping("/changeStatus")
+    public AjaxResult changeStatus(@RequestBody BatchChangeStatusVO vo) {
+        return toAjax(queryLogService.batchChangeStatus(vo));
+    }
+
 }

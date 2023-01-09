@@ -1,5 +1,6 @@
 package top.shareus.mirai.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.shareus.mirai.domain.ArchivedFile;
@@ -15,7 +16,7 @@ import java.util.List;
  * @date 2023-01-09
  */
 @Service
-public class ArchivedFileServiceImpl implements IArchivedFileService {
+public class ArchivedFileServiceImpl extends ServiceImpl<ArchivedFileMapper, ArchivedFile> implements IArchivedFileService {
     @Autowired
     private ArchivedFileMapper archivedFileMapper;
 

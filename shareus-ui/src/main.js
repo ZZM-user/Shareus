@@ -4,15 +4,12 @@ import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
 import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
-
+import 'element-plus/dist/index.css'
 import '@/assets/styles/index.scss' // global css
-
 import App from './App'
 import store from './store'
 import router from './router'
 import directive from './directive' // directive
-
-
 // 注册指令
 import plugins from './plugins' // plugins
 import {download} from '@/utils/request'
@@ -23,9 +20,8 @@ import SvgIcon from '@/components/SvgIcon'
 import elementIcons from '@/components/SvgIcon/svgicon'
 
 import './permission' // permission control
-
 import {useDict} from '@/utils/dict'
-import {parseTime, resetForm, addDateRange, handleTree, selectDictLabel, selectDictLabels} from '@/utils/ruoyi'
+import {addDateRange, handleTree, parseTime, resetForm, selectDictLabel, selectDictLabels} from '@/utils/ruoyi'
 
 // 分页组件
 import Pagination from '@/components/Pagination'

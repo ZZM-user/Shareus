@@ -60,6 +60,7 @@
                 and archive_date = #{archiveDate}
             </if>
         </where>
+        order by archive_date desc
     </select>
 
     <select id="selectArchivedFileById" parameterType="String"

@@ -1,5 +1,6 @@
 package top.shareus.mirai.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.shareus.mirai.domain.ArchivedFile;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * @author zhaojl
  * @date 2023-01-09
  */
-public interface ArchivedFileMapper {
+public interface ArchivedFileMapper extends BaseMapper<ArchivedFile> {
     /**
      * 查询机器人
      *

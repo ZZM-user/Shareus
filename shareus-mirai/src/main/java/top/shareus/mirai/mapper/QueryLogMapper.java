@@ -1,5 +1,6 @@
 package top.shareus.mirai.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import top.shareus.mirai.domain.QueryLog;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * @author zhaojl
  * @date 2023-01-09
  */
-public interface QueryLogMapper {
+public interface QueryLogMapper extends BaseMapper<QueryLog> {
     /**
      * 查询求文日志
      *

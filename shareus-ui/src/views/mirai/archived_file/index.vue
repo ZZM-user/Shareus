@@ -110,7 +110,9 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="archived_fileList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="archived_fileList" :highlight-current-row="true" :max-height="1000"
+              :stripe="true"
+              @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="id" prop="id"/>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="文件名" prop="name" width="350"/>
@@ -131,7 +133,7 @@
       </el-table-column>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="源路径" prop="originUrl"/>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="存档路径" prop="archiveUrl"/>
-      <el-table-column align="center" label="归档日期" prop="archiveDate" width="150"/>
+      <el-table-column align="center" label="归档日期" prop="archiveDate" width="160"/>
       <el-table-column align="center" class-name="small-padding fixed-width" fixed="right" label="操作">
         <template #default="scope">
           <el-button v-hasPermi="['mirai:archived_file:edit']" icon="Edit" link type="primary"
@@ -153,7 +155,7 @@
     />
 
     <!-- 添加或修改归档文件对话框 -->
-    <el-dialog v-model="open" :title="title" append-to-body width="500px">
+    <el-dialog v-model="open" :title="title" append-to-body width="600px">
       <el-form ref="archived_fileRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="文件名" prop="name">
           <el-input v-model="form.name" placeholder="请输入文件名"/>
@@ -324,13 +326,13 @@ function submitForm() {
     if (valid) {
       if (form.value.id != null) {
         updateArchived_file(form.value).then(response => {
-          proxy.msgSuccess("修改成功");
+          proxy.$modal.msgSuccess("修改成功");
           open.value = false;
           getList();
         });
       } else {
         addArchived_file(form.value).then(response => {
-          proxy.msgSuccess("新增成功");
+          proxy.$modal.msgSuccess("新增成功");
           open.value = false;
           getList();
         });
@@ -349,7 +351,7 @@ function handleDelete(row) {
         ;
   }).then(() => {
     getList();
-    proxy.msgSuccess("删除成功");
+    proxy.$modal.msgSuccess("删除成功");
   }).catch(() => {
   });
 }

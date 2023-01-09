@@ -1,25 +1,34 @@
 package top.shareus.mirai.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.*;
 import top.shareus.common.core.annotation.Excel;
 import top.shareus.common.core.web.domain.BaseEntity;
 
 import java.util.Date;
 
+
 /**
- * 机器人对象 archived_file
+ * 归档文件对象 archived_file
  *
  * @author zhaojl
  * @date 2023-01-09
  */
+@Data
+@Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class ArchivedFile extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
      * 主键id 为uuid
      */
+    @TableField(value = "id")
     private String id;
 
     /**
@@ -55,6 +64,7 @@ public class ArchivedFile extends BaseEntity {
     /**
      * 是否删除(0否 1是)
      */
+    @TableLogic(value = "0", delval = "1")
     private Integer delFlag;
 
     /**
@@ -72,103 +82,7 @@ public class ArchivedFile extends BaseEntity {
     /**
      * 归档日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "归档日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "归档日期", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date archiveDate;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
-    public String getMd5() {
-        return md5;
-    }
-
-    public void setMd5(String md5) {
-        this.md5 = md5;
-    }
-
-    public Integer getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Integer enabled) {
-        this.enabled = enabled;
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
-    }
-
-    public String getOriginUrl() {
-        return originUrl;
-    }
-
-    public void setOriginUrl(String originUrl) {
-        this.originUrl = originUrl;
-    }
-
-    public String getArchiveUrl() {
-        return archiveUrl;
-    }
-
-    public void setArchiveUrl(String archiveUrl) {
-        this.archiveUrl = archiveUrl;
-    }
-
-    public Date getArchiveDate() {
-        return archiveDate;
-    }
-
-    public void setArchiveDate(Date archiveDate) {
-        this.archiveDate = archiveDate;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("name", getName())
-                .append("senderId", getSenderId())
-                .append("size", getSize())
-                .append("md5", getMd5())
-                .append("enabled", getEnabled())
-                .append("delFlag", getDelFlag())
-                .append("originUrl", getOriginUrl())
-                .append("archiveUrl", getArchiveUrl())
-                .append("archiveDate", getArchiveDate())
-                .toString();
-    }
 }

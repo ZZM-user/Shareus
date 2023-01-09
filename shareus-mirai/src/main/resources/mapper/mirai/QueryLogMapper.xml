@@ -62,6 +62,7 @@
                 and finish_time = #{finishTime}
             </if>
         </where>
+        order by send_time desc, finish_time desc
     </select>
 
     <select id="selectQueryLogById" parameterType="Long"

@@ -1,6 +1,7 @@
 package top.shareus.mirai.service;
 
 import top.shareus.mirai.domain.QueryLog;
+import top.shareus.mirai.vo.BatchChangeStatusVO;
 
 import java.util.List;
 
@@ -58,4 +59,12 @@ public interface IQueryLogService {
      * @return 结果
      */
     public int deleteQueryLogById(Long id);
+
+    /**
+     * 批量更改状态
+     *
+     * @param vo 签证官
+     * @return int
+     */
+    int batchChangeStatus(BatchChangeStatusVO vo);
 }

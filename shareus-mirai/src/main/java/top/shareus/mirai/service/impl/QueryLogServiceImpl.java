@@ -1,10 +1,12 @@
 package top.shareus.mirai.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.shareus.mirai.domain.QueryLog;
 import top.shareus.mirai.mapper.QueryLogMapper;
 import top.shareus.mirai.service.IQueryLogService;
+import top.shareus.mirai.vo.BatchChangeStatusVO;
 
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
  * @date 2023-01-09
  */
 @Service
-public class QueryLogServiceImpl implements IQueryLogService {
+public class QueryLogServiceImpl extends ServiceImpl<QueryLogMapper, QueryLog> implements IQueryLogService {
     @Autowired
     private QueryLogMapper queryLogMapper;
 
@@ -27,7 +29,7 @@ public class QueryLogServiceImpl implements IQueryLogService {
      */
     @Override
     public QueryLog selectQueryLogById(Long id) {
-        return queryLogMapper.selectQueryLogById(id);
+        return queryLogMapper.selectById(id);
     }
 
     /**
@@ -83,5 +85,13 @@ public class QueryLogServiceImpl implements IQueryLogService {
     @Override
     public int deleteQueryLogById(Long id) {
         return queryLogMapper.deleteQueryLogById(id);
+    }
+
+    @Override
+    public int batchChangeStatus(BatchChangeStatusVO vo) {
+        List<QueryLog> queryLogs = this.listByIds(vo.getIds());
+        queryLogs.forEach(queryLog -> queryLog.setStatus(vo.getStatus()));
+        this.updateBatchById(queryLogs);
+        return queryLogs.size();
     }
 }
