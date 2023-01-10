@@ -2,6 +2,7 @@ package top.shareus.mirai.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import top.shareus.common.core.annotation.Excel;
 import top.shareus.common.core.web.domain.BaseEntity;
@@ -20,6 +21,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class QueryLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
 

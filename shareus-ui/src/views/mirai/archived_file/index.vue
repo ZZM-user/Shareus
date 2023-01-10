@@ -127,12 +127,13 @@
               :inactive-value="1"
               class="ml-2"
               style="--el-switch-on-color: #13ce66"
+              @change="changeArchivedEnabled(scope.row)"
           />
         </template>
 
       </el-table-column>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="源路径" prop="originUrl"/>
-      <el-table-column :show-tooltip-when-overflow="true" align="center" label="存档路径" prop="archiveUrl"/>
+      <!--      <el-table-column :show-tooltip-when-overflow="true" align="center" label="存档路径" prop="archiveUrl"/>-->
       <el-table-column align="center" label="归档日期" prop="archiveDate" width="160"/>
       <el-table-column align="center" class-name="small-padding fixed-width" fixed="right" label="操作">
         <template #default="scope">
@@ -204,7 +205,12 @@
 </template>
 
 <script name="Archived_file" setup>
-import {delArchived_file, getArchived_file, listArchived_file} from "@/api/mirai/archived_file";
+import {
+  changeArchived_file_enabled,
+  delArchived_file,
+  getArchived_file,
+  listArchived_file
+} from "@/api/mirai/archived_file";
 import {updateArchived_file} from "../../../api/mirai/archived_file";
 
 const {proxy} = getCurrentInstance();
@@ -353,6 +359,17 @@ function handleDelete(row) {
     getList();
     proxy.$modal.msgSuccess("删除成功");
   }).catch(() => {
+  });
+}
+
+function changeArchivedEnabled(row) {
+  let text = row.enabled === 0 ? "启用" : "停用";
+  proxy.$modal.confirm('确认要"' + text + '"' + row.name + '"吗?').then(function () {
+    return changeArchived_file_enabled(row.id, row.enabled);
+  }).then(() => {
+    proxy.$modal.msgSuccess(text + "成功");
+  }).catch(function () {
+    row.enabled = row.enabled === 0 ? 1 : 0;
   });
 }
 

@@ -42,3 +42,12 @@ export function delArchived_file(id) {
         method: 'delete'
     })
 }
+
+// 删除归档文件
+export function changeArchived_file_enabled(id, enabled) {
+    return request({
+        url: '/mirai/archived_file/changeStatus',
+        method: 'post',
+        data: {stringIds: [id], status: enabled}
+    })
+}

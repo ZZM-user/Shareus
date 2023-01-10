@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import top.shareus.mirai.domain.ArchivedFile;
 import top.shareus.mirai.mapper.ArchivedFileMapper;
 import top.shareus.mirai.service.IArchivedFileService;
+import top.shareus.mirai.vo.BatchChangeStatusVO;
 
 import java.util.List;
 
@@ -84,5 +85,13 @@ public class ArchivedFileServiceImpl extends ServiceImpl<ArchivedFileMapper, Arc
     @Override
     public int deleteArchivedFileById(String id) {
         return archivedFileMapper.deleteArchivedFileById(id);
+    }
+
+    @Override
+    public int batchChangeStatus(BatchChangeStatusVO vo) {
+        List<ArchivedFile> archivedFiles = this.listByIds(vo.getStringIds());
+        archivedFiles.forEach(archivedFile -> archivedFile.setEnabled(vo.getStatus()));
+        this.updateBatchById(archivedFiles);
+        return archivedFiles.size();
     }
 }

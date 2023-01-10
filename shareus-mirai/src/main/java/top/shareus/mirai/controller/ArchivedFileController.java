@@ -11,6 +11,7 @@ import top.shareus.common.log.enums.BusinessType;
 import top.shareus.common.security.annotation.RequiresPermissions;
 import top.shareus.mirai.domain.ArchivedFile;
 import top.shareus.mirai.service.IArchivedFileService;
+import top.shareus.mirai.vo.BatchChangeStatusVO;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -87,5 +88,15 @@ public class ArchivedFileController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(archivedFileService.deleteArchivedFileByIds(ids));
+    }
+
+    /**
+     * 修改归档文件显示状态
+     */
+    @RequiresPermissions("mirai:qiuwen_log:edit")
+    @Log(title = "归档文件", businessType = BusinessType.UPDATE)
+    @PostMapping("/changeStatus")
+    public AjaxResult changeStatus(@RequestBody BatchChangeStatusVO vo) {
+        return toAjax(archivedFileService.batchChangeStatus(vo));
     }
 }

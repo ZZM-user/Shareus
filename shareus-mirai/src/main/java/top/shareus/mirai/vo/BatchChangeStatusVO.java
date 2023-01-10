@@ -14,5 +14,7 @@ import java.util.List;
 public class BatchChangeStatusVO {
 
     private List<Long> ids;
+
+    private List<String> stringIds;
     private Integer status;
 }
