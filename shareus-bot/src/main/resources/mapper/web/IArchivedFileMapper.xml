@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="top.shareus.mirai.mapper.ArchivedFileMapper">
+<mapper namespace="top.shareus.web.mapper.IArchivedFileMapper">
 
-    <resultMap type="top.shareus.mirai.domain.ArchivedFile" id="ArchivedFileResult">
+    <resultMap type="top.shareus.domain.entity.ArchivedFile" id="ArchivedFileResult">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="senderId" column="sender_id"/>
@@ -31,7 +31,7 @@
         from archived_file
     </sql>
 
-    <select id="selectArchivedFileList" parameterType="top.shareus.mirai.domain.ArchivedFile"
+    <select id="selectArchivedFileList" parameterType="top.shareus.domain.entity.ArchivedFile"
             resultMap="ArchivedFileResult">
         <include refid="selectArchivedFileVo"/>
         <where>
@@ -69,7 +69,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertArchivedFile" parameterType="top.shareus.mirai.domain.ArchivedFile">
+    <insert id="insertArchivedFile" parameterType="top.shareus.domain.entity.ArchivedFile">
         insert into archived_file
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,
@@ -117,7 +117,7 @@
         </trim>
     </insert>
 
-    <update id="updateArchivedFile" parameterType="top.shareus.mirai.domain.ArchivedFile">
+    <update id="updateArchivedFile" parameterType="top.shareus.domain.entity.ArchivedFile">
         update archived_file
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name =
@@ -151,11 +151,12 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteArchivedFileById" parameterType="String">
-        delete
-        from archived_file
+    <update id="deleteArchivedFileById" parameterType="String">
+        update
+            archived_file
+        set del_flag=1
         where id = #{id}
-    </delete>
+    </update>
 
     <delete id="deleteArchivedFileByIds" parameterType="String">
         delete from archived_file where id in

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="top.shareus.mirai.mapper.QueryLogMapper">
+<mapper namespace="top.shareus.web.mapper.IQueryLogMapper">
 
-    <resultMap type="top.shareus.mirai.domain.QueryLog" id="QueryLogResult">
+    <resultMap type="top.shareus.domain.entity.QueryLog" id="QueryLogResult">
         <result property="id" column="id"/>
         <result property="senderName" column="sender_name"/>
         <result property="senderId" column="sender_id"/>
@@ -31,7 +31,7 @@
         from query_log
     </sql>
 
-    <select id="selectQueryLogList" parameterType="top.shareus.mirai.domain.QueryLog" resultMap="QueryLogResult">
+    <select id="selectQueryLogList" parameterType="top.shareus.domain.entity.QueryLog" resultMap="QueryLogResult">
         <include refid="selectQueryLogVo"/>
         <where>
             <if test="senderName != null  and senderName != ''">
@@ -71,7 +71,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertQueryLog" parameterType="top.shareus.mirai.domain.QueryLog" useGeneratedKeys="true"
+    <insert id="insertQueryLog" parameterType="top.shareus.domain.entity.QueryLog" useGeneratedKeys="true"
             keyProperty="id">
         insert into query_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -116,7 +116,7 @@
         </trim>
     </insert>
 
-    <update id="updateQueryLog" parameterType="top.shareus.mirai.domain.QueryLog">
+    <update id="updateQueryLog" parameterType="top.shareus.domain.entity.QueryLog">
         update query_log
         <trim prefix="SET" suffixOverrides=",">
             <if test="senderName != null">sender_name =
