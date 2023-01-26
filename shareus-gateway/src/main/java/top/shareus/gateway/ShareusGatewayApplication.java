@@ -13,6 +13,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 public class ShareusGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(ShareusGatewayApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  若依网关启动成功   ლ(´ڡ`ლ)ﾞ  \n");
+        System.out.println("(♥◠‿◠)ﾉﾞ  网关启动成功   ლ(´ڡ`ლ)ﾞ  \n");
     }
 }

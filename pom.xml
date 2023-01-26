@@ -247,6 +247,13 @@
                 <version>${shareus.version}</version>
             </dependency>
 
+            <!-- 机器人接口 -->
+            <dependency>
+                <groupId>top.shareus</groupId>
+                <artifactId>shareus-api-bot</artifactId>
+                <version>${shareus.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -257,7 +264,7 @@
         <module>shareus-modules</module>
         <module>shareus-api</module>
         <module>shareus-common</module>
-        <module>shareus-mirai</module>
+        <module>shareus-bot</module>
     </modules>
     <packaging>pom</packaging>
 

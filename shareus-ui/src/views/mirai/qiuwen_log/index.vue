@@ -128,8 +128,10 @@
       <el-table-column align="center" label="求文时间" prop="sendTime" width="160"/>
       <el-table-column align="center" label="反馈者" prop="answerId" width="120px">
         <template #default="scope">
-          <span v-if="scope.row.answerId===0">机器人</span>
-          <span v-else>{{ scope.row.answerId }}</span>
+          <div>
+            <span v-if="scope.row.answerId===0">机器人</span>
+            <span v-else>{{ scope.row.answerId }}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="反馈结果" prop="result"/>
@@ -164,7 +166,7 @@
           <el-input v-model="form.senderId" placeholder="请输入发送人QQ"/>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input v-model="form.content" placeholder="请输入内容" type="textarea"/>
+          <el-input v-model="form.content" autosize placeholder="请输入内容" type="textarea"/>
         </el-form-item>
         <el-form-item label="抽取内容" prop="extract">
           <el-input v-model="form.extract" placeholder="请输入抽取内容"/>
@@ -221,8 +223,10 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="反馈结果" prop="result">
-          <el-input v-model="form.result" :rows="3" autosize clearable placeholder="请输入反馈结果" type="textarea"/>
+        <el-form-item v-if="form.status==2" label="反馈结果" prop="result">
+          <el-col v-if="disOpenChangeStatus">{{ form.result }}</el-col>
+          <el-input v-else v-model="form.result" :rows="3" autosize clearable placeholder="请输入反馈结果"
+                    type="textarea"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -370,7 +374,7 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const ids = row.id || ids.value;
-  proxy.confirm('是否确认删除求文日志编号为"' + ids + '"的数据项？'
+  proxy.$confirm('是否确认删除求文日志编号为"' + ids + '"的数据项？'
   ).then(function () {
     return delQiuwen_log(ids);
   }).then(() => {
@@ -403,7 +407,7 @@ function cancelChangeQiuwenStatus() {
 
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download('mirai/qiuwen_log/export', {
+  proxy.download('bot/qiuwen_log/export', {
     ...queryParams.value
   }, `求文日志数据导出_${new Date().getTime()}.xlsx`)
 }

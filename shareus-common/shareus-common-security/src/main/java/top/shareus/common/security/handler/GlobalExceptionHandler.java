@@ -1,7 +1,5 @@
 package top.shareus.common.security.handler;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -15,8 +13,11 @@ import top.shareus.common.core.exception.InnerAuthException;
 import top.shareus.common.core.exception.ServiceException;
 import top.shareus.common.core.exception.auth.NotPermissionException;
 import top.shareus.common.core.exception.auth.NotRoleException;
+import top.shareus.common.core.exception.mirai.bot.BotException;
 import top.shareus.common.core.utils.StringUtils;
 import top.shareus.common.core.web.domain.AjaxResult;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 全局异常处理器
@@ -122,5 +123,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DemoModeException.class)
     public AjaxResult handleDemoModeException(DemoModeException e) {
         return AjaxResult.error("演示模式，不允许操作");
+    }
+
+    @ExceptionHandler(BotException.class)
+    public AjaxResult handleBotException(BotException e) {
+        String message = e.getMessage();
+        if (StringUtils.isNotEmpty(message)) {
+            return AjaxResult.error(message);
+        }
+        return AjaxResult.error("机器人故障，请联系管理员处理！");
     }
 }

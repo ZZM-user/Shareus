@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询求文日志列表
 export function listQiuwen_log(query) {
     return request({
-        url: '/mirai/qiuwen_log/list',
+        url: '/bot/qiuwen_log/list',
         method: 'get',
         params: query
     })
@@ -12,7 +12,7 @@ export function listQiuwen_log(query) {
 // 查询求文日志详细
 export function getQiuwen_log(id) {
     return request({
-        url: '/mirai/qiuwen_log/' + id,
+        url: '/bot/qiuwen_log/' + id,
         method: 'get'
     })
 }
@@ -20,7 +20,7 @@ export function getQiuwen_log(id) {
 // 新增求文日志
 export function addQiuwen_log(data) {
     return request({
-        url: '/mirai/qiuwen_log',
+        url: '/bot/qiuwen_log',
         method: 'post',
         data: data
     })
@@ -29,7 +29,7 @@ export function addQiuwen_log(data) {
 // 修改求文日志
 export function updateQiuwen_log(data) {
     return request({
-        url: '/mirai/qiuwen_log',
+        url: '/bot/qiuwen_log',
         method: 'put',
         data: data
     })
@@ -38,7 +38,7 @@ export function updateQiuwen_log(data) {
 // 删除求文日志
 export function delQiuwen_log(id) {
     return request({
-        url: '/mirai/qiuwen_log/' + id,
+        url: '/bot/qiuwen_log/' + id,
         method: 'delete'
     })
 }

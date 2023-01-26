@@ -1,11 +1,11 @@
 <template>
   <div>
-    <svg-icon icon-class="github" @click="goto"/>
+    <svg-icon icon-class="github"/>
   </div>
 </template>
 
 <script setup>
-const url = ref('https://gitee.com/y_project/RuoYi-Cloud');
+const url = ref('https://gitee.com/');
 
 function goto() {
   window.open(url.value)

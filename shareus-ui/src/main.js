@@ -23,6 +23,9 @@ import './permission' // permission control
 import {useDict} from '@/utils/dict'
 import {addDateRange, handleTree, parseTime, resetForm, selectDictLabel, selectDictLabels} from '@/utils/ruoyi'
 
+// 一键复制
+import Clipboard from 'v-clipboard'
+
 // 分页组件
 import Pagination from '@/components/Pagination'
 // 自定义表格工具组件
@@ -64,6 +67,7 @@ app.use(store)
 app.use(plugins)
 app.use(elementIcons)
 app.component('svg-icon', SvgIcon)
+app.use(Clipboard)
 
 directive(app)
 

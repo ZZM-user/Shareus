@@ -20,4 +20,9 @@ public class ServiceNameConstants {
      * 文件服务的serviceid
      */
     public static final String FILE_SERVICE = "shareus-file";
+
+    /**
+     * 机器人服务serviceId
+     */
+    public static final String BOT_SERVICE = "shareus-bot";
 }

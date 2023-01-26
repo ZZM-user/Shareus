@@ -137,6 +137,16 @@
       <el-table-column align="center" label="归档日期" prop="archiveDate" width="160"/>
       <el-table-column align="center" class-name="small-padding fixed-width" fixed="right" label="操作">
         <template #default="scope">
+          <el-button
+              v-clipboard:copy="scope.row.archiveUrl"
+              v-clipboard:error="onCopyError"
+              v-clipboard:success="onCopySuccess"
+              icon="Document"
+              link
+              type="primary"
+          >复制链接
+          </el-button>
+
           <el-button v-hasPermi="['mirai:archived_file:edit']" icon="Edit" link type="primary"
                      @click="handleUpdate(scope.row)">修改
           </el-button>
@@ -328,7 +338,7 @@ function handleUpdate(row) {
 
 /** 提交按钮 */
 function submitForm() {
-  proxy.refs["archived_fileRef"].validate(valid => {
+  proxy.$refs["archived_fileRef"].validate(valid => {
     if (valid) {
       if (form.value.id != null) {
         updateArchived_file(form.value).then(response => {
@@ -350,11 +360,9 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const ids = row.id || ids.value;
-  proxy.confirm('是否确认删除归档文件编号为"' + ids + '"的数据项？'
+  proxy.$confirm('是否确认删除归档文件编号为"' + ids + '"的数据项？'
   ).then(function () {
-    return delArchived_file(ids
-    )
-        ;
+    return delArchived_file(ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
@@ -376,9 +384,17 @@ function changeArchivedEnabled(row) {
 
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download('mirai/archived_file/export', {
+  proxy.$download('bot/archived_file/export', {
     ...queryParams.value
   }, `archived_file_${new Date().getTime()}.xlsx`)
+}
+
+function onCopySuccess() {
+  proxy.$modal.msgSuccess("复制成功");
+}
+
+function onCopyError() {
+  proxy.$modal.msgError("复制失败");
 }
 
 getList();

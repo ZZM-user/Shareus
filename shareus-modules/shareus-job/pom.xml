@@ -78,6 +78,11 @@
             <artifactId>shareus-common-swagger</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>top.shareus</groupId>
+            <artifactId>shareus-api-bot</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

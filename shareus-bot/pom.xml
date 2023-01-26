@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>top.shareus</groupId>
+        <artifactId>shareus</artifactId>
+        <version>3.6.1</version>
+    </parent>
+
+    <artifactId>shareus-bot</artifactId>
+    <description>mirai-Bot模块</description>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mirai.version>2.13.4</mirai.version>
+        <kotlin.version>1.8.0</kotlin.version>
+        <hutool.version>5.8.11</hutool.version>
+        <jedis.verison>4.3.1</jedis.verison>
+        <junit.version>5.9.2</junit.version>
+        <junit-platform.version>1.9.2</junit-platform.version>
+    </properties>
+
+    <dependencies>
+        <!-- SpringCloud Alibaba Nacos -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!-- SpringCloud Alibaba Nacos Config -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <!-- SpringCloud Alibaba Sentinel -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
+        <!-- SpringBoot Actuator -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Swagger UI -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.fox.version}</version>
+        </dependency>
+
+        <!-- Mysql Connector -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- Druid -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+
+        <!-- Dynamic DataSource -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>${dynamic-ds.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>top.shareus</groupId>
+            <artifactId>shareus-common-security</artifactId>
+        </dependency>
+
+        <!--Common DataSource -->
+        <dependency>
+            <groupId>top.shareus</groupId>
+            <artifactId>shareus-common-datasource</artifactId>
+        </dependency>
+
+        <!--Common DataScope -->
+        <dependency>
+            <groupId>top.shareus</groupId>
+            <artifactId>shareus-common-datascope</artifactId>
+        </dependency>
+
+        <!--Common Log -->
+        <dependency>
+            <groupId>top.shareus</groupId>
+            <artifactId>shareus-common-log</artifactId>
+        </dependency>
+
+        <!--Common Swagger -->
+        <dependency>
+            <groupId>top.shareus</groupId>
+            <artifactId>shareus-common-swagger</artifactId>
+        </dependency>
+
+        <!-- redis -->
+        <dependency>
+            <groupId>top.shareus</groupId>
+            <artifactId>shareus-common-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.shareus</groupId>
+            <artifactId>shareus-common-swagger</artifactId>
+        </dependency>
+
+        <!--junit5-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>${junit-platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-console-standalone</artifactId>
+            <version>1.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--mirai-->
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-all</artifactId>
+            <version>${mirai.version}</version>
+            <classifier>all</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-console</artifactId>
+            <version>${mirai.version}</version>
+            <classifier>all</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

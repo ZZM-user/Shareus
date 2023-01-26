@@ -10,6 +10,7 @@
 
     <modules>
         <module>shareus-api-system</module>
+        <module>shareus-api-bot</module>
     </modules>
 
     <artifactId>shareus-api</artifactId>
