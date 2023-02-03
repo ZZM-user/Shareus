@@ -3,7 +3,6 @@ package top.shareus.bot.config;
 import lombok.Data;
 import net.mamoe.mirai.Bot;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -22,7 +21,7 @@ public class BotConfig {
     @Value("${bot.password}")
     private String password;
 
-    @Bean
+    //    @Bean
     public Bot getBot() {
         Bot bot = BotManager.createBot(this);
         // 注册事件

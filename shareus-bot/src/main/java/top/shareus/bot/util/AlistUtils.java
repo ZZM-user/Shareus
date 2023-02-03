@@ -12,6 +12,8 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 import top.shareus.common.core.constant.AlistConstant;
 import top.shareus.common.reids.RedisClient;
@@ -35,6 +37,7 @@ public class AlistUtils {
      */
     private static final String JWT_REGEX = "\"(e.+?)\"";
     private static RedisClient redisClient = SpringUtil.getBean(RedisClient.class);
+    private static RedissonClient redissonClient = SpringUtil.getBean(RedissonClient.class);
 
 //    public static void main(String[] args) {
 //        ArrayList<String> pathList = new ArrayList() {{
@@ -216,21 +219,28 @@ public class AlistUtils {
      *
      * @return {@code String}
      */
-    private static String getAuthorization() {
+    public static String getAuthorization() {
         log.info("开始获取Alist授权");
+        RLock lock = redissonClient.getLock("get-authorization");
 
-        String token = redisClient.get(AlistConstant.AUTH_REDIS_KEY);
-        if (StrUtil.isNotEmpty(token)) {
-            log.info("无需更新 token");
+        lock.lock();
+        try {
+            String token = redisClient.get(AlistConstant.AUTH_REDIS_KEY);
+            if (StrUtil.isNotEmpty(token)) {
+                log.info("无需更新 token");
+                return token;
+            }
+            log.info("需要更新 token");
+            // token已经失效 需要重新登录 登录后再存到redis里
+            token = login().trim();
+            log.info("获取Alist Token：" + token);
+
+            redisClient.set(AlistConstant.AUTH_REDIS_KEY, token, AlistConstant.AUTH_REDIS_EXPIRE);
             return token;
+        } finally {
+            lock.unlock();
         }
-        log.info("需要更新 token");
-        // token已经失效 需要重新登录 登录后再存到redis里
-        token = login().trim();
-        log.info("获取Alist Token：" + token);
 
-        redisClient.set(AlistConstant.AUTH_REDIS_KEY, token, AlistConstant.AUTH_REDIS_EXPIRE);
-        return token;
     }
 
     /**

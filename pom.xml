@@ -31,7 +31,7 @@
         <commons.io.version>2.11.0</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <velocity.version>2.3</velocity.version>
-        <fastjson.version>2.0.20</fastjson.version>
+        <fastjson.version>2.0.23</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
         <minio.version>8.2.2</minio.version>
         <poi.version>4.1.2</poi.version>
@@ -253,6 +253,14 @@
                 <artifactId>shareus-api-bot</artifactId>
                 <version>${shareus.version}</version>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
