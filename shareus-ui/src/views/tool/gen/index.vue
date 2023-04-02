@@ -142,7 +142,7 @@
     />
     <!-- 预览界面 -->
     <el-dialog :title="preview.title" v-model="preview.open" width="80%" top="5vh" append-to-body
-               custom-class="scrollbar">
+               class="scrollbar">
       <el-tabs v-model="preview.activeName">
         <el-tab-pane
             v-for="(value, key) in preview.data"
@@ -164,10 +164,10 @@
 <script setup name="Gen">
 import {delTable, genCode, listTable, previewTable, synchDb} from "@/api/tool/gen";
 import router from "@/router";
+import ImportTable from "./importTable.vue";
 
 const route = useRoute();
 const {proxy} = getCurrentInstance();
-
 const tableList = ref([]);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -178,7 +178,6 @@ const total = ref(0);
 const tableNames = ref([]);
 const dateRange = ref([]);
 const uniqueId = ref("");
-
 const data = reactive({
   queryParams: {
     pageNum: 1,
@@ -193,9 +192,7 @@ const data = reactive({
     activeName: "domain.java"
   }
 });
-
 const {queryParams, preview} = toRefs(data);
-
 onActivated(() => {
   const time = route.query.t;
   if (time != null && time != uniqueId.value) {

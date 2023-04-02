@@ -27,7 +27,7 @@ public class HasMemberJoinEvent extends SimpleListenerHost {
     @EventHandler
     private void onHasMemberJoinEvent(MemberJoinEvent event) {
         long id = event.getGroupId();
-
+        
         if (GroupUtils.hasAnyGroups(id, GroupsConstant.ADMIN_GROUPS, GroupsConstant.CHAT_GROUPS)) {
             NormalMember member = event.getMember();
             MessageChainBuilder builder = new MessageChainBuilder();
@@ -39,7 +39,7 @@ public class HasMemberJoinEvent extends SimpleListenerHost {
             event.getGroup().sendMessage(builder.build());
         }
     }
-
+    
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
         log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());

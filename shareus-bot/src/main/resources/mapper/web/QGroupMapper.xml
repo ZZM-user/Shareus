@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.shareus.web.mapper.QGroupMapper">
+
+    <resultMap type="top.shareus.domain.entity.QGroup" id="QGroupResult">
+        <result property="id" column="id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="groupName" column="group_name"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="type" column="type"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectQGroupVo">
+        select id,
+               group_id,
+               group_name,
+               avatar_url,
+               type,
+               remark,
+               del_flag,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from q_group
+    </sql>
+
+    <select id="selectQGroupList" parameterType="top.shareus.domain.entity.QGroup" resultMap="QGroupResult">
+        <include refid="selectQGroupVo"/>
+        <where>
+            <if test="groupId != null ">
+                and group_id = #{groupId}
+            </if>
+            <if test="groupName != null  and groupName != ''">
+                and group_name like concat('%', #{groupName}, '%')
+            </if>
+            <if test="avatarUrl != null  and avatarUrl != ''">
+                and avatar_url = #{avatarUrl}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectQGroupById" parameterType="Long"
+            resultMap="QGroupResult">
+        <include refid="selectQGroupVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertQGroup" parameterType="top.shareus.domain.entity.QGroup">
+        insert into q_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,
+            </if>
+            <if test="groupId != null">group_id,
+            </if>
+            <if test="groupName != null and groupName != ''">group_name,
+            </if>
+            <if test="avatarUrl != null">avatar_url,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="delFlag != null">del_flag,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},
+            </if>
+            <if test="groupId != null">#{groupId},
+            </if>
+            <if test="groupName != null and groupName != ''">#{groupName},
+            </if>
+            <if test="avatarUrl != null">#{avatarUrl},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="delFlag != null">#{delFlag},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateQGroup" parameterType="top.shareus.domain.entity.QGroup">
+        update q_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupId != null">group_id =
+                #{groupId},
+            </if>
+            <if test="groupName != null and groupName != ''">group_name =
+                #{groupName},
+            </if>
+            <if test="avatarUrl != null">avatar_url =
+                #{avatarUrl},
+            </if>
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="delFlag != null">del_flag =
+                #{delFlag},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQGroupById" parameterType="Long">
+        delete
+        from q_group
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteQGroupByIds" parameterType="String">
+        delete from q_group where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

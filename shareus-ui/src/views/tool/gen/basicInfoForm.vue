@@ -37,7 +37,6 @@ defineProps({
     default: null
   }
 });
-
 // 表单校验
 const rules = ref({
   tableName: [{required: true, message: "请输入表名称", trigger: "blur"}],

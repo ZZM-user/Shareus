@@ -17,8 +17,8 @@ import top.shareus.common.core.exception.mirai.bot.BotException;
 @Slf4j
 @Component
 public class BotManager {
-    private static Bot BOT = null;
-
+    private volatile static Bot BOT = null;
+    
     /**
      * 创建机器人
      *
@@ -49,7 +49,7 @@ public class BotManager {
         }
         return BOT;
     }
-
+    
     /**
      * 获取机器人
      *

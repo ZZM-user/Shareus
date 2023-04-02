@@ -132,7 +132,6 @@ import {optionselect as getDictOptionselect} from "@/api/system/dict/type";
 
 const route = useRoute();
 const {proxy} = getCurrentInstance();
-
 const activeName = ref("columnInfo");
 const tableHeight = ref(document.documentElement.scrollHeight - 245 + "px");
 const tables = ref([]);

@@ -1,1 +1,1 @@
-top.shareus.bot.api.factory.RemoteFileFallbackFactory
+top.shareus.bot.api.factory.RemoteBotFallbackFactory

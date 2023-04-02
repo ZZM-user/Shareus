@@ -252,7 +252,6 @@ import {listMenu} from "@/api/system/menu";
 const subColumns = ref([]);
 const menuOptions = ref([]);
 const {proxy} = getCurrentInstance();
-
 const props = defineProps({
   info: {
     type: Object,
@@ -263,7 +262,6 @@ const props = defineProps({
     default: null
   }
 });
-
 // 表单校验
 const rules = ref({
   tplCategory: [{required: true, message: "请选择生成模板", trigger: "blur"}],
@@ -304,6 +302,5 @@ function getMenuTreeselect() {
 watch(() => props.info.subTableName, val => {
   setSubTableColumns(val);
 });
-
 getMenuTreeselect();
 </script>

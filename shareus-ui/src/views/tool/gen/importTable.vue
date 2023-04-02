@@ -57,14 +57,12 @@ const visible = ref(false);
 const tables = ref([]);
 const dbTableList = ref([]);
 const {proxy} = getCurrentInstance();
-
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   tableName: undefined,
   tableComment: undefined
 });
-
 const emit = defineEmits(["ok"]);
 
 /** 查询参数列表 */

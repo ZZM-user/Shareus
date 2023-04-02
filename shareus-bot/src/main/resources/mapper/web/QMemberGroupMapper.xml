@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.shareus.web.mapper.QMemberGroupMapper">
+
+    <resultMap type="top.shareus.domain.entity.QMemberGroup" id="QMemberGroupResult">
+        <result property="id" column="id"/>
+        <result property="qqId" column="qq_id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="identityType" column="identity_type"/>
+        <result property="nameCard" column="name_card"/>
+        <result property="rankTitle" column="rank_title"/>
+        <result property="temperatureTitle" column="temperature_title"/>
+        <result property="muted" column="muted"/>
+        <result property="muteTime" column="mute_time"/>
+        <result property="enable" column="enable"/>
+        <result property="joinTime" column="join_time"/>
+        <result property="speakTime" column="speak_time"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectQMemberGroupVo">
+        select id,
+               qq_id,
+               group_id,
+               identity_type,
+               name_card,
+               rank_title,
+               temperature_title,
+               muted,
+               mute_time,
+               enable,
+               join_time,
+               speak_time,
+               remark,
+               del_flag,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from q_member_group
+    </sql>
+
+    <select id="selectQMemberGroupList" parameterType="top.shareus.domain.entity.QMemberGroup"
+            resultMap="QMemberGroupResult">
+        <include refid="selectQMemberGroupVo"/>
+        <where>
+            <if test="qqId != null ">
+                and qq_id = #{qqId}
+            </if>
+            <if test="groupId != null ">
+                and group_id = #{groupId}
+            </if>
+            <if test="identityType != null ">
+                and identity_type = #{identityType}
+            </if>
+            <if test="nameCard != null  and nameCard != ''">
+                and name_card = #{nameCard}
+            </if>
+            <if test="rankTitle != null  and rankTitle != ''">
+                and rank_title = #{rankTitle}
+            </if>
+            <if test="temperatureTitle != null  and temperatureTitle != ''">
+                and temperature_title = #{temperatureTitle}
+            </if>
+            <if test="muted != null ">
+                and muted = #{muted}
+            </if>
+            <if test="muteTime != null ">
+                and mute_time = #{muteTime}
+            </if>
+            <if test="enable != null ">
+                and enable = #{enable}
+            </if>
+            <if test="joinTime != null ">
+                and join_time = #{joinTime}
+            </if>
+            <if test="speakTime != null ">
+                and speak_time = #{speakTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectQMemberGroupById" parameterType="Long"
+            resultMap="QMemberGroupResult">
+        <include refid="selectQMemberGroupVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertQMemberGroup" parameterType="top.shareus.domain.entity.QMemberGroup">
+        insert into q_member_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,
+            </if>
+            <if test="qqId != null">qq_id,
+            </if>
+            <if test="groupId != null">group_id,
+            </if>
+            <if test="identityType != null">identity_type,
+            </if>
+            <if test="nameCard != null">name_card,
+            </if>
+            <if test="rankTitle != null">rank_title,
+            </if>
+            <if test="temperatureTitle != null">temperature_title,
+            </if>
+            <if test="muted != null">muted,
+            </if>
+            <if test="muteTime != null">mute_time,
+            </if>
+            <if test="enable != null">enable,
+            </if>
+            <if test="joinTime != null">join_time,
+            </if>
+            <if test="speakTime != null">speak_time,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="delFlag != null">del_flag,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},
+            </if>
+            <if test="qqId != null">#{qqId},
+            </if>
+            <if test="groupId != null">#{groupId},
+            </if>
+            <if test="identityType != null">#{identityType},
+            </if>
+            <if test="nameCard != null">#{nameCard},
+            </if>
+            <if test="rankTitle != null">#{rankTitle},
+            </if>
+            <if test="temperatureTitle != null">#{temperatureTitle},
+            </if>
+            <if test="muted != null">#{muted},
+            </if>
+            <if test="muteTime != null">#{muteTime},
+            </if>
+            <if test="enable != null">#{enable},
+            </if>
+            <if test="joinTime != null">#{joinTime},
+            </if>
+            <if test="speakTime != null">#{speakTime},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="delFlag != null">#{delFlag},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateQMemberGroup" parameterType="top.shareus.domain.entity.QMemberGroup">
+        update q_member_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="qqId != null">qq_id =
+                #{qqId},
+            </if>
+            <if test="groupId != null">group_id =
+                #{groupId},
+            </if>
+            <if test="identityType != null">identity_type =
+                #{identityType},
+            </if>
+            <if test="nameCard != null">name_card =
+                #{nameCard},
+            </if>
+            <if test="rankTitle != null">rank_title =
+                #{rankTitle},
+            </if>
+            <if test="temperatureTitle != null">temperature_title =
+                #{temperatureTitle},
+            </if>
+            <if test="muted != null">muted =
+                #{muted},
+            </if>
+            <if test="muteTime != null">mute_time =
+                #{muteTime},
+            </if>
+            <if test="enable != null">enable =
+                #{enable},
+            </if>
+            <if test="joinTime != null">join_time =
+                #{joinTime},
+            </if>
+            <if test="speakTime != null">speak_time =
+                #{speakTime},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="delFlag != null">del_flag =
+                #{delFlag},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQMemberGroupById" parameterType="Long">
+        delete
+        from q_member_group
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteQMemberGroupByIds" parameterType="String">
+        delete from q_member_group where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
