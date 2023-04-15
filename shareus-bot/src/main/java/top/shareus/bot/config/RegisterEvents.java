@@ -38,6 +38,7 @@ public class RegisterEvents {
         log.info("开始注册-成员加入事件");
         EventChannel<MemberJoinEvent> channel = GlobalEventChannel.INSTANCE.filterIsInstance(MemberJoinEvent.class);
         channel.registerListenerHost(SpringUtils.getBean(HasMemberJoinEvent.class));
+        channel.registerListenerHost(SpringUtils.getBean(MemberJoinRequest.class));
     }
 
     /**
@@ -56,5 +57,14 @@ public class RegisterEvents {
         log.info("开始注册-好友消息事件");
         EventChannel<FriendMessageEvent> channel = GlobalEventChannel.INSTANCE.filterIsInstance(FriendMessageEvent.class);
         channel.registerListenerHost(SpringUtils.getBean(ForwardFriendFlashImageMessage.class));
+    }
+
+    /**
+     * 注册机器人被邀请进群消息事件
+     */
+    public static void registerJoinGroupEvent() {
+        log.info("开始注册-好友消息事件");
+        EventChannel<FriendMessageEvent> channel = GlobalEventChannel.INSTANCE.filterIsInstance(FriendMessageEvent.class);
+        channel.registerListenerHost(SpringUtils.getBean(JoinGroupEvent.class));
     }
 }

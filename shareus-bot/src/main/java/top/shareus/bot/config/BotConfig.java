@@ -29,6 +29,7 @@ public class BotConfig {
         RegisterEvents.registerMemberJoinEvent();
         RegisterEvents.registerFriendMessageEvent();
         RegisterEvents.registerGroupRecall();
+        RegisterEvents.registerJoinGroupEvent();
         return bot;
     }
 }

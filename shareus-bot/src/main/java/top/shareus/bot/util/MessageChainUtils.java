@@ -44,6 +44,9 @@ public class MessageChainUtils {
                 // 文件
                 FileMessage fileMessage = (FileMessage) message;
                 builder.add(fileMessage);
+            } else if (message instanceof At) {
+                At at = (At) message;
+                builder.add(at);
             } else {
                 // 其他消息
                 builder.add(message);
@@ -55,6 +58,7 @@ public class MessageChainUtils {
      * 获取普通文本信息
      *
      * @param messages 消息
+     *
      * @return {@link PlainText}
      */
     public static PlainText fetchPlainText(MessageChain chain) {
@@ -66,6 +70,7 @@ public class MessageChainUtils {
      * 获取闪照信息
      *
      * @param messages 消息
+     *
      * @return {@link FlashImage}
      */
     public static FlashImage fetchFlashImage(MessageChain chain) {
@@ -80,6 +85,17 @@ public class MessageChainUtils {
      */
     public static FileMessage fetchFileMessage(MessageChain chain) {
         return (FileMessage) chain.stream().filter(FileMessage.class::isInstance).findFirst().orElse(null);
+
+    }
+
+    /**
+     * 获取At信息
+     *
+     * @param messages 消息
+     * @return {@link PlainText}
+     */
+    public static At fetchAt(MessageChain chain) {
+        return (At) chain.stream().filter(At.class::isInstance).findFirst().orElse(null);
 
     }
 }
