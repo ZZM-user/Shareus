@@ -7,6 +7,7 @@ import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.MemberJoinEvent;
 import net.mamoe.mirai.event.events.MessageRecallEvent;
+import org.springframework.context.annotation.Configuration;
 import top.shareus.bot.event.*;
 import top.shareus.common.core.utils.SpringUtils;
 
@@ -17,6 +18,7 @@ import top.shareus.common.core.utils.SpringUtils;
  * @date 2023/01/26
  */
 @Slf4j
+@Configuration
 public class RegisterEvents {
 
     /**

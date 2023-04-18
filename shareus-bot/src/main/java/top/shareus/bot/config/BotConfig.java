@@ -24,12 +24,12 @@ public class BotConfig {
     //    @Bean
     public Bot getBot() {
         Bot bot = BotManager.createBot(this);
-        // 注册事件
-        RegisterEvents.registerGroupMessageEvent();
-        RegisterEvents.registerMemberJoinEvent();
-        RegisterEvents.registerFriendMessageEvent();
-        RegisterEvents.registerGroupRecall();
-        RegisterEvents.registerJoinGroupEvent();
+//        // 注册事件
+//        RegisterEvents.registerGroupMessageEvent();
+//        RegisterEvents.registerMemberJoinEvent();
+//        RegisterEvents.registerFriendMessageEvent();
+//        RegisterEvents.registerGroupRecall();
+//        RegisterEvents.registerJoinGroupEvent();
         return bot;
     }
 }
