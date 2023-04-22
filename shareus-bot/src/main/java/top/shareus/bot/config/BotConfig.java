@@ -1,8 +1,10 @@
 package top.shareus.bot.config;
 
-import lombok.Data;
+import lombok.Getter;
 import net.mamoe.mirai.Bot;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -11,25 +13,29 @@ import org.springframework.context.annotation.Configuration;
  * @author zhaojl
  * @date 2023/01/25
  */
-@Data
+@Getter
 @Configuration
 public class BotConfig {
-
-    @Value("${bot.account}")
-    private Long account;
-
-    @Value("${bot.password}")
-    private String password;
-
-    //    @Bean
-    public Bot getBot() {
-        Bot bot = BotManager.createBot(this);
-//        // 注册事件
-//        RegisterEvents.registerGroupMessageEvent();
-//        RegisterEvents.registerMemberJoinEvent();
-//        RegisterEvents.registerFriendMessageEvent();
-//        RegisterEvents.registerGroupRecall();
-//        RegisterEvents.registerJoinGroupEvent();
-        return bot;
-    }
+	
+	@Value("${bot.account}")
+	private Long account;
+	
+	@Value("${bot.password}")
+	private String password;
+	
+	@Autowired
+	private RegisterEvents registerEvents;
+	
+	@Bean
+	public Bot getBot() {
+		Bot bot = BotManager.createBot(this);
+		// 注册事件
+		registerEvents.registerGroupMessageEvent();
+		registerEvents.registerMemberJoinEvent();
+		registerEvents.registerMemberJoinRequestEvent();
+		registerEvents.registerFriendMessageEvent();
+		registerEvents.registerGroupRecall();
+		registerEvents.registerBotJoinGroupEvent();
+		return bot;
+	}
 }

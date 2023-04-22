@@ -21,27 +21,27 @@ import top.shareus.common.core.constant.GroupsConstant;
 @Slf4j
 @Component
 public class ResChatEvent extends SimpleListenerHost {
-
-    @EventHandler
-    private void onAdminGroupMessageEvent(GroupMessageEvent event) {
-        long id = event.getGroup().getId();
-
-        if (GroupUtils.isRes(id)) {
-            if (BanResWordConstant.hasBanWord(event.getMessage().contentToString())) {
-                // 禁它言
-                event.getSender().mute(BanResWordConstant.MUTE_SECONDS);
-                // 撤它消息
-                MessageSource.recall(event.getMessage());
-                String message = "尝试撤回消息 " + event.getSender().getNick() + "：" + event.getMessage().contentToString();
-                log.info(message);
-                // 通知群
-                event.getBot().getGroup(GroupsConstant.ADMIN_GROUPS.get(0)).sendMessage(message);
-            }
-        }
-    }
-
-    @Override
-    public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-        log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());
-    }
+	
+	@EventHandler
+	public void onAdminGroupMessageEvent(GroupMessageEvent event) {
+		long id = event.getGroup().getId();
+		
+		if (GroupUtils.isRes(id)) {
+			if (BanResWordConstant.hasBanWord(event.getMessage().contentToString())) {
+				// 禁它言
+				event.getSender().mute(BanResWordConstant.MUTE_SECONDS);
+				// 撤它消息
+				MessageSource.recall(event.getMessage());
+				String message = "尝试撤回消息 " + event.getSender().getNick() + "：" + event.getMessage().contentToString();
+				log.info(message);
+				// 通知群
+				event.getBot().getGroup(GroupsConstant.ADMIN_GROUPS.get(0)).sendMessage(message);
+			}
+		}
+	}
+	
+	@Override
+	public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
+		log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());
+	}
 }

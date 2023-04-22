@@ -8,7 +8,7 @@ import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.MemberJoinRequestEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import top.shareus.bot.annotation.Group;
+import top.shareus.bot.annotation.GroupAuth;
 import top.shareus.bot.mapper.mapper.BlackListMapper;
 import top.shareus.common.core.eumn.GroupEnum;
 import top.shareus.common.core.exception.mirai.bot.BotException;
@@ -27,8 +27,8 @@ public class MemberJoinRequest extends SimpleListenerHost {
 	private BlackListMapper blacklistMapper;
 	
 	@EventHandler
-	@Group(groupList = {GroupEnum.RES_GROUP, GroupEnum.CHAT_GROUP, GroupEnum.TEST_GROUP})
-	private void onMemberJoinRequest(MemberJoinRequestEvent event) {
+	@GroupAuth(groupList = {GroupEnum.RES_GROUP, GroupEnum.CHAT_GROUP, GroupEnum.TEST_GROUP})
+	public void onMemberJoinRequest(MemberJoinRequestEvent event) {
 		log.debug(event.getMessage());
 		
 		blackListUserFilter(event);

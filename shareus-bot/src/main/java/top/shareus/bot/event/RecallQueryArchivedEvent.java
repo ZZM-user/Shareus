@@ -29,29 +29,29 @@ import java.util.List;
 @Slf4j
 @Component
 public class RecallQueryArchivedEvent extends SimpleListenerHost {
-    @Autowired
-    private QueryLogMapper queryLogMapper;
-
-    @EventHandler
-    private void onRecallQueryArchivedEvent(MessageRecallEvent.GroupRecall event) {
-        Group group = event.getGroup();
-        boolean hasGroups = GroupUtils.hasGroups(GroupsConstant.RES_GROUPS, group.getId());
-        if (!hasGroups) {
-            return;
-        }
-
-        Member operator = event.getOperator();
-        NormalMember author = event.getAuthor();
-        int messageTime = event.getMessageTime() * 1000;
-        List<QueryLog> queryLogs = queryLogMapper.selectUnfinishedQueryBySender(author.getId(), DateUtil.date(messageTime));
-
-        String cause = "由 " + operator.getNameCard() + " 主动撤回";
-        queryLogs.forEach(q -> Polling.stopQuery(q, cause));
-        log.info(cause + " - " + queryLogs.size());
-    }
-
-    @Override
-    public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-        log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());
-    }
+	@Autowired
+	private QueryLogMapper queryLogMapper;
+	
+	@EventHandler
+	public void onRecallQueryArchivedEvent(MessageRecallEvent.GroupRecall event) {
+		Group group = event.getGroup();
+		boolean hasGroups = GroupUtils.hasGroups(GroupsConstant.RES_GROUPS, group.getId());
+		if (! hasGroups) {
+			return;
+		}
+		
+		Member operator = event.getOperator();
+		NormalMember author = event.getAuthor();
+		int messageTime = event.getMessageTime() * 1000;
+		List<QueryLog> queryLogs = queryLogMapper.selectUnfinishedQueryBySender(author.getId(), DateUtil.date(messageTime));
+		
+		String cause = "由 " + operator.getNameCard() + " 主动撤回";
+		queryLogs.forEach(q -> Polling.stopQuery(q, cause));
+		log.info(cause + " - " + queryLogs.size());
+	}
+	
+	@Override
+	public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
+		log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());
+	}
 }

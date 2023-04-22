@@ -24,24 +24,24 @@ import top.shareus.common.core.constant.GroupsConstant;
 @Slf4j
 @Component
 public class HasMemberJoinEvent extends SimpleListenerHost {
-    @EventHandler
-    private void onHasMemberJoinEvent(MemberJoinEvent event) {
-        long id = event.getGroupId();
-        
-        if (GroupUtils.hasAnyGroups(id, GroupsConstant.ADMIN_GROUPS, GroupsConstant.CHAT_GROUPS)) {
-            NormalMember member = event.getMember();
-            MessageChainBuilder builder = new MessageChainBuilder();
-            builder.add(new At(member.getId()));
-            builder.add(" 欢迎欢迎！");
-            // 构建头像 发送
-            Image image = ImageUtils.create(event.getGroup(), member.getAvatarUrl());
-            builder.add(image);
-            event.getGroup().sendMessage(builder.build());
-        }
-    }
-    
-    @Override
-    public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-        log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());
-    }
+	@EventHandler
+	public void onHasMemberJoinEvent(MemberJoinEvent event) {
+		long id = event.getGroupId();
+		
+		if (GroupUtils.hasAnyGroups(id, GroupsConstant.ADMIN_GROUPS, GroupsConstant.CHAT_GROUPS)) {
+			NormalMember member = event.getMember();
+			MessageChainBuilder builder = new MessageChainBuilder();
+			builder.add(new At(member.getId()));
+			builder.add(" 欢迎欢迎！");
+			// 构建头像 发送
+			Image image = ImageUtils.create(event.getGroup(), member.getAvatarUrl());
+			builder.add(image);
+			event.getGroup().sendMessage(builder.build());
+		}
+	}
+	
+	@Override
+	public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
+		log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());
+	}
 }

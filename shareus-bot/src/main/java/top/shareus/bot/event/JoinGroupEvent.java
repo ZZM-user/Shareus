@@ -21,17 +21,17 @@ import top.shareus.common.core.constant.GroupsConstant;
 @Slf4j
 @Component
 public class JoinGroupEvent extends SimpleListenerHost {
-    @EventHandler
-    private void onJoinGroupEvent(BotJoinGroupEvent event) {
-        Group group = event.getGroup();
-        Bot bot = BotManager.getBot();
-        MessageChainBuilder messages = new MessageChainBuilder()
-                .append(new At(2657272578L))
-                .append("我被邀请进群了-")
-                .append(group.getName())
-                .append(" - ")
-                .append(String.valueOf(group.getId()));
-        bot.getGroup(GroupsConstant.TEST_GROUPS.get(0))
-                .sendMessage(messages.build());
-    }
+	@EventHandler
+	public void onJoinGroupEvent(BotJoinGroupEvent event) {
+		Group group = event.getGroup();
+		Bot bot = BotManager.getBot();
+		MessageChainBuilder messages = new MessageChainBuilder()
+				.append(new At(2657272578L))
+				.append("我被邀请进群了-")
+				.append(group.getName())
+				.append(" - ")
+				.append(String.valueOf(group.getId()));
+		bot.getGroup(GroupsConstant.TEST_GROUPS.get(0))
+				.sendMessage(messages.build());
+	}
 }

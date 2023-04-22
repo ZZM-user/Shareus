@@ -11,11 +11,10 @@ import java.lang.annotation.*;
  * @date 2023/02/25
  */
 @Documented
-@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE, ElementType.METHOD})
-public @interface Group {
-    long groupId() default 0L;
-    
-    GroupEnum[] groupList() default {};
+public @interface GroupAuth {
+	long groupId() default 0L;
+	
+	GroupEnum[] groupList() default {};
 }
