@@ -3,7 +3,6 @@ package top.shareus.bot.event;
 import cn.hutool.core.date.DateUtil;
 import kotlin.coroutines.CoroutineContext;
 import lombok.extern.slf4j.Slf4j;
-import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.event.EventHandler;
@@ -12,10 +11,10 @@ import net.mamoe.mirai.event.events.MessageRecallEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import top.shareus.bot.annotation.GroupAuth;
 import top.shareus.bot.job.querylog.Polling;
 import top.shareus.bot.mapper.QueryLogMapper;
-import top.shareus.bot.util.GroupUtils;
-import top.shareus.common.core.constant.GroupsConstant;
+import top.shareus.common.core.eumn.GroupEnum;
 import top.shareus.domain.entity.QueryLog;
 
 import java.util.List;
@@ -33,13 +32,8 @@ public class RecallQueryArchivedEvent extends SimpleListenerHost {
 	private QueryLogMapper queryLogMapper;
 	
 	@EventHandler
+	@GroupAuth(groupList = {GroupEnum.TEST_GROUP})
 	public void onRecallQueryArchivedEvent(MessageRecallEvent.GroupRecall event) {
-		Group group = event.getGroup();
-		boolean hasGroups = GroupUtils.hasGroups(GroupsConstant.RES_GROUPS, group.getId());
-		if (! hasGroups) {
-			return;
-		}
-		
 		Member operator = event.getOperator();
 		NormalMember author = event.getAuthor();
 		int messageTime = event.getMessageTime() * 1000;

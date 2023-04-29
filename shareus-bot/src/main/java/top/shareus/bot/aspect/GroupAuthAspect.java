@@ -19,7 +19,7 @@ import top.shareus.common.core.exception.mirai.bot.BotException;
 @Aspect
 @Slf4j
 @Component
-public class GroupAspect {
+public class GroupAuthAspect {
 	
 	@Around(value = "@annotation(groupAuth)", argNames = "joinPoint,groupAuth")
 	public Object around(ProceedingJoinPoint joinPoint, GroupAuth groupAuth) throws Throwable {

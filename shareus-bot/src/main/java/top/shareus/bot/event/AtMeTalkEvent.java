@@ -16,10 +16,8 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.message.data.PlainText;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import top.shareus.bot.annotation.GroupAuth;
 import top.shareus.bot.util.GroupUtils;
 import top.shareus.bot.util.MessageChainUtils;
-import top.shareus.common.core.eumn.GroupEnum;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,7 +40,6 @@ public class AtMeTalkEvent extends SimpleListenerHost {
 															 );
 	
 	@EventHandler
-	@GroupAuth(groupList = GroupEnum.TEST_GROUP)
 	public void onAtMeTalkEvent(GroupMessageEvent event) {
 		long id = event.getGroup().getId();
 		if (! GroupUtils.hasGroups(ALLOW_GROUP, id)) {

@@ -58,6 +58,7 @@ public class RegisterEvents {
 	 * @return {@link EventChannel}<{@link BotEvent}>
 	 */
 	private EventChannel<BotEvent> getBotChannel() {
+		log.info("开始获取机器人消息通道");
 		Bot bot = BotManager.getBot();
 		return bot.getEventChannel();
 	}

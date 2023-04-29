@@ -8,9 +8,10 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.MessageSource;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import top.shareus.bot.util.GroupUtils;
+import top.shareus.bot.annotation.GroupAuth;
 import top.shareus.common.core.constant.BanResWordConstant;
 import top.shareus.common.core.constant.GroupsConstant;
+import top.shareus.common.core.eumn.GroupEnum;
 
 /**
  * 监听聊天事件 撤销违禁消息
@@ -23,20 +24,19 @@ import top.shareus.common.core.constant.GroupsConstant;
 public class ResChatEvent extends SimpleListenerHost {
 	
 	@EventHandler
+	@GroupAuth(groupList = {GroupEnum.RES_GROUP})
 	public void onAdminGroupMessageEvent(GroupMessageEvent event) {
 		long id = event.getGroup().getId();
 		
-		if (GroupUtils.isRes(id)) {
-			if (BanResWordConstant.hasBanWord(event.getMessage().contentToString())) {
-				// 禁它言
-				event.getSender().mute(BanResWordConstant.MUTE_SECONDS);
-				// 撤它消息
-				MessageSource.recall(event.getMessage());
-				String message = "尝试撤回消息 " + event.getSender().getNick() + "：" + event.getMessage().contentToString();
-				log.info(message);
-				// 通知群
-				event.getBot().getGroup(GroupsConstant.ADMIN_GROUPS.get(0)).sendMessage(message);
-			}
+		if (BanResWordConstant.hasBanWord(event.getMessage().contentToString())) {
+			// 禁它言
+			event.getSender().mute(BanResWordConstant.MUTE_SECONDS);
+			// 撤它消息
+			MessageSource.recall(event.getMessage());
+			String message = "尝试撤回消息 " + event.getSender().getNick() + "：" + event.getMessage().contentToString();
+			log.info(message);
+			// 通知群
+			event.getBot().getGroup(GroupsConstant.ADMIN_GROUPS.get(0)).sendMessage(message);
 		}
 	}
 	

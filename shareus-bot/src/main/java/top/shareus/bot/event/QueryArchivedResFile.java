@@ -14,10 +14,14 @@ import net.mamoe.mirai.message.data.PlainText;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import top.shareus.bot.annotation.GroupAuth;
 import top.shareus.bot.service.ArchivedFileService;
-import top.shareus.bot.util.*;
-import top.shareus.common.core.constant.GroupsConstant;
+import top.shareus.bot.util.MessageChainUtils;
+import top.shareus.bot.util.QueryArchivedResFileUtils;
+import top.shareus.bot.util.QueryLogUtils;
+import top.shareus.bot.util.ShortUrlUtils;
 import top.shareus.common.core.constant.QiuWenConstant;
+import top.shareus.common.core.eumn.GroupEnum;
 import top.shareus.domain.entity.ArchivedFile;
 
 import java.util.List;
@@ -36,14 +40,9 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 	private ArchivedFileService archivedFileService;
 	
 	@EventHandler
+	@GroupAuth(groupList = {GroupEnum.RES_GROUP, GroupEnum.TEST_GROUP})
 	public void onQueryArchivedResFile(GroupMessageEvent event) {
 		long senderId = event.getSender().getId();
-		long groupId = event.getGroup().getId();
-		
-		// 不监管 聊天群、管理群
-		if (GroupUtils.hasAnyGroups(groupId, GroupsConstant.CHAT_GROUPS, GroupsConstant.ADMIN_GROUPS)) {
-			return;
-		}
 		
 		try {
 			PlainText plainText = MessageChainUtils.fetchPlainText(event.getMessage());

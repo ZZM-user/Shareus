@@ -11,9 +11,9 @@ import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import top.shareus.bot.util.GroupUtils;
+import top.shareus.bot.annotation.GroupAuth;
 import top.shareus.bot.util.ImageUtils;
-import top.shareus.common.core.constant.GroupsConstant;
+import top.shareus.common.core.eumn.GroupEnum;
 
 /**
  * 新成员加入事件
@@ -25,19 +25,16 @@ import top.shareus.common.core.constant.GroupsConstant;
 @Component
 public class HasMemberJoinEvent extends SimpleListenerHost {
 	@EventHandler
+	@GroupAuth(groupList = {GroupEnum.ADMIN_GROUP, GroupEnum.CHAT_GROUP})
 	public void onHasMemberJoinEvent(MemberJoinEvent event) {
-		long id = event.getGroupId();
-		
-		if (GroupUtils.hasAnyGroups(id, GroupsConstant.ADMIN_GROUPS, GroupsConstant.CHAT_GROUPS)) {
-			NormalMember member = event.getMember();
-			MessageChainBuilder builder = new MessageChainBuilder();
-			builder.add(new At(member.getId()));
-			builder.add(" 欢迎欢迎！");
-			// 构建头像 发送
-			Image image = ImageUtils.create(event.getGroup(), member.getAvatarUrl());
-			builder.add(image);
-			event.getGroup().sendMessage(builder.build());
-		}
+		NormalMember member = event.getMember();
+		MessageChainBuilder builder = new MessageChainBuilder();
+		builder.add(new At(member.getId()));
+		builder.add(" 欢迎欢迎！");
+		// 构建头像 发送
+		Image image = ImageUtils.create(event.getGroup(), member.getAvatarUrl());
+		builder.add(image);
+		event.getGroup().sendMessage(builder.build());
 	}
 	
 	@Override
