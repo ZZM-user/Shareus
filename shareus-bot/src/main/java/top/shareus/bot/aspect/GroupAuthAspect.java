@@ -5,10 +5,15 @@ import net.mamoe.mirai.event.events.MessageEvent;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.annotation.GroupAuth;
+import top.shareus.bot.config.GroupsConfig;
 import top.shareus.common.core.eumn.GroupEnum;
 import top.shareus.common.core.exception.mirai.bot.BotException;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 群组 增强
@@ -21,12 +26,15 @@ import top.shareus.common.core.exception.mirai.bot.BotException;
 @Component
 public class GroupAuthAspect {
 	
+	@Autowired
+	private GroupsConfig groupsConfig;
+	
 	@Around(value = "@annotation(groupAuth)", argNames = "joinPoint,groupAuth")
 	public Object around(ProceedingJoinPoint joinPoint, GroupAuth groupAuth) throws Throwable {
 		for (Object arg : joinPoint.getArgs()) {
 			if (arg instanceof MessageEvent event) {
 				long id = event.getSubject().getId();
-				if (groupAuth.groupId() == id || hasIt(groupAuth.groupList(), id)) {
+				if (hasIt(groupAuth.allowGroupList(), id)) {
 					// 恢复程序执行
 					return joinPoint.proceed();
 				}
@@ -35,9 +43,10 @@ public class GroupAuthAspect {
 		throw new BotException("非管辖范围");
 	}
 	
-	private static boolean hasIt(GroupEnum[] groupEnum, Long id) {
-		for (GroupEnum yeoman : groupEnum) {
-			boolean can = yeoman.getGroupList().stream().anyMatch(id::equals);
+	private boolean hasIt(GroupEnum[] groupEnum, Long id) {
+		HashMap<GroupEnum, List<Long>> byGroup = groupsConfig.getByGroup();
+		for (GroupEnum type : groupEnum) {
+			boolean can = byGroup.get(type).stream().anyMatch(id::equals);
 			if (can) {
 				return true;
 			}

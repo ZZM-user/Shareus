@@ -9,11 +9,12 @@ import net.mamoe.mirai.console.command.CommandSender;
 import net.mamoe.mirai.console.command.java.JRawCommand;
 import net.mamoe.mirai.message.data.MessageChain;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import top.shareus.bot.config.BotManager;
+import top.shareus.bot.config.GroupsConfig;
 import top.shareus.bot.util.ExcelUtils;
 import top.shareus.bot.util.GroupUploadFileUtils;
 import top.shareus.bot.util.GroupUtils;
-import top.shareus.common.core.constant.GroupsConstant;
 import top.shareus.domain.vo.NormalMemberVO;
 
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ import java.util.Map;
 @Slf4j
 public class InvalidMemberCommand extends JRawCommand {
 	public static final InvalidMemberCommand INSTANCE = new InvalidMemberCommand();
+	
+	@Autowired
+	private GroupsConfig groupsConfig;
 	
 	private InvalidMemberCommand() {
 		// 使用插件主类对象作为指令拥有者；设置主指令名为 "test"
@@ -60,7 +64,7 @@ public class InvalidMemberCommand extends JRawCommand {
 			if (hasGroups) {
 				List<NormalMemberVO> invalidMember = getInvalidMember(adminMemberList, resMemberList, chatMemberList);
 				String filePath = ExcelUtils.exportMemberDataExcel(invalidMember, "资源群失效人员名单");
-				GroupUploadFileUtils.uploadFile(bot.getGroup(GroupsConstant.ADMIN_GROUPS.get(0)), filePath);
+				GroupUploadFileUtils.uploadFile(bot.getGroup(groupsConfig.getAdmin().get(0)), filePath);
 			}
 		} catch (Exception e) {
 			log.error("发现异常：", e);

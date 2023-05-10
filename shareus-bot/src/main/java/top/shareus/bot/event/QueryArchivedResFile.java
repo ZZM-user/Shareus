@@ -40,7 +40,7 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 	private ArchivedFileService archivedFileService;
 	
 	@EventHandler
-	@GroupAuth(groupList = {GroupEnum.RES_GROUP, GroupEnum.TEST_GROUP})
+	@GroupAuth(allowGroupList = {GroupEnum.RES, GroupEnum.TEST})
 	public void onQueryArchivedResFile(GroupMessageEvent event) {
 		long senderId = event.getSender().getId();
 		

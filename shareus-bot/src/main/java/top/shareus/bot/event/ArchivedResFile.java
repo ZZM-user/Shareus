@@ -20,10 +20,8 @@ import org.springframework.stereotype.Component;
 import top.shareus.bot.annotation.GroupAuth;
 import top.shareus.bot.mapper.ArchivedFileMapper;
 import top.shareus.bot.util.AlistUtils;
-import top.shareus.bot.util.GroupUtils;
 import top.shareus.bot.util.MessageChainUtils;
 import top.shareus.bot.util.QueryLogUtils;
-import top.shareus.common.core.constant.GroupsConstant;
 import top.shareus.common.core.eumn.GroupEnum;
 import top.shareus.domain.entity.ArchivedFile;
 
@@ -50,14 +48,8 @@ public class ArchivedResFile extends SimpleListenerHost {
 	ArchivedFileMapper archivedFileMapper;
 	
 	@EventHandler
-	@GroupAuth(groupList = {GroupEnum.RES_GROUP, GroupEnum.TEST_GROUP})
+	@GroupAuth(allowGroupList = {GroupEnum.RES, GroupEnum.TEST})
 	public void onArchivedResFileEvent(GroupMessageEvent event) {
-		long id = event.getGroup().getId();
-		// 只监管 资源群
-		if (GroupUtils.notHasAnyGroups(id, GroupsConstant.RES_GROUPS, GroupsConstant.TEST_GROUPS)) {
-			return;
-		}
-		
 		// 监听 【所有】 文件
 		MessageChain message = event.getMessage();
 		// 获取文件

@@ -32,7 +32,7 @@ public class RecallQueryArchivedEvent extends SimpleListenerHost {
 	private QueryLogMapper queryLogMapper;
 	
 	@EventHandler
-	@GroupAuth(groupList = {GroupEnum.TEST_GROUP})
+	@GroupAuth(allowGroupList = {GroupEnum.TEST})
 	public void onRecallQueryArchivedEvent(MessageRecallEvent.GroupRecall event) {
 		Member operator = event.getOperator();
 		NormalMember author = event.getAuthor();

@@ -1,6 +1,5 @@
 package top.shareus.bot.event;
 
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
@@ -16,11 +15,11 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.message.data.PlainText;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import top.shareus.bot.util.GroupUtils;
+import top.shareus.bot.annotation.GroupAuth;
 import top.shareus.bot.util.MessageChainUtils;
+import top.shareus.common.core.eumn.GroupEnum;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,19 +31,10 @@ import java.util.Map;
 @Slf4j
 @Component
 public class AtMeTalkEvent extends SimpleListenerHost {
-	private final static List<Long> ALLOW_GROUP = ListUtil.of(
-			826992221L, 473592372L, 882427723L,
-			591573701L
-			, 714487798L
-			, 891087945L
-															 );
 	
 	@EventHandler
+	@GroupAuth(allowGroupList = {GroupEnum.GPT})
 	public void onAtMeTalkEvent(GroupMessageEvent event) {
-		long id = event.getGroup().getId();
-		if (! GroupUtils.hasGroups(ALLOW_GROUP, id)) {
-			return;
-		}
 		
 		At at = MessageChainUtils.fetchAt(event.getMessage());
 		if (ObjectUtil.isNull(at)) {

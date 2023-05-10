@@ -14,11 +14,12 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.data.MessageChain;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import top.shareus.bot.config.BotManager;
+import top.shareus.bot.config.GroupsConfig;
 import top.shareus.bot.util.ExcelUtils;
 import top.shareus.bot.util.GroupUploadFileUtils;
 import top.shareus.bot.util.GroupUtils;
-import top.shareus.common.core.constant.GroupsConstant;
 import top.shareus.domain.vo.NormalMemberVO;
 
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ import java.util.List;
 @Slf4j
 public class ClearGroupMemberCommand extends JRawCommand {
 	public final static ClearGroupMemberCommand INSTANCE = new ClearGroupMemberCommand();
+	
+	@Autowired
+	private GroupsConfig groupsConfig;
 	
 	public ClearGroupMemberCommand() {
 		// 使用插件主类对象作为指令拥有者；设置主指令名为 "test"
@@ -57,7 +61,7 @@ public class ClearGroupMemberCommand extends JRawCommand {
 		
 		Bot bot = BotManager.getBot();
 		Group group = bot.getGroup(Long.parseLong(args.get(0).toString()));
-		Group adminGroup = bot.getGroup(GroupsConstant.ADMIN_GROUPS.get(0));
+		Group adminGroup = bot.getGroup(groupsConfig.getAdmin().get(0));
 		
 		if (ObjectUtil.isNull(group) || GroupUtils.isAdmin(group.getId())) {
 			String message = "该群组成员获取失败!\n group：" + args.get(0);
@@ -101,6 +105,6 @@ public class ClearGroupMemberCommand extends JRawCommand {
 			
 		}
 		String path = ExcelUtils.exportMemberDataExcel(invalidMembers, group.getName() + " - 失效群员名单");
-		GroupUploadFileUtils.uploadFile(bot.getGroup(GroupsConstant.ADMIN_GROUPS.get(0)), path);
+		GroupUploadFileUtils.uploadFile(bot.getGroup(groupsConfig.getAdmin().get(0)), path);
 	}
 }

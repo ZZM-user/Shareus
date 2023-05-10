@@ -9,8 +9,8 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.config.BotManager;
+import top.shareus.bot.config.GroupsConfig;
 import top.shareus.bot.mapper.ArchivedFileMapper;
-import top.shareus.common.core.constant.GroupsConstant;
 import top.shareus.domain.ShareFileStar;
 
 import java.text.NumberFormat;
@@ -25,36 +25,38 @@ import java.util.List;
 @Slf4j
 @Component
 public class Week {
-
-    @Autowired
-    private ArchivedFileMapper archivedFileMapper;
-
-    public void execute() {
-        // 每周发送统计信息
-        Integer hasArchived = archivedFileMapper.countByDaysOfBefore(7);
-        List<ShareFileStar> stars = archivedFileMapper.computedFileStar(7);
-
-        Assert.notNull(hasArchived, "获取本周归档信息失败!");
-        Assert.notNull(stars, "获取本周分享之星失败!");
-
-        ShareFileStar star = stars.get(0);
-        MessageChainBuilder builder = new MessageChainBuilder();
-        builder.append("本周总结：");
-        builder.add("\n本周资源群归档文件数量：" + hasArchived);
-        builder.add("\n本周分享之星：");
-        builder.add(new At(star.getSenderId()));
-        builder.add("\nTA本周为我们分享了 " + star.getTimes() + " 次文件");
-        // 创建一个数值格式化对象
-        NumberFormat numberFormat = NumberFormat.getInstance();
-        // 设置精确到小数点后2位
-        numberFormat.setMaximumFractionDigits(2);
-        builder.add("\n占本周的 " + numberFormat.format((float) star.getTimes() / (float) hasArchived * 100) + "%");
-
-        Bot bot = BotManager.getBot();
-        Group group = bot.getGroupOrFail(GroupsConstant.TEST_GROUPS.get(0));
-        log.info(builder.build().toString());
-        group.sendMessage(builder.build());
-
-        bot.getGroup(GroupsConstant.ADMIN_GROUPS.get(0)).sendMessage(builder.build());
-    }
+	
+	@Autowired
+	private ArchivedFileMapper archivedFileMapper;
+	@Autowired
+	private GroupsConfig groupsConfig;
+	
+	public void execute() {
+		// 每周发送统计信息
+		Integer hasArchived = archivedFileMapper.countByDaysOfBefore(7);
+		List<ShareFileStar> stars = archivedFileMapper.computedFileStar(7);
+		
+		Assert.notNull(hasArchived, "获取本周归档信息失败!");
+		Assert.notNull(stars, "获取本周分享之星失败!");
+		
+		ShareFileStar star = stars.get(0);
+		MessageChainBuilder builder = new MessageChainBuilder();
+		builder.append("本周总结：");
+		builder.add("\n本周资源群归档文件数量：" + hasArchived);
+		builder.add("\n本周分享之星：");
+		builder.add(new At(star.getSenderId()));
+		builder.add("\nTA本周为我们分享了 " + star.getTimes() + " 次文件");
+		// 创建一个数值格式化对象
+		NumberFormat numberFormat = NumberFormat.getInstance();
+		// 设置精确到小数点后2位
+		numberFormat.setMaximumFractionDigits(2);
+		builder.add("\n占本周的 " + numberFormat.format((float) star.getTimes() / (float) hasArchived * 100) + "%");
+		
+		Bot bot = BotManager.getBot();
+		Group group = bot.getGroupOrFail(groupsConfig.getTest().get(0));
+		log.info(builder.build().toString());
+		group.sendMessage(builder.build());
+		
+		bot.getGroup(groupsConfig.getAdmin().get(0)).sendMessage(builder.build());
+	}
 }

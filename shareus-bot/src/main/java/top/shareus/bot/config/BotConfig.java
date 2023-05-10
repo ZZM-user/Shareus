@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.mamoe.mirai.Bot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -26,7 +25,7 @@ public class BotConfig {
 	@Autowired
 	private RegisterEvents registerEvents;
 	
-	@Bean
+	//	@Bean
 	public Bot getBot() {
 		Bot bot = BotManager.createBot(this);
 		// 注册事件

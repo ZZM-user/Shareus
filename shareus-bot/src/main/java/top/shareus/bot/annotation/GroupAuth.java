@@ -14,7 +14,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE, ElementType.METHOD})
 public @interface GroupAuth {
-	long groupId() default 0L;
+	GroupEnum[] allowGroupList() default {};
 	
-	GroupEnum[] groupList() default {};
 }

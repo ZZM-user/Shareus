@@ -7,10 +7,11 @@ import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.MessageSource;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.annotation.GroupAuth;
-import top.shareus.common.core.constant.BanResWordConstant;
-import top.shareus.common.core.constant.GroupsConstant;
+import top.shareus.bot.config.BanResWordConstant;
+import top.shareus.bot.config.GroupsConfig;
 import top.shareus.common.core.eumn.GroupEnum;
 
 /**
@@ -23,8 +24,11 @@ import top.shareus.common.core.eumn.GroupEnum;
 @Component
 public class ResChatEvent extends SimpleListenerHost {
 	
+	@Autowired
+	private GroupsConfig groupsConfig;
+	
 	@EventHandler
-	@GroupAuth(groupList = {GroupEnum.RES_GROUP})
+	@GroupAuth(allowGroupList = {GroupEnum.RES})
 	public void onAdminGroupMessageEvent(GroupMessageEvent event) {
 		long id = event.getGroup().getId();
 		
@@ -36,7 +40,7 @@ public class ResChatEvent extends SimpleListenerHost {
 			String message = "尝试撤回消息 " + event.getSender().getNick() + "：" + event.getMessage().contentToString();
 			log.info(message);
 			// 通知群
-			event.getBot().getGroup(GroupsConstant.ADMIN_GROUPS.get(0)).sendMessage(message);
+			event.getBot().getGroup(groupsConfig.getAdmin().get(0)).sendMessage(message);
 		}
 	}
 	

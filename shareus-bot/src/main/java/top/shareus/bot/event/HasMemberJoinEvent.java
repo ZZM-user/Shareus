@@ -25,7 +25,7 @@ import top.shareus.common.core.eumn.GroupEnum;
 @Component
 public class HasMemberJoinEvent extends SimpleListenerHost {
 	@EventHandler
-	@GroupAuth(groupList = {GroupEnum.ADMIN_GROUP, GroupEnum.CHAT_GROUP})
+	@GroupAuth(allowGroupList = {GroupEnum.ADMIN, GroupEnum.CHAT})
 	public void onHasMemberJoinEvent(MemberJoinEvent event) {
 		NormalMember member = event.getMember();
 		MessageChainBuilder builder = new MessageChainBuilder();

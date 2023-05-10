@@ -9,6 +9,7 @@ import net.mamoe.mirai.event.events.MemberJoinRequestEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.annotation.GroupAuth;
+import top.shareus.bot.config.GroupsConfig;
 import top.shareus.bot.mapper.mapper.BlackListMapper;
 import top.shareus.common.core.eumn.GroupEnum;
 import top.shareus.common.core.exception.mirai.bot.BotException;
@@ -25,9 +26,11 @@ public class MemberJoinRequest extends SimpleListenerHost {
 	
 	@Autowired
 	private BlackListMapper blacklistMapper;
+	@Autowired
+	private GroupsConfig groupsConfig;
 	
 	@EventHandler
-	@GroupAuth(groupList = {GroupEnum.RES_GROUP, GroupEnum.CHAT_GROUP, GroupEnum.TEST_GROUP})
+	@GroupAuth(allowGroupList = {GroupEnum.RES, GroupEnum.CHAT, GroupEnum.TEST})
 	public void onMemberJoinRequest(MemberJoinRequestEvent event) {
 		log.debug(event.getMessage());
 		
@@ -46,7 +49,7 @@ public class MemberJoinRequest extends SimpleListenerHost {
 																.last(" limit 1"));
 		if (ObjUtil.isNotNull(blacklist)) {
 			event.reject(true, "机器人认定黑名单用户，如有疑问请联系管理员！");
-			net.mamoe.mirai.contact.Group group = event.getBot().getGroup(GroupEnum.ADMIN_GROUP.getGroupList().get(0));
+			net.mamoe.mirai.contact.Group group = event.getBot().getGroup(groupsConfig.getAdmin().get(0));
 			String message = " 黑名单用户被拒绝：" + event.getFromId() + " " + event.getFromNick() + "\n来自：" + event.getFromNick();
 			group.sendMessage(message);
 			log.debug(message);

@@ -13,9 +13,10 @@ import net.mamoe.mirai.message.data.FlashImage;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import top.shareus.bot.config.GroupsConfig;
 import top.shareus.bot.util.MessageChainUtils;
-import top.shareus.common.core.constant.GroupsConstant;
 
 /**
  * 转发好友的闪照信息
@@ -26,6 +27,8 @@ import top.shareus.common.core.constant.GroupsConstant;
 @Slf4j
 @Component
 public class ForwardFriendFlashImageMessage extends SimpleListenerHost {
+	@Autowired
+	private GroupsConfig groupsConfig;
 	
 	@EventHandler
 	public void onFriendFlashImageMessageEvent(FriendMessageEvent event) {
@@ -37,7 +40,7 @@ public class ForwardFriendFlashImageMessage extends SimpleListenerHost {
 		if (ObjectUtil.isNotNull(flashImage)) {
 			// 获取测试组
 			Bot bot = event.getBot();
-			Group group = bot.getGroup(GroupsConstant.TEST_GROUPS.get(0));
+			Group group = bot.getGroup(groupsConfig.getTest().get(0));
 			
 			MessageChainBuilder builder = new MessageChainBuilder();
 			builder.add("【截取的闪照】");

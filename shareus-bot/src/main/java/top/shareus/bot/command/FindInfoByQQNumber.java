@@ -10,7 +10,9 @@ import net.mamoe.mirai.console.command.java.JRawCommand;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.data.MessageChain;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import top.shareus.bot.config.BotManager;
+import top.shareus.bot.config.GroupsConfig;
 import top.shareus.bot.util.GroupUtils;
 import top.shareus.bot.util.NormalMemberUtils;
 import top.shareus.domain.vo.NormalMemberVO;
@@ -27,8 +29,12 @@ import java.util.stream.Collectors;
  * @date 2022/10/29 17:03
  **/
 @Slf4j
+//@Component
 public final class FindInfoByQQNumber extends JRawCommand {
 	public static final FindInfoByQQNumber INSTANCE = new FindInfoByQQNumber();
+	
+	@Autowired
+	private GroupsConfig groupsConfig;
 	
 	public FindInfoByQQNumber() {
 		// 使用插件主类对象作为指令拥有者；设置主指令名为 "test"

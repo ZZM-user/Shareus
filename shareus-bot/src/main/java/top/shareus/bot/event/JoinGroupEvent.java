@@ -8,9 +8,10 @@ import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.BotJoinGroupEvent;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.config.BotManager;
-import top.shareus.common.core.constant.GroupsConstant;
+import top.shareus.bot.config.GroupsConfig;
 
 /**
  * 被邀请进群
@@ -21,6 +22,9 @@ import top.shareus.common.core.constant.GroupsConstant;
 @Slf4j
 @Component
 public class JoinGroupEvent extends SimpleListenerHost {
+	@Autowired
+	private GroupsConfig groupsConfig;
+	
 	@EventHandler
 	public void onJoinGroupEvent(BotJoinGroupEvent event) {
 		Group group = event.getGroup();
@@ -31,7 +35,6 @@ public class JoinGroupEvent extends SimpleListenerHost {
 				.append(group.getName())
 				.append(" - ")
 				.append(String.valueOf(group.getId()));
-		bot.getGroup(GroupsConstant.TEST_GROUPS.get(0))
-				.sendMessage(messages.build());
+		bot.getGroup(groupsConfig.getTest().get(0)).sendMessage(messages.build());
 	}
 }
