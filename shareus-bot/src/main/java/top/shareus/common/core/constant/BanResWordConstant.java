@@ -1,4 +1,4 @@
-package top.shareus.bot.config;
+package top.shareus.common.core.constant;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;

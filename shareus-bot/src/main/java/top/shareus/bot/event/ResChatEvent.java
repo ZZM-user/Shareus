@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.annotation.GroupAuth;
-import top.shareus.bot.config.BanResWordConstant;
 import top.shareus.bot.config.GroupsConfig;
+import top.shareus.common.core.constant.BanResWordConstant;
 import top.shareus.common.core.eumn.GroupEnum;
 
 /**
