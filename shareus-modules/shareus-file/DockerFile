@@ -1,0 +1,7 @@
+FROM openjdk:17
+COPY ./target/*.jar /shareus-file.jar
+ENV TZ Asia/Shanghai
+ENV LANG C.UTF-8
+CMD ["-server.port=9300"]
+EXPOSE 9300
+ENTRYPOINT ["java","-jar","-Xms256m", "-Xmx256m","/shareus-file.jar"]
