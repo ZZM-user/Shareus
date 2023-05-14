@@ -87,10 +87,9 @@
 
     <el-table v-loading="loading" :data="memberList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
-      <el-table-column align="center" label="id" prop="id"/>
+      <el-table-column align="center" label="头像" prop="avatarUrl"/>
       <el-table-column align="center" label="QQ号码" prop="qq"/>
       <el-table-column align="center" label="昵称" prop="nickName"/>
-      <el-table-column align="center" label="头像" prop="avatrarUrl"/>
       <el-table-column align="center" label="特殊头衔" prop="specialTitle"/>
       <el-table-column align="center" label="备注" prop="remark"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">

@@ -110,13 +110,15 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="archived_fileList" :highlight-current-row="true" :max-height="1000"
+    <el-table v-loading="loading" :data="archived_fileList" :default-sort="{ prop: 'archiveDate', order: 'descending' }"
+              :highlight-current-row="true"
               :stripe="true"
+              :max-height="900"
               @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
-      <el-table-column :show-tooltip-when-overflow="true" align="center" label="id" prop="id"/>
-      <el-table-column :show-tooltip-when-overflow="true" align="center" label="文件名" prop="name" width="350"/>
-      <el-table-column align="center" label="发件人" prop="senderId" width="120"/>
+      <!--      <el-table-column :show-tooltip-when-overflow="true" align="center" label="id" prop="id"/>-->
+      <el-table-column :show-tooltip-when-overflow="true" align="center" label="文件名" prop="name"/>
+      <el-table-column align="center" label="发件人" prop="senderId"/>
       <el-table-column align="center" label="大小" prop="size"/>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="MD5" prop="md5"/>
       <el-table-column align="center" label="是否展示" prop="enabled">
@@ -134,7 +136,7 @@
       </el-table-column>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="源路径" prop="originUrl"/>
       <!--      <el-table-column :show-tooltip-when-overflow="true" align="center" label="存档路径" prop="archiveUrl"/>-->
-      <el-table-column align="center" label="归档日期" prop="archiveDate" width="160"/>
+      <el-table-column align="center" label="归档日期" prop="archiveDate" sortable/>
       <el-table-column align="center" class-name="small-padding fixed-width" fixed="right" label="操作">
         <template #default="scope">
           <el-button

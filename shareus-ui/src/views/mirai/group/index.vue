@@ -79,11 +79,10 @@
 
     <el-table v-loading="loading" :data="groupList" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
-      <el-table-column align="center" label="id" prop="id"/>
+      <el-table-column align="center" label="头像" prop="avatarUrl"/>
       <el-table-column align="center" label="群号" prop="groupId"/>
       <el-table-column align="center" label="群名" prop="groupName"/>
-      <el-table-column align="center" label="头像" prop="avatarUrl"/>
-      <el-table-column align="center" label="群组类型(0管理群；1聊天群；2资源群；3审核群；5活动群)" prop="type"/>
+      <el-table-column align="center" label="群组类型" prop="type"/>
       <el-table-column align="center" label="备注" prop="remark"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template #default="scope">

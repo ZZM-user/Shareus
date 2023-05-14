@@ -109,15 +109,15 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="qiuwen_logList" :highlight-current-row="true" :max-height="1000" :stripe="true"
+    <el-table v-loading="loading" :data="qiuwen_logList" :highlight-current-row="true" :max-height="900" :stripe="true"
               @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="55"/>
-      <el-table-column :show-tooltip-when-overflow="true" align="center" label="id" prop="id"/>
-      <el-table-column align="center" label="发送人昵称" prop="senderName" width="120px"/>
-      <el-table-column align="center" label="发送人QQ" prop="senderId" width="120px"/>
-      <el-table-column :show-tooltip-when-overflow="true" align="center" label="发送内容" prop="content" width="120px"/>
+      <!--      <el-table-column :show-tooltip-when-overflow="true" align="center" label="id" prop="id"/>-->
+      <el-table-column align="center" label="发送人昵称" prop="senderName"/>
+      <el-table-column align="center" label="发送人QQ" prop="senderId"/>
+      <el-table-column :show-tooltip-when-overflow="true" align="center" label="发送内容" prop="content"/>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="抽取内容" prop="extract"
-                       width="180"/>
+                       width="160"/>
       <el-table-column align="center" label="求文状态" prop="status">
         <template #default="scope">
           <dict-tag :options="mirai_qiuwen_log_status" :value="scope.row.status"
@@ -125,8 +125,8 @@
                     @click="handleChangeQiuwenStatus(scope.row)"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="求文时间" prop="sendTime" width="160"/>
-      <el-table-column align="center" label="反馈者" prop="answerId" width="120px">
+      <el-table-column align="center" label="求文时间" prop="sendTime" sortable/>
+      <el-table-column align="center" label="反馈者" prop="answerId">
         <template #default="scope">
           <div>
             <span v-if="scope.row.answerId===0">机器人</span>
@@ -135,7 +135,7 @@
         </template>
       </el-table-column>
       <el-table-column :show-tooltip-when-overflow="true" align="center" label="反馈结果" prop="result"/>
-      <el-table-column align="center" label="反馈时间" prop="finishTime" width="160"/>
+      <el-table-column align="center" label="反馈时间" prop="finishTime" sortable/>
       <el-table-column align="center" class-name="small-padding fixed-width" fixed="right" label="操作">
         <template #default="scope">
           <el-button v-hasPermi="['mirai:qiuwen_log:edit']" icon="Edit" link type="primary"
