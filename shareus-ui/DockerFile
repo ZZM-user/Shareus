@@ -1,0 +1,11 @@
+FROM node:18.16.0
+ENV NODE_ENV=production
+ENV HOST 0.0.0.0
+RUN mkdir -p /opt/shareus
+COPY . /shareus
+WORKDIR /shareus
+EXPOSE 8080
+RUN npm config set registry https://registry.npm.taobao.org # 配置淘宝镜像
+RUN npm install	# 升级相关依赖包
+RUN npm run build	# 创建镜像
+CMD ["npm", "start"]
