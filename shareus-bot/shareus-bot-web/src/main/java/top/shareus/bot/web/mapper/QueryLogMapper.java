@@ -11,7 +11,7 @@ import java.util.List;
  * @author zhaojl
  * @date 2023-01-09
  */
-public interface QQueryLogMapper extends BaseMapper<QueryLog> {
+public interface QueryLogMapper extends BaseMapper<QueryLog> {
 	/**
 	 * 查询求文日志
 	 *

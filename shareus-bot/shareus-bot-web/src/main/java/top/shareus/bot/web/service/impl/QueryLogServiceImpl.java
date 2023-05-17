@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.shareus.bot.common.domain.QueryLog;
 import top.shareus.bot.common.pojo.vo.BatchChangeStatusVO;
-import top.shareus.bot.web.mapper.QQueryLogMapper;
+import top.shareus.bot.web.mapper.QueryLogMapper;
 import top.shareus.bot.web.service.QueryLogService;
 
 import java.util.List;
@@ -17,9 +17,9 @@ import java.util.List;
  * @date 2023-01-09
  */
 @Service("WebQueryLogService")
-public class QueryLogServiceImpl extends ServiceImpl<QQueryLogMapper, QueryLog> implements QueryLogService {
+public class QueryLogServiceImpl extends ServiceImpl<QueryLogMapper, QueryLog> implements QueryLogService {
 	@Autowired
-	private QQueryLogMapper queryLogMapper;
+	private QueryLogMapper queryLogMapper;
 	
 	/**
 	 * 查询求文日志
