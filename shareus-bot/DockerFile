@@ -1,7 +1,0 @@
-FROM openjdk:17
-COPY ./target/*.jar /shareus-robot.jar
-ENV TZ Asia/Shanghai
-ENV LANG C.UTF-8
-CMD ["-server.port=9999"]
-EXPOSE 9999
-ENTRYPOINT ["java","-jar","-Xms256m", "-Xmx256m","/shareus-robot.jar"]

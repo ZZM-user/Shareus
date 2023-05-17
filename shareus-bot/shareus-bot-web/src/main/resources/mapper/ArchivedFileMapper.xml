@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.shareus.bot.web.mapper.ArchivedFileMapper">
+
+    <resultMap type="top.shareus.bot.common.domain.ArchivedFile" id="ArchivedFileResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="senderId" column="sender_id"/>
+        <result property="size" column="size"/>
+        <result property="md5" column="md5"/>
+        <result property="enabled" column="enabled"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="originUrl" column="origin_url"/>
+        <result property="archiveUrl" column="archive_url"/>
+        <result property="archiveDate" column="archive_date"/>
+    </resultMap>
+
+    <sql id="selectArchivedFileVo">
+        select id,
+               name,
+               sender_id, size, md5, enabled, del_flag, origin_url, archive_url, archive_date
+        from archived_file
+    </sql>
+
+    <select id="selectArchivedFileList" parameterType="top.shareus.bot.common.domain.ArchivedFile"
+            resultMap="ArchivedFileResult">
+        <include refid="selectArchivedFileVo"/>
+        <where>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="senderId != null ">
+                and sender_id = #{senderId}
+            </if>
+            <if test="size != null ">
+                and size = #{size}
+            </if>
+            <if test="md5 != null  and md5 != ''">
+                and md5 = #{md5}
+            </if>
+            <if test="enabled != null ">
+                and enabled = #{enabled}
+            </if>
+            <if test="originUrl != null  and originUrl != ''">
+                and origin_url = #{originUrl}
+            </if>
+            <if test="archiveUrl != null  and archiveUrl != ''">
+                and archive_url = #{archiveUrl}
+            </if>
+            <if test="archiveDate != null ">
+                and archive_date = #{archiveDate}
+            </if>
+        </where>
+        order by archive_date desc
+    </select>
+
+    <select id="selectArchivedFileById" parameterType="String"
+            resultMap="ArchivedFileResult">
+        <include refid="selectArchivedFileVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertArchivedFile" parameterType="top.shareus.bot.common.domain.ArchivedFile">
+        insert into archived_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,
+            </if>
+            <if test="name != null and name != ''">name,
+            </if>
+            <if test="senderId != null">sender_id,
+            </if>
+            <if test="size != null">size,
+            </if>
+            <if test="md5 != null">md5,
+            </if>
+            <if test="enabled != null">enabled,
+            </if>
+            <if test="delFlag != null">del_flag,
+            </if>
+            <if test="originUrl != null">origin_url,
+            </if>
+            <if test="archiveUrl != null">archive_url,
+            </if>
+            <if test="archiveDate != null">archive_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},
+            </if>
+            <if test="name != null and name != ''">#{name},
+            </if>
+            <if test="senderId != null">#{senderId},
+            </if>
+            <if test="size != null">#{size},
+            </if>
+            <if test="md5 != null">#{md5},
+            </if>
+            <if test="enabled != null">#{enabled},
+            </if>
+            <if test="delFlag != null">#{delFlag},
+            </if>
+            <if test="originUrl != null">#{originUrl},
+            </if>
+            <if test="archiveUrl != null">#{archiveUrl},
+            </if>
+            <if test="archiveDate != null">#{archiveDate},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateArchivedFile" parameterType="top.shareus.bot.common.domain.ArchivedFile">
+        update archived_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name =
+                #{name},
+            </if>
+            <if test="senderId != null">sender_id =
+                #{senderId},
+            </if>
+            <if test="size != null">size =
+                #{size},
+            </if>
+            <if test="md5 != null">md5 =
+                #{md5},
+            </if>
+            <if test="enabled != null">enabled =
+                #{enabled},
+            </if>
+            <if test="delFlag != null">del_flag =
+                #{delFlag},
+            </if>
+            <if test="originUrl != null">origin_url =
+                #{originUrl},
+            </if>
+            <if test="archiveUrl != null">archive_url =
+                #{archiveUrl},
+            </if>
+            <if test="archiveDate != null">archive_date =
+                #{archiveDate},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteArchivedFileById" parameterType="String">
+        update
+            archived_file
+        set del_flag=1
+        where id = #{id}
+    </update>
+
+    <delete id="deleteArchivedFileByIds" parameterType="String">
+        delete from archived_file where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

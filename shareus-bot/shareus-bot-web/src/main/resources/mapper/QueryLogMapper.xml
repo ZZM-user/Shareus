@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.shareus.bot.web.mapper.QueryLogMapper">
+
+    <resultMap type="top.shareus.bot.common.domain.QueryLog" id="QueryLogResult">
+        <result property="id" column="id"/>
+        <result property="senderName" column="sender_name"/>
+        <result property="senderId" column="sender_id"/>
+        <result property="content" column="content"/>
+        <result property="extract" column="extract"/>
+        <result property="status" column="status"/>
+        <result property="answerId" column="answer_id"/>
+        <result property="result" column="result"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="finishTime" column="finish_time"/>
+    </resultMap>
+
+    <sql id="selectQueryLogVo">
+        select id,
+               sender_name,
+               sender_id,
+               content,
+               extract,
+               status,
+               answer_id,
+               result,
+               send_time,
+               finish_time
+        from query_log
+    </sql>
+
+    <select id="selectQueryLogList" parameterType="top.shareus.bot.common.domain.QueryLog"
+            resultMap="QueryLogResult">
+        <include refid="selectQueryLogVo"/>
+        <where>
+            <if test="senderName != null  and senderName != ''">
+                and sender_name like concat('%', #{senderName}, '%')
+            </if>
+            <if test="senderId != null ">
+                and sender_id = #{senderId}
+            </if>
+            <if test="content != null  and content != ''">
+                and content = #{content}
+            </if>
+            <if test="extract != null  and extract != ''">
+                and extract like concat('%', #{extract}, '%')
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
+            <if test="answerId != null ">
+                and answer_id = #{answerId}
+            </if>
+            <if test="result != null  and result != ''">
+                and result = #{result}
+            </if>
+            <if test="sendTime != null ">
+                and send_time = #{sendTime}
+            </if>
+            <if test="finishTime != null ">
+                and finish_time = #{finishTime}
+            </if>
+        </where>
+        order by send_time desc, finish_time desc
+    </select>
+
+    <select id="selectQueryLogById" parameterType="Long"
+            resultMap="QueryLogResult">
+        <include refid="selectQueryLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertQueryLog" parameterType="top.shareus.bot.common.domain.QueryLog" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into query_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="senderName != null">sender_name,
+            </if>
+            <if test="senderId != null">sender_id,
+            </if>
+            <if test="content != null">content,
+            </if>
+            <if test="extract != null">extract,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="answerId != null">answer_id,
+            </if>
+            <if test="result != null">result,
+            </if>
+            <if test="sendTime != null">send_time,
+            </if>
+            <if test="finishTime != null">finish_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="senderName != null">#{senderName},
+            </if>
+            <if test="senderId != null">#{senderId},
+            </if>
+            <if test="content != null">#{content},
+            </if>
+            <if test="extract != null">#{extract},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="answerId != null">#{answerId},
+            </if>
+            <if test="result != null">#{result},
+            </if>
+            <if test="sendTime != null">#{sendTime},
+            </if>
+            <if test="finishTime != null">#{finishTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateQueryLog" parameterType="top.shareus.bot.common.domain.QueryLog">
+        update query_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="senderName != null">sender_name =
+                #{senderName},
+            </if>
+            <if test="senderId != null">sender_id =
+                #{senderId},
+            </if>
+            <if test="content != null">content =
+                #{content},
+            </if>
+            <if test="extract != null">extract =
+                #{extract},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="answerId != null">answer_id =
+                #{answerId},
+            </if>
+            <if test="result != null">result =
+                #{result},
+            </if>
+            <if test="sendTime != null">send_time =
+                #{sendTime},
+            </if>
+            <if test="finishTime != null">finish_time =
+                #{finishTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQueryLogById" parameterType="Long">
+        delete
+        from query_log
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteQueryLogByIds" parameterType="String">
+        delete from query_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

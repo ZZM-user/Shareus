@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.shareus.bot.robot.mapper.BlackListMapper">
+
+    <resultMap id="BaseResultMap" type="top.shareus.bot.common.domain.BlackList">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <id property="qqId" column="qq_id" jdbcType="VARCHAR"/>
+        <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="delFlag" column="del_flag" jdbcType="TINYINT"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createById" column="create_by_id" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,qq_id,nick_name,
+        remark,del_flag,create_by,
+        create_by_id,create_time
+    </sql>
+</mapper>
