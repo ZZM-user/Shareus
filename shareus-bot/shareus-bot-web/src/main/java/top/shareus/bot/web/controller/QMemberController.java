@@ -30,7 +30,7 @@ public class QMemberController extends BaseController {
 	/**
 	 * 查询QQ成员列表
 	 */
-	@RequiresPermissions("system:member:list")
+	@RequiresPermissions("mirai:member:list")
 	@GetMapping("/list")
 	public TableDataInfo list(QMember qMember) {
 		startPage();
@@ -41,7 +41,7 @@ public class QMemberController extends BaseController {
 	/**
 	 * 导出QQ成员列表
 	 */
-	@RequiresPermissions("system:member:export")
+	@RequiresPermissions("mirai:member:export")
 	@Log(title = "QQ成员", businessType = BusinessType.EXPORT)
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, QMember qMember) {
@@ -53,7 +53,7 @@ public class QMemberController extends BaseController {
 	/**
 	 * 获取QQ成员详细信息
 	 */
-	@RequiresPermissions("system:member:query")
+	@RequiresPermissions("mirai:member:query")
 	@GetMapping(value = "/{id}")
 	public AjaxResult getInfo(@PathVariable("id") Long id) {
 		return success(qMemberService.selectQMemberById(id));
@@ -62,7 +62,7 @@ public class QMemberController extends BaseController {
 	/**
 	 * 新增QQ成员
 	 */
-	@RequiresPermissions("system:member:add")
+	@RequiresPermissions("mirai:member:add")
 	@Log(title = "QQ成员", businessType = BusinessType.INSERT)
 	@PostMapping
 	public AjaxResult add(@RequestBody QMember qMember) {
@@ -72,7 +72,7 @@ public class QMemberController extends BaseController {
 	/**
 	 * 修改QQ成员
 	 */
-	@RequiresPermissions("system:member:edit")
+	@RequiresPermissions("mirai:member:edit")
 	@Log(title = "QQ成员", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public AjaxResult edit(@RequestBody QMember qMember) {
@@ -82,7 +82,7 @@ public class QMemberController extends BaseController {
 	/**
 	 * 删除QQ成员
 	 */
-	@RequiresPermissions("system:member:remove")
+	@RequiresPermissions("mirai:member:remove")
 	@Log(title = "QQ成员", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
 	public AjaxResult remove(@PathVariable Long[] ids) {

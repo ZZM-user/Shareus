@@ -34,7 +34,7 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-            v-hasPermi="['system:group:add']"
+            v-hasPermi="['mirai:group:add']"
             icon="Plus"
             plain
             type="primary"
@@ -44,7 +44,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-            v-hasPermi="['system:group:edit']"
+            v-hasPermi="['mirai:group:edit']"
             :disabled="single"
             icon="Edit"
             plain
@@ -55,7 +55,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-            v-hasPermi="['system:group:remove']"
+            v-hasPermi="['mirai:group:remove']"
             :disabled="multiple"
             icon="Delete"
             plain
@@ -66,7 +66,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-            v-hasPermi="['system:group:export']"
+            v-hasPermi="['mirai:group:export']"
             icon="Download"
             plain
             type="warning"
@@ -86,10 +86,10 @@
       <el-table-column align="center" label="备注" prop="remark"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template #default="scope">
-          <el-button v-hasPermi="['system:group:edit']" icon="Edit" link type="primary"
+          <el-button v-hasPermi="['mirai:group:edit']" icon="Edit" link type="primary"
                      @click="handleUpdate(scope.row)">修改
           </el-button>
-          <el-button v-hasPermi="['system:group:remove']" icon="Delete" link type="primary"
+          <el-button v-hasPermi="['mirai:group:remove']" icon="Delete" link type="primary"
                      @click="handleDelete(scope.row)">删除
           </el-button>
         </template>

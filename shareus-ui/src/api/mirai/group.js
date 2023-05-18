@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询QQ群组列表
 export function listGroup(query) {
     return request({
-        url: '/bot/group/list',
+        url: '/bot-web/group/list',
         method: 'get',
         params: query
     })
@@ -12,7 +12,7 @@ export function listGroup(query) {
 // 查询QQ群组详细
 export function getGroup(id) {
     return request({
-        url: '/bot/group/' + id,
+        url: '/bot-web/group/' + id,
         method: 'get'
     })
 }
@@ -20,7 +20,7 @@ export function getGroup(id) {
 // 新增QQ群组
 export function addGroup(data) {
     return request({
-        url: '/bot/group',
+        url: '/bot-web/group',
         method: 'post',
         data: data
     })
@@ -29,7 +29,7 @@ export function addGroup(data) {
 // 修改QQ群组
 export function updateGroup(data) {
     return request({
-        url: '/bot/group',
+        url: '/bot-web/group',
         method: 'put',
         data: data
     })
@@ -38,7 +38,7 @@ export function updateGroup(data) {
 // 删除QQ群组
 export function delGroup(id) {
     return request({
-        url: '/bot/group/' + id,
+        url: '/bot-web/group/' + id,
         method: 'delete'
     })
 }

@@ -30,7 +30,7 @@ public class QMemberGroupController extends BaseController {
 	/**
 	 * 查询QQ成员和群的关系列表
 	 */
-	@RequiresPermissions("system:group:list")
+	@RequiresPermissions("mirai:group:list")
 	@GetMapping("/list")
 	public TableDataInfo list(QMemberGroup qMemberGroup) {
 		startPage();
@@ -41,7 +41,7 @@ public class QMemberGroupController extends BaseController {
 	/**
 	 * 导出QQ成员和群的关系列表
 	 */
-	@RequiresPermissions("system:group:export")
+	@RequiresPermissions("mirai:group:export")
 	@Log(title = "QQ成员和群的关系", businessType = BusinessType.EXPORT)
 	@PostMapping("/export")
 	public void export(HttpServletResponse response, QMemberGroup qMemberGroup) {
@@ -53,7 +53,7 @@ public class QMemberGroupController extends BaseController {
 	/**
 	 * 获取QQ成员和群的关系详细信息
 	 */
-	@RequiresPermissions("system:group:query")
+	@RequiresPermissions("mirai:group:query")
 	@GetMapping(value = "/{id}")
 	public AjaxResult getInfo(@PathVariable("id") Long id) {
 		return success(qMemberGroupService.selectQMemberGroupById(id));
@@ -62,7 +62,7 @@ public class QMemberGroupController extends BaseController {
 	/**
 	 * 新增QQ成员和群的关系
 	 */
-	@RequiresPermissions("system:group:add")
+	@RequiresPermissions("mirai:group:add")
 	@Log(title = "QQ成员和群的关系", businessType = BusinessType.INSERT)
 	@PostMapping
 	public AjaxResult add(@RequestBody QMemberGroup qMemberGroup) {
@@ -72,7 +72,7 @@ public class QMemberGroupController extends BaseController {
 	/**
 	 * 修改QQ成员和群的关系
 	 */
-	@RequiresPermissions("system:group:edit")
+	@RequiresPermissions("mirai:group:edit")
 	@Log(title = "QQ成员和群的关系", businessType = BusinessType.UPDATE)
 	@PutMapping
 	public AjaxResult edit(@RequestBody QMemberGroup qMemberGroup) {
@@ -82,7 +82,7 @@ public class QMemberGroupController extends BaseController {
 	/**
 	 * 删除QQ成员和群的关系
 	 */
-	@RequiresPermissions("system:group:remove")
+	@RequiresPermissions("mirai:group:remove")
 	@Log(title = "QQ成员和群的关系", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
 	public AjaxResult remove(@PathVariable Long[] ids) {
