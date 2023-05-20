@@ -33,7 +33,8 @@ public class ArchivedFileServiceImpl extends ServiceImpl<ArchivedFileMapper, Arc
 			return null;
 		}
 		
-		List<ArchivedFile> archivedFiles = archivedFileMapper.selectBookByName(bookName);
+		List<ArchivedFile> archivedFiles = archivedFileMapper.selectBookByNameFullText(bookName);
+//		List<ArchivedFile> archivedFiles = archivedFileMapper.selectBookByName(bookName);
 		if (CollUtil.isEmpty(archivedFiles)) {
 			log.info("查不到相关内容");
 			return null;

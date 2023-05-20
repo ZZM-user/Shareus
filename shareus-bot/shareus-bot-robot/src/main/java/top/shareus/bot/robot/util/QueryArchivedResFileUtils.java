@@ -7,6 +7,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.data.PlainText;
 import top.shareus.bot.common.constant.QiuWenConstant;
 import top.shareus.bot.common.reids.RedisClient;
@@ -37,14 +38,21 @@ public class QueryArchivedResFileUtils {
 	 * @return boolean
 	 */
 	public static boolean checkWarring(Long senderId, String nickName) {
+		Bot bot = BotManager.getBot();
+		Group adminGroup = bot.getGroup(groupsConfig.getAdmin().get(0));
+		
+		NormalMember normalMember = adminGroup.getMembers().get(senderId);
+		if (ObjectUtil.isNotNull(normalMember)) {
+			log.info("忽略管理员的次数限制：{}", nickName);
+			return false;
+		}
+		
 		String key = QiuWenConstant.QIU_WEN_REDIS_KEY + senderId;
 		int times = QueryArchivedResFileUtils.getTimes(key);
 		
 		if (times > QiuWenConstant.MAX_TIMES_OF_DAY) {
-			Bot bot = BotManager.getBot();
-			Group group = bot.getGroup(groupsConfig.getAdmin().get(0));
-			group.sendMessage("请注意 \n[" + senderId + nickName + "]\n该用户今日已求文第 " + times + " 次");
-			MuteUtils.mute(group, senderId, QiuWenConstant.getExpireTime());
+			adminGroup.sendMessage("请注意 \n[" + senderId + nickName + "]\n该用户今日已求文第 " + times + " 次");
+			MuteUtils.mute(adminGroup, senderId, QiuWenConstant.getExpireTime());
 			return true;
 		}
 		

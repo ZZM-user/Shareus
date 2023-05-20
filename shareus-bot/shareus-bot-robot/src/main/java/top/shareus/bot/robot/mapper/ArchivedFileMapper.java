@@ -58,4 +58,6 @@ public interface ArchivedFileMapper extends BaseMapper<ArchivedFile> {
 	 * @return {@link List}<{@link ArchivedFile}>
 	 */
 	List<ArchivedFile> selectRepeatFileByMd5(String md5);
+	
+	List<ArchivedFile> selectBookByNameFullText(String bookName);
 }

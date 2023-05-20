@@ -52,5 +52,20 @@
         FROM archived_file
         WHERE md5 = #{md5}
     </select>
+    <select id="selectBookByNameFullText" resultType="top.shareus.bot.common.domain.ArchivedFile">
+        SELECT *, MATCH ( NAME ) AGAINST (
+               #{name} IN NATURAL LANGUAGE MODE ) AS score
+        FROM
+            archived_file
+        WHERE
+            MATCH ( NAME ) AGAINST ( #{name} IN NATURAL LANGUAGE MODE )
+          AND enabled = 0
+          AND del_flag = 0
+        HAVING score> LENGTH (#{name})
+        ORDER BY
+            score DESC,
+            archive_date DESC
+            LIMIT 10
+    </select>
 
 </mapper>
