@@ -28,7 +28,7 @@ import java.util.List;
 public class QueryLogServiceImpl implements QueryLogService {
 	
 	@Autowired
-	private static QueryLogMapper queryLogMapper;
+	private QueryLogMapper queryLogMapper;
 	@Autowired
 	private Polling polling;
 	

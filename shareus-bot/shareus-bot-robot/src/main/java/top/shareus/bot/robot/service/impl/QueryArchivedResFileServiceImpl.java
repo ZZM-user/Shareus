@@ -11,14 +11,11 @@ import net.mamoe.mirai.message.data.PlainText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.shareus.bot.common.constant.QiuWenConstant;
-import top.shareus.bot.common.reids.RedisClient;
+import top.shareus.bot.common.redis.service.RedisService;
 import top.shareus.bot.robot.config.BotManager;
 import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.service.QueryArchivedResFileService;
 import top.shareus.bot.robot.util.MuteUtils;
-import top.shareus.common.redis.service.RedisService;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * 查询归档res impl文件服务
@@ -30,8 +27,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileService {
 	
-	@Autowired
-	private RedisClient redisClient;
 	@Autowired
 	private RedisService redisService;
 	@Autowired
@@ -102,11 +97,7 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 	 */
 	@Override
 	public int incrTimes(String key, long expire) {
-		int oldValue = redisService.getCacheObject(key);
-		if (ObjectUtil.isNull(oldValue)) {
-			redisService.setCacheObject(key, 0, expire, TimeUnit.SECONDS);
-		}
-		redisClient.increment(key, 1);
+		redisService.increment(key, 1L);
 		return redisService.getCacheObject(key);
 	}
 	
@@ -189,9 +180,9 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 	public void decrTimes(String key, long expire) {
 		int oldValue = redisService.getCacheObject(key);
 		if (ObjectUtil.isNotNull(oldValue)) {
-			redisClient.increment(key, - 1);
+			redisService.increment(key, - 1L);
 		} else {
-			redisService.setCacheObject(key, 0, expire, TimeUnit.SECONDS);
+			redisService.set(key, "0", expire);
 		}
 	}
 }

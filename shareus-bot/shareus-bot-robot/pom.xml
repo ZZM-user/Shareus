@@ -19,6 +19,14 @@
             <artifactId>shareus-bot-common</artifactId>
             <version>0.0.9</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
         <!--mirai-->
         <dependency>
             <groupId>net.mamoe</groupId>
@@ -40,6 +48,12 @@
             <version>${mirai.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-login-solver-selenium</artifactId>
+            <version>1.0-dev-17</version>
+        </dependency>
+        
         <dependency>
             <groupId>xyz.cssxsh.mirai</groupId>
             <artifactId>mirai-device-generator</artifactId>
@@ -70,6 +84,10 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
+                <configuration>
+                    <!-- 打包时是否包含scope为system的依赖 -->
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

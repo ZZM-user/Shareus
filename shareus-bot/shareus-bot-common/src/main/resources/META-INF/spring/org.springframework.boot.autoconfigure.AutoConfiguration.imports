@@ -1,1 +1,2 @@
-top.shareus.bot.common.reids.RedisClient
+#top.shareus.bot.common.redis.configure.RedisConfig
+top.shareus.bot.common.redis.service.RedisService

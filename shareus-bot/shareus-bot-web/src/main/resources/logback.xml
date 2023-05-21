@@ -1,74 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="60 seconds" debug="false">
-    <!-- 日志存放路径 -->
-    <property name="log.path" value="logs/shareus-bot-web"/>
-    <!-- 日志输出格式 -->
-    <property name="log.pattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{20} - [%method,%line] - %msg%n"/>
+<configuration debug="false" scan="true" scanPeriod="1000 seconds">
+    <!-- 将状态信息监听器设置为无操作监听器。-->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+    <springProperty scope="context" name="spring.application.name" source="spring.application.name" defaultValue="app"/>
+    <timestamp key="date" datePattern="yyyyMMdd"/>
+    <property name="colorfulPattern"
+              value="%blue(%d{MM-dd HH:mm:ss}) [%boldYellow(%thread)] | %highlight(%-5level) | %boldGreen(%logger) %X{clientIp} %X{operateId} - %highlight(%msg) %n"/>
+    <property name="defaultPattern"
+              value="%d{MM-dd HH:mm:ss} [%thread] | %-5level | %logger %X{clientIp} %X{operateId} - %msg %n"/>
+    <property name="log.base_path" value="logs"/>
+    <!-- 日志文件大小,超过这个大小将被压缩 -->
+    <property name="log.max.size" value="100MB"/>
 
-    <!-- 控制台输出 -->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${log.pattern}</pattern>
+    <!--控制台输出 -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${colorfulPattern}</pattern>
+            <!--            <pattern>${defaultPattern}</pattern>-->
         </encoder>
     </appender>
 
-    <!-- 系统日志输出 -->
-    <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/info.log</file>
-        <!-- 循环政策：基于时间创建日志文件 -->
+    <appender name="trace.appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.base_path}/${spring.application.name}/trace.${spring.application.name}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 日志文件名格式 -->
-            <fileNamePattern>${log.path}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- 日志最大的历史 60天 -->
-            <maxHistory>60</maxHistory>
+            <fileNamePattern>
+                ${log.base_path}/archive/${spring.application.name}/trace.${spring.application.name}.%d{yyyyMMdd}.%i.log.zip
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
-        <encoder>
-            <pattern>${log.pattern}</pattern>
-        </encoder>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${defaultPattern}</pattern>
+        </layout>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <!-- 过滤的级别 -->
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="info.appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.base_path}/${spring.application.name}/info.${spring.application.name}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.base_path}/archive/${spring.application.name}/info.${spring.application.name}.%d{yyyyMMdd}.%i.log.zip
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${defaultPattern}</pattern>
+        </layout>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
-            <!-- 匹配时的操作：接收（记录） -->
             <onMatch>ACCEPT</onMatch>
-            <!-- 不匹配时的操作：拒绝（不记录） -->
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
 
-    <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/error.log</file>
-        <!-- 循环政策：基于时间创建日志文件 -->
+    <appender name="debug.appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.base_path}/${spring.application.name}/debug.${spring.application.name}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 日志文件名格式 -->
-            <fileNamePattern>${log.path}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- 日志最大的历史 60天 -->
-            <maxHistory>60</maxHistory>
+            <fileNamePattern>
+                ${log.base_path}/archive/${spring.application.name}/debug.${spring.application.name}.%d{yyyyMMdd}.%i.log.zip
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
-        <encoder>
-            <pattern>${log.pattern}</pattern>
-        </encoder>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${defaultPattern}</pattern>
+        </layout>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <!-- 过滤的级别 -->
-            <level>ERROR</level>
-            <!-- 匹配时的操作：接收（记录） -->
+            <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
-            <!-- 不匹配时的操作：拒绝（不记录） -->
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
 
-    <!-- 系统模块日志级别控制  -->
-    <logger name="top.shareus" level="info"/>
-    <!-- Spring日志级别控制  -->
-    <logger name="org.springframework" level="warn"/>
+    <appender name="error.appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.base_path}/${spring.application.name}/error.${spring.application.name}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.base_path}/archive/${spring.application.name}/error.${spring.application.name}.%d{yyyyMMdd}.%i.log.zip
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${defaultPattern}</pattern>
+        </layout>
+        <!-- 下面为配置只输出error级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+    <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+    <!-- 添加附加的appender,最多只能添加一个 -->
+    <appender name="trace.async" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>256</queueSize>
+        <includeCallerData>true</includeCallerData>
+        <appender-ref ref="trace.appender"/>
+    </appender>
+    <!-- http rest 请求日志 -->
+    <logger name="cn.felord.common.http.RestBodyAdvice" level="TRACE"/>
+    <logger name="cn.felord.app.mapper" level="DEBUG"/>
+    <!--    dev 环境调试-->
+    <springProfile name="dev">
+        <logger name="org.springframework.security" level="TRACE" additivity="false">
+            <appender-ref ref="stdout"/>
+        </logger>
+        <logger name="org.springframework.security.oauth2" level="DEBUG" additivity="false">
+            <appender-ref ref="stdout"/>
+        </logger>
+        <logger name="org.springframework.web" level="TRACE" additivity="false">
+            <appender-ref ref="stdout"/>
+        </logger>
+    </springProfile>
 
     <root level="info">
-        <appender-ref ref="console"/>
-    </root>
-
-    <!--系统操作日志-->
-    <root level="info">
-        <appender-ref ref="file_info"/>
-        <appender-ref ref="file_error"/>
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="info.appender"/>
+        <appender-ref ref="debug.appender"/>
+        <appender-ref ref="error.appender"/>
+        <appender-ref ref="trace.async"/>
     </root>
 </configuration>

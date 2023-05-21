@@ -1,0 +1,29 @@
+{
+    "deviceInfoVersion": 2,
+    "data": {
+        "display": "MIRAI.563787.001",
+        "product": "mirai",
+        "device": "mirai",
+        "board": "mirai",
+        "brand": "mamoe",
+        "model": "mirai",
+        "bootloader": "unknown",
+        "fingerprint": "mamoe/mirai/mirai:10/MIRAI.200122.001/3545662:user/release-keys",
+        "bootId": "C4F6C3D3-F8A8-D16E-3CDB-7F64496B5378",
+        "procVersion": "Linux version 3.0.31-gAB2hL9U (android-build@xxx.xxx.xxx.xxx.com)",
+        "baseBand": "",
+        "version": {
+            "incremental": "5891938",
+            "release": "10",
+            "codename": "REL"
+        },
+        "simInfo": "T-Mobile",
+        "osType": "android",
+        "macAddress": "02:00:00:00:00:00",
+        "wifiBSSID": "02:00:00:00:00:00",
+        "wifiSSID": "<unknown ssid>",
+        "imsiMd5": "3e3efa380d5ec7700e4bdce74ff957c4",
+        "imei": "864277789096962",
+        "apn": "wifi"
+    }
+}

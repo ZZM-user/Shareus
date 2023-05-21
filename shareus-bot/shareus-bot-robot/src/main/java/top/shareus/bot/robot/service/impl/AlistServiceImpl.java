@@ -16,7 +16,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.shareus.bot.common.constant.AlistConstant;
-import top.shareus.bot.common.reids.RedisClient;
+import top.shareus.bot.common.redis.service.RedisService;
 import top.shareus.bot.robot.service.AlistService;
 
 import java.io.File;
@@ -39,7 +39,7 @@ public class AlistServiceImpl implements AlistService {
 	private static final String JWT_REGEX = "\"(e.+?)\"";
 	
 	@Autowired
-	private RedisClient redisClient;
+	private RedisService redisService;
 	@Autowired
 	private RedissonClient redissonClient;
 
@@ -188,7 +188,7 @@ public class AlistServiceImpl implements AlistService {
 		
 		lock.lock();
 		try {
-			String token = redisClient.get(AlistConstant.AUTH_REDIS_KEY);
+			String token = redisService.get(AlistConstant.AUTH_REDIS_KEY);
 			if (StrUtil.isNotEmpty(token)) {
 				log.info("无需更新 token");
 				return token;
@@ -198,7 +198,7 @@ public class AlistServiceImpl implements AlistService {
 			token = login().trim();
 			log.info("获取Alist Token：" + token);
 			
-			redisClient.set(AlistConstant.AUTH_REDIS_KEY, token, AlistConstant.AUTH_REDIS_EXPIRE);
+			redisService.set(AlistConstant.AUTH_REDIS_KEY, token, AlistConstant.AUTH_REDIS_EXPIRE);
 			return token;
 		} finally {
 			lock.unlock();
