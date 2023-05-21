@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import top.shareus.bot.common.eumn.bot.GroupEnum;
 import top.shareus.bot.robot.annotation.GroupAuth;
 import top.shareus.bot.robot.config.GroupsConfig;
-import top.shareus.common.core.exception.mirai.bot.BotException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +39,8 @@ public class GroupAuthAspect {
 				}
 			}
 		}
-		throw new BotException("非管辖范围");
+//		throw new BotException("非管辖范围");
+		return null;
 	}
 	
 	private boolean hasIt(GroupEnum[] groupEnum, Long id) {

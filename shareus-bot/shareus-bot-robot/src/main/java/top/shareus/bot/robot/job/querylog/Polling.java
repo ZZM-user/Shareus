@@ -13,10 +13,9 @@ import org.springframework.stereotype.Component;
 import top.shareus.bot.common.constant.QiuWenConstant;
 import top.shareus.bot.common.domain.ArchivedFile;
 import top.shareus.bot.common.domain.QueryLog;
-import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.mapper.QueryLogMapper;
 import top.shareus.bot.robot.service.ArchivedFileService;
-import top.shareus.bot.robot.util.QueryArchivedResFileUtils;
+import top.shareus.bot.robot.service.QueryArchivedResFileService;
 
 import javax.annotation.PostConstruct;
 import java.util.Comparator;
@@ -39,7 +38,7 @@ public class Polling {
 	@Autowired
 	private ArchivedFileService archivedFileService;
 	@Autowired
-	private GroupsConfig groupsConfig;
+	private QueryArchivedResFileService queryArchivedResFileService;
 	
 	/**
 	 * 完成查询
@@ -47,7 +46,7 @@ public class Polling {
 	 * @param queryLog     查询日志
 	 * @param archivedFile 存档文件
 	 */
-	public static void finishQuery(QueryLog queryLog, ArchivedFile archivedFile) {
+	public void finishQuery(QueryLog queryLog, ArchivedFile archivedFile) {
 		if (ObjectUtil.isNotNull(archivedFile)) {
 			finishQuery(queryLog, Lists.newArrayList(archivedFile));
 		}
@@ -59,7 +58,7 @@ public class Polling {
 	 * @param queryLog       查询日志
 	 * @param bookInfoByName 图书信息名字
 	 */
-	private static void finishQuery(QueryLog queryLog, List<ArchivedFile> archivedFiles) {
+	private void finishQuery(QueryLog queryLog, List<ArchivedFile> archivedFiles) {
 		if (CollUtil.isNotEmpty(archivedFiles)) {
 			// 按归档时间排正序
 			if (archivedFiles.size() > 1) {
@@ -73,7 +72,7 @@ public class Polling {
 			queryLog.setFinishTime(archivedFile.getArchiveDate());
 			queryMapper.updateById(queryLog);
 			String key = QiuWenConstant.QIU_WEN_REDIS_KEY + queryLog.getSenderId();
-			QueryArchivedResFileUtils.incrTimes(key, QiuWenConstant.getExpireTime());
+			queryArchivedResFileService.incrTimes(key, QiuWenConstant.getExpireTime());
 			log.info("该求文任务完成: " + queryLog);
 		}
 	}
@@ -134,13 +133,13 @@ public class Polling {
 	 * @param queryLog 查询日志
 	 * @param cause    原因
 	 */
-	public static void stopQuery(QueryLog queryLog, String cause) {
+	public void stopQuery(QueryLog queryLog, String cause) {
 		queryLog.setStatus(2);
 		queryLog.setResult(cause);
 		queryLog.setFinishTime(new Date());
 		queryMapper.updateById(queryLog);
 		String key = QiuWenConstant.QIU_WEN_REDIS_KEY + queryLog.getSenderId();
-		QueryArchivedResFileUtils.incrTimes(key, QiuWenConstant.getExpireTime());
+		queryArchivedResFileService.incrTimes(key, QiuWenConstant.getExpireTime());
 		log.info("该求文任务被关闭: " + queryLog);
 	}
 }

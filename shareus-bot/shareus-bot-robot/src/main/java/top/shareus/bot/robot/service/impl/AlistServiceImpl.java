@@ -1,4 +1,4 @@
-package top.shareus.bot.robot.util;
+package top.shareus.bot.robot.service.impl;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -6,7 +6,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
@@ -14,28 +13,35 @@ import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import top.shareus.bot.common.constant.AlistConstant;
 import top.shareus.bot.common.reids.RedisClient;
+import top.shareus.bot.robot.service.AlistService;
 
 import java.io.File;
 import java.util.HashMap;
 
 /**
- * Alist 工具类
+ * Alist服务impl
  *
  * @author 17602
- * @date 2022/11/19
+ * @date 2023/05/21
  */
 @Slf4j
-public class AlistUtils {
+@Service
+public class AlistServiceImpl implements AlistService {
 	
 	public static final String JSON = "application/json; charset=utf-8";
 	/**
 	 * 正则表达式
 	 */
 	private static final String JWT_REGEX = "\"(e.+?)\"";
-	private static RedisClient redisClient = SpringUtil.getBean(RedisClient.class);
-	private static RedissonClient redissonClient = SpringUtil.getBean(RedissonClient.class);
+	
+	@Autowired
+	private RedisClient redisClient;
+	@Autowired
+	private RedissonClient redissonClient;
 
 //    public static void main(String[] args) {
 //        ArrayList<String> pathList = new ArrayList() {{
@@ -96,7 +102,8 @@ public class AlistUtils {
 	 *
 	 * @return {@code String}
 	 */
-	public static String uploadFile(File file) {
+	@Override
+	public String uploadFile(File file) {
 		// 文件转二进制
 		byte[] bytes = FileUtil.readBytes(file);
 		String uploadPath = buildPathOfArchive(file.getName());
@@ -133,7 +140,7 @@ public class AlistUtils {
 	 *
 	 * @return {@link String}
 	 */
-	public static String ls(String dir, Integer page) {
+	public String ls(String dir, Integer page) {
 		return ls(dir, "", page, false);
 	}
 	
@@ -147,7 +154,7 @@ public class AlistUtils {
 	 *
 	 * @return {@link String}
 	 */
-	public static String ls(String dir, String password, Integer page, boolean isRefresh) {
+	public String ls(String dir, String password, Integer page, boolean isRefresh) {
 		
 		HashMap<String, Object> map = new HashMap() {{
 			put("path", dir);
@@ -175,7 +182,7 @@ public class AlistUtils {
 	 *
 	 * @return {@code String}
 	 */
-	public static String getAuthorization() {
+	public String getAuthorization() {
 		log.info("开始获取Alist授权");
 		RLock lock = redissonClient.getLock("get-authorization");
 		
@@ -204,7 +211,7 @@ public class AlistUtils {
 	 *
 	 * @return {@code String}
 	 */
-	public static String login() {
+	public String login() {
 		// 构建请求体
 		HashMap<String, String> map = new HashMap(2) {{
 			put("username", AlistConstant.USERNAME);
@@ -232,7 +239,7 @@ public class AlistUtils {
 	 *
 	 * @return {@code Boolean}
 	 */
-	private static void mkdir(String dir) {
+	private void mkdir(String dir) {
 		HashMap<String, String> map = new HashMap(1) {{
 			put("path", dir);
 		}};
@@ -252,7 +259,7 @@ public class AlistUtils {
 	 *
 	 * @return {@code String}
 	 */
-	private static String buildPathOfArchive(String fileName) {
+	private String buildPathOfArchive(String fileName) {
 		DateTime date = DateUtil.date();
 		int year = date.year();
 		int month = date.month();

@@ -21,9 +21,9 @@ import top.shareus.bot.common.domain.ArchivedFile;
 import top.shareus.bot.common.eumn.bot.GroupEnum;
 import top.shareus.bot.robot.annotation.GroupAuth;
 import top.shareus.bot.robot.mapper.ArchivedFileMapper;
-import top.shareus.bot.robot.util.AlistUtils;
+import top.shareus.bot.robot.service.AlistService;
+import top.shareus.bot.robot.service.QueryLogService;
 import top.shareus.bot.robot.util.MessageChainUtils;
-import top.shareus.bot.robot.util.QueryLogUtils;
 
 import java.io.File;
 import java.util.Date;
@@ -45,7 +45,12 @@ public class ArchivedResFile extends SimpleListenerHost {
 	public static final String FILE_DOWNLOAD_PATH = "/opt/download/mirai/groupFile/";
 	
 	@Autowired
-	ArchivedFileMapper archivedFileMapper;
+	private ArchivedFileMapper archivedFileMapper;
+	
+	@Autowired
+	private AlistService alistService;
+	@Autowired
+	private QueryLogService queryLogService;
 	
 	@EventHandler
 	@GroupAuth(allowGroupList = {GroupEnum.RES, GroupEnum.TEST})
@@ -67,14 +72,14 @@ public class ArchivedResFile extends SimpleListenerHost {
 				log.info("归档路径：" + archivedFile.getArchiveUrl());
 				
 				try {
-					String uploadFilePath = AlistUtils.uploadFile(file);
+					String uploadFilePath = alistService.uploadFile(file);
 					if (StrUtil.isNotBlank(uploadFilePath)) {
 						archivedFile.setArchiveUrl(uploadFilePath);
 						log.info(archivedFile.toString());
 						// 将信息 写入数据库
 						archivedFileMapper.insert(archivedFile);
 						// 判断 是否完成求文
-						QueryLogUtils.queryLogByBookName(archivedFile);
+						queryLogService.queryLogByBookName(archivedFile);
 					}
 					log.info(archivedFile.getName() + " 存档完成！");
 					return;

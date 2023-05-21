@@ -30,6 +30,8 @@ import java.util.List;
 public class RecallQueryArchivedEvent extends SimpleListenerHost {
 	@Autowired
 	private QueryLogMapper queryLogMapper;
+	@Autowired
+	private Polling polling;
 	
 	@EventHandler
 	@GroupAuth(allowGroupList = {GroupEnum.TEST})
@@ -40,7 +42,7 @@ public class RecallQueryArchivedEvent extends SimpleListenerHost {
 		List<QueryLog> queryLogs = queryLogMapper.selectUnfinishedQueryBySender(author.getId(), DateUtil.date(messageTime));
 		
 		String cause = "由 " + operator.getNameCard() + " 主动撤回";
-		queryLogs.forEach(q -> Polling.stopQuery(q, cause));
+		queryLogs.forEach(q -> polling.stopQuery(q, cause));
 		log.info(cause + " - " + queryLogs.size());
 	}
 	

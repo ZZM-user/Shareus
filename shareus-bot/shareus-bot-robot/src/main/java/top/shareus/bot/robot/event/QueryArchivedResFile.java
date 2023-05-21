@@ -19,9 +19,9 @@ import top.shareus.bot.common.domain.ArchivedFile;
 import top.shareus.bot.common.eumn.bot.GroupEnum;
 import top.shareus.bot.robot.annotation.GroupAuth;
 import top.shareus.bot.robot.service.ArchivedFileService;
+import top.shareus.bot.robot.service.QueryArchivedResFileService;
+import top.shareus.bot.robot.service.QueryLogService;
 import top.shareus.bot.robot.util.MessageChainUtils;
-import top.shareus.bot.robot.util.QueryArchivedResFileUtils;
-import top.shareus.bot.robot.util.QueryLogUtils;
 import top.shareus.bot.robot.util.ShortUrlUtils;
 
 import java.util.List;
@@ -38,6 +38,10 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 	
 	@Autowired
 	private ArchivedFileService archivedFileService;
+	@Autowired
+	private QueryArchivedResFileService queryArchivedResFileService;
+	@Autowired
+	private QueryLogService queryLogService;
 	
 	@EventHandler
 	@GroupAuth(allowGroupList = {GroupEnum.RES, GroupEnum.TEST})
@@ -47,23 +51,23 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 		try {
 			PlainText plainText = MessageChainUtils.fetchPlainText(event.getMessage());
 			// 不包含 求文 不管
-			if (! QueryArchivedResFileUtils.isQiuWen(plainText)) {
+			if (! queryArchivedResFileService.isQiuWen(plainText)) {
 				return;
 			}
 			
-			if (QueryArchivedResFileUtils.checkWarring(senderId, event.getSenderName())) {
+			if (queryArchivedResFileService.checkWarring(senderId, event.getSenderName())) {
 				log.error(event.getSender().getNameCard() + "/" + senderId + " 求文次数异常！");
 				return;
 			}
 			
 			// 提取书名
-			String bookName = QueryArchivedResFileUtils.extractBookInfo(plainText);
+			String bookName = queryArchivedResFileService.extractBookInfo(plainText);
 			
 			// 规范错误
 			if (StrUtil.isEmpty(bookName)) {
 				log.info("求文规范错误！");
 				MessageSource.recall(event.getMessage());
-				QueryArchivedResFileUtils.checkTemplateError(senderId, event.getSenderName());
+				queryArchivedResFileService.checkTemplateError(senderId, event.getSenderName());
 				return;
 			}
 			
@@ -77,7 +81,7 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 			List<ArchivedFile> archivedFiles = archivedFileService.findBookInfoByName(bookName);
 			
 			// 求文记录
-			QueryLogUtils.recordLog(event, plainText.getContent(), bookName, archivedFiles);
+			queryLogService.recordLog(event, plainText.getContent(), bookName, archivedFiles);
 			
 			if (CollUtil.isEmpty(archivedFiles)) {
 				log.info("没查到关于 [" + bookName + "] 的库存信息");
@@ -86,7 +90,7 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 			
 			// 求文次数 + 1
 			String key = QiuWenConstant.QIU_WEN_REDIS_KEY + senderId;
-			QueryArchivedResFileUtils.incrTimes(key, QiuWenConstant.getExpireTime());
+			queryArchivedResFileService.incrTimes(key, QiuWenConstant.getExpireTime());
 			
 			// 查到了书目信息 构建消息链
 			MessageChainBuilder builder = new MessageChainBuilder();

@@ -34,6 +34,32 @@
             <classifier>all</classifier>
         </dependency>
 
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-api-jvm</artifactId>
+            <version>${mirai.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xyz.cssxsh.mirai</groupId>
+            <artifactId>mirai-device-generator</artifactId>
+            <version>1.2.0</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.kasukusakura.mlss</groupId>
+            <artifactId>mirai-login-solver-sakura</artifactId>
+            <version>0.0.10</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/mirai-login-solver-sakura-0.0.10.mirai2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>xyz.cssxsh.mirai</groupId>
+            <artifactId>fix-protocol-version</artifactId>
+            <version>1.5.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/fix-protocol-version-1.5.0.mirai2.jar</systemPath>
+        </dependency>
     </dependencies>
 
 
