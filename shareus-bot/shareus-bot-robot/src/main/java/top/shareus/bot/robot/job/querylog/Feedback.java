@@ -31,7 +31,7 @@ public class Feedback {
 	@Autowired
 	private GroupsConfig groupsConfig;
 	
-	@Scheduled(cron = "0 5 18 * * ?")
+	@Scheduled(cron = "0 5 18 * * ? ")
 	public void execute() {
 		List<QueryLog> queryLogs = queryLogMapper.selectUnfinishedQuery(0);
 		if (CollUtil.isEmpty(queryLogs)) {

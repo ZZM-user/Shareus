@@ -32,7 +32,7 @@ public class Week {
 	@Autowired
 	private GroupsConfig groupsConfig;
 	
-	@Scheduled(cron = "0 22 * * 7")
+	@Scheduled(cron = "0 0 22 * 7 *")
 	public void execute() {
 		// 每周发送统计信息
 		Integer hasArchived = archivedFileMapper.countByDaysOfBefore(7);

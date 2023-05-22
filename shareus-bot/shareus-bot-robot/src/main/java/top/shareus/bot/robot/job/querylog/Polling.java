@@ -40,7 +40,7 @@ public class Polling {
 	private QueryArchivedResFileService queryArchivedResFileService;
 	
 	
-	@Scheduled(cron = "0 5 18 * * ?")
+	@Scheduled(cron = "0 0 18 * * ?")
 	public void execute() {
 		log.info("开始对求文任务检查……");
 		

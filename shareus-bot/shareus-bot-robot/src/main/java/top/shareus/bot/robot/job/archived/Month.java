@@ -16,6 +16,7 @@ import top.shareus.bot.robot.mapper.ArchivedFileMapper;
 
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -33,8 +34,13 @@ public class Month {
 	@Autowired
 	private GroupsConfig groupsConfig;
 	
-	@Scheduled(cron = "0 22 L * *")
+	@Scheduled(cron = "0 0 22 28-31 * ?")
 	public void execute() {
+		final Calendar c = Calendar.getInstance();
+		if (c.get(Calendar.DATE) != c.getActualMaximum(Calendar.DATE)) {
+			return;
+		}
+		
 		// 每月发送统计信息
 		int dayOfMonth = LocalDateTime.now().getDayOfMonth();
 		
