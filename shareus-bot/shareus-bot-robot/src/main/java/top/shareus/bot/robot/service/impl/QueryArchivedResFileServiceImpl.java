@@ -69,8 +69,8 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 	 */
 	@Override
 	public int getTimes(String key) {
-		int times = redisService.getCacheObject(key);
-		return ObjectUtil.isNotNull(times) ? times : 0;
+		Object times = redisService.getCacheObject(key);
+		return ObjectUtil.isNotNull(times) ? (int) times : 0;
 	}
 	
 	/**

@@ -61,7 +61,7 @@
             MATCH ( NAME ) AGAINST ( #{name} IN NATURAL LANGUAGE MODE )
           AND enabled = 0
           AND del_flag = 0
-        HAVING score> LENGTH (#{name})
+        HAVING score> (LENGTH (#{name}) * 1.6)
         ORDER BY
             score DESC,
             archive_date DESC

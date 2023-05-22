@@ -5,6 +5,7 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.common.domain.QueryLog;
 import top.shareus.bot.robot.config.BotManager;
@@ -33,6 +34,7 @@ public class Day {
 	@Autowired
 	private GroupsConfig groupsConfig;
 	
+	@Scheduled(cron = "0 0 12 * * ?")
 	public void execute() {
 		// 每天发送统计信息
 		Integer hasArchived = archivedFileMapper.countByYesterday();

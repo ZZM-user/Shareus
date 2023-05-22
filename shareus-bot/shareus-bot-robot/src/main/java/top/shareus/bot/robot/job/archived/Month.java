@@ -7,6 +7,7 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.common.domain.ShareFileStar;
 import top.shareus.bot.robot.config.BotManager;
@@ -32,6 +33,7 @@ public class Month {
 	@Autowired
 	private GroupsConfig groupsConfig;
 	
+	@Scheduled(cron = "0 22 L * *")
 	public void execute() {
 		// 每月发送统计信息
 		int dayOfMonth = LocalDateTime.now().getDayOfMonth();

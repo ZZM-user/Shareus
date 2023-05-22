@@ -3,11 +3,13 @@ package top.shareus.bot.robot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.common.security.annotation.EnableCustomConfig;
 import top.shareus.common.security.annotation.EnableRyFeignClients;
 import top.shareus.common.swagger.annotation.EnableCustomSwagger2;
 
+@EnableScheduling
 @EnableCustomConfig
 @EnableCustomSwagger2
 @EnableRyFeignClients
