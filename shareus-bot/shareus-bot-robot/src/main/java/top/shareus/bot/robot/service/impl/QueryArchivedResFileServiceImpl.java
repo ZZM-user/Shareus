@@ -98,6 +98,7 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 	@Override
 	public int incrTimes(String key, long expire) {
 		redisService.increment(key, 1L);
+		redisService.expire(key, expire);
 		return redisService.getCacheObject(key);
 	}
 	
