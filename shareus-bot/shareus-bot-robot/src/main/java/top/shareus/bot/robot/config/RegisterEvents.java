@@ -69,7 +69,7 @@ public class RegisterEvents {
 	public void registerMemberJoinEvent() {
 		log.info("开始注册-成员加入事件");
 		EventChannel<BotEvent> channel = getBotChannel();
-		channel.subscribeAlways(MemberJoinEvent.class, hasMemberJoinEvent::onHasMemberJoinEvent);
+		channel.subscribeAlways(MemberJoinEvent.Active.class, hasMemberJoinEvent::onHasMemberJoinEvent);
 	}
 	
 	/**
