@@ -104,32 +104,35 @@ public class AlistServiceImpl implements AlistService {
 	 */
 	@Override
 	public String uploadFile(File file) {
-		// 文件转二进制
-		byte[] bytes = FileUtil.readBytes(file);
-		String uploadPath = buildPathOfArchive(file.getName());
-		// url编码路径
-		String encodePath = URLEncodeUtil.encode(uploadPath);
-		log.info("流：" + bytes.length + "\t编码串：" + encodePath);
 		
-		HttpResponse response = null;
 		try {
-			response = HttpRequest.put(AlistConstant.UPLOAD_FILE_API)
+			// 文件转二进制
+			byte[] bytes = FileUtil.readBytes(file);
+			String uploadPath = buildPathOfArchive(file.getName());
+			// url编码路径
+			String encodePath = URLEncodeUtil.encode(uploadPath);
+			log.info("流：" + bytes.length + "\t编码串：" + encodePath);
+			
+			HttpResponse response = HttpRequest.put(AlistConstant.UPLOAD_FILE_API)
 					.header("file-path", encodePath)
 					.header("authorization", getAuthorization())
 					.body(bytes)
 					.execute().sync();
 			
 			log.info("上传文件 结束 " + response.body());
+			
+			if (HttpStatus.HTTP_OK == response.getStatus()) {
+				log.info(uploadPath + " 上传成功");
+				return AlistConstant.DOMAIN + uploadPath;
+			}
+			
+			log.error("Alist文件上传失败:" + uploadPath + "\t" + response.body());
+			throw new RuntimeException("Alist文件上传失败:" + uploadPath + "\t" + response.body());
 		} catch (Exception e) {
-			System.out.println(e);
+			log.error("归档文件异常：{}", e.getCause().getMessage());
 		}
 		
-		if (HttpStatus.HTTP_OK == response.getStatus()) {
-			log.info(uploadPath + " 上传成功");
-			return AlistConstant.DOMAIN + uploadPath;
-		}
-		
-		throw new RuntimeException("Alist文件上传失败:" + uploadPath + "\t" + response.body());
+		throw new RuntimeException();
 	}
 	
 	/**

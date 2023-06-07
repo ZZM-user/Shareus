@@ -13,6 +13,7 @@
     <name>shareus-bot-robot</name>
     <description>shareus-bot-robot</description>
 
+
     <dependencies>
         <dependency>
             <groupId>top.shareus</groupId>
@@ -53,7 +54,7 @@
             <artifactId>mirai-login-solver-selenium</artifactId>
             <version>1.0-dev-17</version>
         </dependency>
-        
+
         <dependency>
             <groupId>xyz.cssxsh.mirai</groupId>
             <artifactId>mirai-device-generator</artifactId>

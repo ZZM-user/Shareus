@@ -23,6 +23,7 @@ import top.shareus.bot.robot.annotation.GroupAuth;
 import top.shareus.bot.robot.mapper.ArchivedFileMapper;
 import top.shareus.bot.robot.service.AlistService;
 import top.shareus.bot.robot.service.QueryLogService;
+import top.shareus.bot.robot.util.FileProcessor;
 import top.shareus.bot.robot.util.MessageChainUtils;
 
 import java.io.File;
@@ -43,6 +44,7 @@ public class ArchivedResFile extends SimpleListenerHost {
 	 * 文件下载路径 for Linux
 	 */
 	public static final String FILE_DOWNLOAD_PATH = "/opt/download/mirai/groupFile/";
+	
 	
 	@Autowired
 	private ArchivedFileMapper archivedFileMapper;
@@ -69,6 +71,7 @@ public class ArchivedResFile extends SimpleListenerHost {
 				log.info("文件下载成功：" + archivedFile.getName());
 				File file = new File(archivedFile.getArchiveUrl());
 				
+				FileProcessor.insertWatermark(file, 5);
 				log.info("归档路径：" + archivedFile.getArchiveUrl());
 				
 				try {
