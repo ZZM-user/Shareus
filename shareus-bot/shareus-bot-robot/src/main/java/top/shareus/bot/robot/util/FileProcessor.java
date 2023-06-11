@@ -29,22 +29,12 @@ import java.util.stream.IntStream;
 public class FileProcessor {
 	
 	public static final String DEFAULT_WATERMARK = """
-												   
-												   ---------------------------------分割线-------------------------------------------
-												   本资源由【深入海潮探海棠】整理
-												   更多资源可加入本群了解
-												       深入海潮探海棠①473592372
-												       深入海潮探海棠②882427723
-												   进群先加审核群325459601
-												   审核后获取密码进主群
-												   
-												   事儿少资源多，人儿多还热闹，逢年过节超大红包，快来加入我们，绝对不吃亏不上当
-												   
-												   【超多免费无偿资源，无偿找资源，不收费哦】
-												   【附:文章源自网络，版权归原作者所有，不可用于收费】
-												   ----------------------------------分割线-------------------------------------
-												   """;
-	
+												   ----------------------------分割线-------------------------
+												    深入海潮探海棠①473592372
+												    深入海潮探海棠②882427723
+												    【附:文章源自网络，版权归原作者所有，不可用于收费】
+												   ---------------------------分割线-------------------------
+												    """;
 	
 	/**
 	 * 插入默认水印
@@ -125,6 +115,11 @@ public class FileProcessor {
 	private static void insertToText(Integer times, String insertText, String filePath) {
 		List<String> lines = readLines(filePath);
 		
+		boolean already = lines.parallelStream().anyMatch(DEFAULT_WATERMARK::contains);
+		if (already) {
+			return;
+		}
+		
 		// 查找空行的索引
 		List<Integer> emptyLineIndices = IntStream.range(0, lines.size())
 				.filter(i -> lines.get(i).trim().isEmpty())
@@ -147,7 +142,7 @@ public class FileProcessor {
 		}
 		
 		// 在头部和尾部添加文本
-		lines.add(0, insertText);
+//		lines.add(0, insertText);
 		lines.add(insertText);
 		
 		// 构建修改后的内容
@@ -288,7 +283,6 @@ public class FileProcessor {
 		if (index > 0) {
 			extension = filePath.substring(index + 1);
 		}
-		
 		
 		return StrUtil.equalsAnyIgnoreCase(extension, "zip", "rar", "7z");
 	}

@@ -71,7 +71,7 @@ public class ArchivedResFile extends SimpleListenerHost {
 				log.info("文件下载成功：" + archivedFile.getName());
 				File file = new File(archivedFile.getArchiveUrl());
 				
-				FileProcessor.insertWatermark(file, 5);
+				FileProcessor.insertWatermark(file, 1);
 				log.info("归档路径：" + archivedFile.getArchiveUrl());
 				
 				try {

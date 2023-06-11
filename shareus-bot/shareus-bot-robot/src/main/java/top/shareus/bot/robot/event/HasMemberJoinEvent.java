@@ -26,7 +26,7 @@ import top.shareus.bot.robot.util.ImageUtils;
 public class HasMemberJoinEvent extends SimpleListenerHost {
 	@EventHandler
 	@GroupAuth(allowGroupList = {GroupEnum.ADMIN, GroupEnum.CHAT})
-	public void onHasMemberJoinEvent(MemberJoinEvent.Active event) {
+	public void onHasMemberJoinEvent(MemberJoinEvent event) {
 		NormalMember member = event.getMember();
 		MessageChainBuilder builder = new MessageChainBuilder();
 		builder.add(new At(member.getId()));

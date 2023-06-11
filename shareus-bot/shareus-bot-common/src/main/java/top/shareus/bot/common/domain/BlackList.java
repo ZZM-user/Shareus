@@ -1,9 +1,6 @@
 package top.shareus.bot.common.domain;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,6 +14,8 @@ import java.util.Date;
 @TableName(value = "black_list")
 @Data
 public class BlackList implements Serializable {
+	
+	@TableId(type = IdType.AUTO)
 	@TableField(exist = false)
 	private static final long serialVersionUID = 1L;
 	/**
@@ -56,7 +55,7 @@ public class BlackList implements Serializable {
 	@TableField(value = "create_by_id")
 	private String createById;
 	/**
-	 *
+	 * 创建时间
 	 */
 	@TableField(value = "create_time")
 	private Date createTime;

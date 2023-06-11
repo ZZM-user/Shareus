@@ -38,6 +38,8 @@ public class RegisterEvents {
 	private JoinGroupEvent joinGroupEvent;
 	@Autowired
 	private AtMeTalkEvent atMeTalkEvent;
+	@Autowired
+	private BlackListManager blacklistManager;
 	
 	/**
 	 * 注册群组消息事件
@@ -50,6 +52,7 @@ public class RegisterEvents {
 		channel.subscribeAlways(GroupMessageEvent.class, forwardAdminMessage::onResGroupMessageEvent);
 		channel.subscribeAlways(GroupMessageEvent.class, queryArchivedResFile::onQueryArchivedResFile);
 		channel.subscribeAlways(GroupMessageEvent.class, atMeTalkEvent::onAtMeTalkEvent);
+		channel.subscribeAlways(GroupMessageEvent.class, blacklistManager::onBlackListManager);
 	}
 	
 	/**
@@ -69,7 +72,7 @@ public class RegisterEvents {
 	public void registerMemberJoinEvent() {
 		log.info("开始注册-成员加入事件");
 		EventChannel<BotEvent> channel = getBotChannel();
-		channel.subscribeAlways(MemberJoinEvent.Active.class, hasMemberJoinEvent::onHasMemberJoinEvent);
+		channel.subscribeAlways(MemberJoinEvent.class, hasMemberJoinEvent::onHasMemberJoinEvent);
 	}
 	
 	/**

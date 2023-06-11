@@ -1,7 +1,6 @@
 package top.shareus.bot.robot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.apache.ibatis.annotations.Mapper;
 import top.shareus.bot.common.domain.ArchivedFile;
 
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
  * @author zhaojl
  * @date 2023/01/24
  */
-@Mapper
 public interface ArchivedFileService extends IService<ArchivedFile> {
 	
 	/**

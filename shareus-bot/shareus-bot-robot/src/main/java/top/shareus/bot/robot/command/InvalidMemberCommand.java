@@ -6,16 +6,17 @@
 //import net.mamoe.mirai.Bot;
 //import net.mamoe.mirai.console.command.CommandContext;
 //import net.mamoe.mirai.console.command.CommandSender;
-//import net.mamoe.mirai.console.command.java.JRawCommand;
+//import net.mamoe.mirai.console.command.SimpleCommand;
 //import net.mamoe.mirai.message.data.MessageChain;
 //import org.jetbrains.annotations.NotNull;
 //import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Component;
 //import top.shareus.bot.common.pojo.vo.NormalMemberVO;
 //import top.shareus.bot.robot.config.BotManager;
 //import top.shareus.bot.robot.config.GroupsConfig;
+//import top.shareus.bot.robot.service.GroupService;
 //import top.shareus.bot.robot.util.ExcelUtils;
 //import top.shareus.bot.robot.util.GroupUploadFileUtils;
-//import top.shareus.bot.robot.util.GroupUtils;
 //
 //import java.util.ArrayList;
 //import java.util.List;
@@ -28,38 +29,28 @@
 // * @date 2022/8/27 19:55
 // */
 //@Slf4j
-//public class InvalidMemberCommand extends JRawCommand {
+//@Component
+//public class InvalidMemberCommand extends SimpleCommand {
 //	public static final InvalidMemberCommand INSTANCE = new InvalidMemberCommand();
 //
 //	@Autowired
 //	private GroupsConfig groupsConfig;
+//	@Autowired
+//	private GroupService groupService;
 //
-//	private InvalidMemberCommand() {
-//		// 使用插件主类对象作为指令拥有者；设置主指令名为 "test"
-//		super(INSTANCE.getOwner(), "invalidMember");
-//		// 可选设置如下属性
-//		// setPermission();
-//		// 设置用法，这将会在 /help 中展示
-//		setUsage("/invalidMember");
-//		// 设置描述，也会在 /help 中展示
-//		setDescription("获取N个群中的失效人员");
-//		// 设置指令前缀是可选的，即使用 `test` 也能执行指令而不需要 `/test`
-//		setPrefixOptional(true);
-//	}
 //
-//	@Override
 //	public void onCommand(@NotNull CommandContext context, @NotNull MessageChain args) {
 //		Bot bot = BotManager.getBot();
 //		CommandSender sender = context.getSender();
 //
 //		// 率先读取出所有群成员信息
-//		Map<String, List<NormalMemberVO>> allGroupMembers = GroupUtils.getAllGroupMembers(bot);
+//		Map<String, List<NormalMemberVO>> allGroupMembers = groupService.getAllGroupMembers(bot);
 //		List<NormalMemberVO> adminMemberList = allGroupMembers.get("admin");
 //		List<NormalMemberVO> resMemberList = allGroupMembers.get("res");
 //		List<NormalMemberVO> chatMemberList = allGroupMembers.get("chat");
 //
 //		log.debug(adminMemberList.size() + "\t" + resMemberList.size() + "\t" + chatMemberList.size());
-//		Boolean hasGroups = GroupUtils.invalidGroup(adminMemberList, resMemberList, chatMemberList);
+//		Boolean hasGroups = groupService.invalidGroup(adminMemberList, resMemberList, chatMemberList);
 //		try {
 //			if (hasGroups) {
 //				List<NormalMemberVO> invalidMember = getInvalidMember(adminMemberList, resMemberList, chatMemberList);
