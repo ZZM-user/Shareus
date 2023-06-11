@@ -38,6 +38,7 @@ public class GroupServiceImpl implements GroupService {
 	 *
 	 * @return {@link Map}<{@link String}, {@link ContactList}<{@link NormalMember}>>
 	 */
+	@Override
 	public Map<String, List<NormalMemberVO>> getAllGroupMembers(Bot bot) {
 		Map<String, List<NormalMemberVO>> contactListMap = new HashMap<>();
 		
@@ -64,6 +65,7 @@ public class GroupServiceImpl implements GroupService {
 	 *
 	 * @return
 	 */
+	@Override
 	public List<NormalMemberVO> getGroupMembers(Bot bot, List<Long> group) {
 		List<NormalMemberVO> groupList = new ArrayList<>();
 		Group groupTemp;
@@ -90,6 +92,7 @@ public class GroupServiceImpl implements GroupService {
 	 *
 	 * @return
 	 */
+	@Override
 	public Boolean invalidGroup
 	(List<NormalMemberVO> adminMemberList, List<NormalMemberVO> resMemberList, List<NormalMemberVO> chatMemberList) {
 		if (adminMemberList.isEmpty()) {
