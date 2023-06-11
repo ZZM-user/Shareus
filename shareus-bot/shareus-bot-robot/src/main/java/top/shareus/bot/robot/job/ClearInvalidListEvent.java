@@ -32,7 +32,7 @@ public class ClearInvalidListEvent {
 	@Autowired
 	private GroupService groupService;
 	
-	@Scheduled(cron = "0 0 12 10 * ?")
+	@Scheduled(cron = "0 5 12 10 * ?")
 	public void noticeClear() {
 		Bot bot = BotManager.getBot();
 		bot.getGroup(groupsConfig.getAdmin().get(0)).sendMessage("晚上九点将会发送本期资源群失效人员名单，为保证名单质量，请于九点前清理聊天群人员。");
