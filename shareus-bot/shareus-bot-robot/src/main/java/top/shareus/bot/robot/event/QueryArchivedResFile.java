@@ -68,6 +68,10 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 				log.info("求文规范错误！");
 				MessageSource.recall(event.getMessage());
 				queryArchivedResFileService.checkTemplateError(senderId, event.getSenderName());
+				MessageChainBuilder builder = new MessageChainBuilder();
+				builder.add(new At(event.getSender().getId()));
+				builder.add("\n求文规范错误！详情见群公告");
+				event.getGroup().sendMessage(builder.build());
 				return;
 			}
 			

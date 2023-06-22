@@ -17,6 +17,9 @@ import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.service.QueryArchivedResFileService;
 import top.shareus.bot.robot.util.MuteUtils;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 /**
  * 查询归档res impl文件服务
  *
@@ -31,6 +34,8 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 	private RedisService redisService;
 	@Autowired
 	private GroupsConfig groupsConfig;
+	
+	private static final String QIU_WEN_INFO_REGEXP = "^书名[：|:](.*?)\\n作者[：|:](.*?)\\n平台[：|:](.*?)$";
 	
 	/**
 	 * 检查 求文次数是否正常
@@ -116,12 +121,8 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 		}
 		
 		String content = plainText.getContent();
-		if (content.length() > 50) {
-			log.info("这哪是求文啊，发公告呢吧…… " + content.length());
-			return false;
-		}
 		
-		return ReUtil.contains("(书名)", content) && ReUtil.contains("(作者)", content) && ReUtil.contains("(平台)", content);
+		return ReUtil.isMatch(QIU_WEN_INFO_REGEXP, content);
 	}
 	
 	/**
@@ -138,41 +139,43 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 		}
 		
 		String content = plainText.getContent();
-		if (! content.startsWith("书名")) {
-			return "";
-		}
 		
 		if (StrUtil.contains(content, "晋江")) {
 			return "晋江";
 		}
 		
+		// 获取求文信息
+		List<String> infoGroupList = ReUtil.getAllGroups(Pattern.compile(QIU_WEN_INFO_REGEXP), content, false);
+		log.info("拆分出的信息：" + String.join(",", infoGroupList));
+		
+		// 信息不全
+		boolean hasEmptyInfo = infoGroupList.stream().anyMatch(String::isEmpty);
+		if (hasEmptyInfo) {
+			return "";
+		}
+		
 		// 新规则
 		// 书名：静夜思\n作者：李白\n平台：未知
-		String[] split = content.split("\n");
-		String result = StrUtil.removePrefix(split[0], "书名");
-		result = result
+		String bookName = infoGroupList.get(0);
+		bookName = bookName
 				.replace("：", "")
 				.replace(":", "")
 				.replace("《", "")
 				.replace("》", "")
 				.trim();
-		result = StrUtil.cleanBlank(result);
+		
+		bookName = StrUtil.cleanBlank(bookName);
 		
 		// 去除 [类型]
-		int indexOf = result.indexOf("[");
+		int indexOf = bookName.indexOf("[");
 		if (indexOf != - 1) {
-			int indexOf1 = result.indexOf("]");
-			result = StrUtil.replace(result, indexOf, indexOf1 + 1, "");
+			int indexOf1 = bookName.indexOf("]");
+			bookName = StrUtil.replace(bookName, indexOf, indexOf1 + 1, "");
 		}
 		
-		// 太长折半
-		if (result.length() > 30) {
-			result = result.substring(0, result.length() / 2);
-		}
+		log.info("最终求文拆分结果：" + bookName);
 		
-		log.info("求文拆分结果：" + result);
-		
-		return result;
+		return bookName;
 	}
 	
 	/**
