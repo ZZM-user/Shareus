@@ -2,7 +2,6 @@ package top.shareus.bot.robot.event;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
@@ -17,13 +16,15 @@ import net.mamoe.mirai.message.data.PlainText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.common.domain.BlackList;
-import top.shareus.bot.common.eumn.bot.GroupEnum;
 import top.shareus.bot.common.pojo.dto.BlackListSaveDTO;
-import top.shareus.bot.robot.annotation.GroupAuth;
+import top.shareus.bot.robot.config.AdminManager;
 import top.shareus.bot.robot.config.BotManager;
 import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.service.BlackListService;
 import top.shareus.bot.robot.util.MessageChainUtils;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 黑名单管理
@@ -39,10 +40,16 @@ public class BlackListManager extends SimpleListenerHost {
 	private BlackListService blackListService;
 	@Autowired
 	private GroupsConfig groupsConfig;
+	@Autowired
+	private AdminManager adminManager;
 	
 	@EventHandler
-	@GroupAuth(allowGroupList = {GroupEnum.ADMIN, GroupEnum.TEST})
 	public void onBlackListManager(GroupMessageEvent event) {
+		boolean idAdmin = isIdAdmin(event.getSender().getId());
+		if (! idAdmin) {
+			return;
+		}
+		
 		boolean contains = event.getMessage().contentToString().contains(ORDER);
 		if (! contains) {
 			return;
@@ -50,6 +57,11 @@ public class BlackListManager extends SimpleListenerHost {
 		
 		add(event);
 		
+	}
+	
+	private boolean isIdAdmin(Long senderId) {
+		List<Long> allAdmin = adminManager.getAllAdmin();
+		return allAdmin.parallelStream().anyMatch(id -> Objects.equals(id, senderId));
 	}
 	
 	private BlackList add(GroupMessageEvent event) {
@@ -67,12 +79,13 @@ public class BlackListManager extends SimpleListenerHost {
 		}
 		String content = plainText.contentToString().replace(ORDER, "");
 		String targetQQ = ReUtil.get("([0-9]{5,})", content, 1);
-		if (StrUtil.isBlank(targetQQ)) {
+		long targetQQId = Long.parseLong(targetQQ);
+		if (ObjectUtil.isNull(targetQQId) || isIdAdmin(targetQQId)) {
 			log.info("拉黑：提取QQ失败");
 			return null;
 		}
 		
-		NormalMember normalMember = event.getGroup().get(Long.parseLong(targetQQ));
+		NormalMember normalMember = event.getGroup().get(targetQQId);
 		if (ObjectUtil.isNotNull(normalMember)) {
 			dto.setNickName(normalMember.getNick() + " " + normalMember.getNameCard());
 		}
@@ -86,7 +99,7 @@ public class BlackListManager extends SimpleListenerHost {
 		try {
 			groupsConfig.getAll().forEach(id -> {
 				Group group = bot.getGroupOrFail(id);
-				NormalMember member = group.getOrFail(Long.parseLong(targetQQ));
+				NormalMember member = group.getOrFail(targetQQId);
 				member.kick("已经拉黑", true);
 				log.info("拉黑踢：{}->{}", id, targetQQ);
 			});
