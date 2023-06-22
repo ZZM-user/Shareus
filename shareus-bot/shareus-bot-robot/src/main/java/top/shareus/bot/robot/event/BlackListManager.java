@@ -81,7 +81,7 @@ public class BlackListManager extends SimpleListenerHost {
 		String targetQQ = ReUtil.get("([0-9]{5,})", content, 1);
 		long targetQQId = Long.parseLong(targetQQ);
 		if (ObjectUtil.isNull(targetQQId) || isIdAdmin(targetQQId)) {
-			log.info("拉黑：提取QQ失败");
+			log.info("拉黑：提取QQ失败 或 为管理员");
 			return null;
 		}
 		

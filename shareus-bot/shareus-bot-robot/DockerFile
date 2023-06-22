@@ -7,4 +7,4 @@ CMD ["-server.port=9999"]
 EXPOSE 9999
 VOLUME ["/opt/download/mirai/groupFile//opt/download/mirai/groupFile/:/upload"]
 ENTRYPOINT ["java","-Dmirai.slider.captcha.supported","-Dmirai.no-desktop=true","-jar","-Xms256m", "-Xmx256m","/shareus-bot-robot.jar"]
-# java -Dmirai.slider.captcha.supported  -Dmirai.no-desktop=true -jar -Xms256m -Xmx256m  shareus-bot-robot.jar
+# ls

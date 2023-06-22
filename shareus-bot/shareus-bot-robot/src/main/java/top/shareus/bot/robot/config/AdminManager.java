@@ -50,7 +50,7 @@ public class AdminManager {
 				redisService.expire(REDIS_KEY, REDIS_EXPIRE);
 			}
 			
-			return idList.parallelStream().map(id -> Long.valueOf((String) id)).toList();
+			return idList.parallelStream().map(id -> Long.valueOf(id.toString())).toList();
 		} finally {
 			lock.unlock();
 		}

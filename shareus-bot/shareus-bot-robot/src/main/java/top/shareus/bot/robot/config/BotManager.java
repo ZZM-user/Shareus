@@ -1,7 +1,6 @@
 package top.shareus.bot.robot.config;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.kasukusakura.mlss.resolver.SakuraLoginSolver;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
@@ -37,18 +36,21 @@ public class BotManager {
 				// 设置心跳检测
 				setHeartbeatStrategy(HeartbeatStrategy.STAT_HB);
 				// 使用平板协议登录
-				setProtocol(MiraiProtocol.ANDROID_PHONE);
+				setProtocol(MiraiProtocol.ANDROID_PAD);
 				// 指定设备信息文件路径，文件不存在将自动生成一个默认的，存在就读取
 				fileBasedDeviceInfo("device.json");
 				// 更多操作自己看代码补全吧
 				setAutoReconnectOnForceOffline(true);
 //				setHighwayUploadCoroutineCount()
-				setLoginSolver(SakuraLoginSolver.Default);
+//				setLoginSolver(SakuraLoginSolver.Default);
 			}
 		});
 		
+		System.out.println(FixProtocolVersion.info());
 		log.info("开始升级协议……");
 		FixProtocolVersion.update();
+		FixProtocolVersion.sync(BotConfiguration.MiraiProtocol.ANDROID_PAD);
+		FixProtocolVersion.load(BotConfiguration.MiraiProtocol.ANDROID_PAD);
 		
 		BOT.login();
 		if (BOT.isOnline()) {
