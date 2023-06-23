@@ -1,6 +1,7 @@
 package top.shareus.bot.robot.config;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.kasukusakura.mlss.resolver.SakuraLoginSolver;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
@@ -42,15 +43,15 @@ public class BotManager {
 				// 更多操作自己看代码补全吧
 				setAutoReconnectOnForceOffline(true);
 //				setHighwayUploadCoroutineCount()
-//				setLoginSolver(SakuraLoginSolver.Default);
+				setLoginSolver(SakuraLoginSolver.Default);
 			}
 		});
 		
-		System.out.println(FixProtocolVersion.info());
 		log.info("开始升级协议……");
-		FixProtocolVersion.update();
 		FixProtocolVersion.sync(BotConfiguration.MiraiProtocol.ANDROID_PAD);
 		FixProtocolVersion.load(BotConfiguration.MiraiProtocol.ANDROID_PAD);
+//		FixProtocolVersion.update();
+		System.out.println(FixProtocolVersion.info());
 		
 		BOT.login();
 		if (BOT.isOnline()) {

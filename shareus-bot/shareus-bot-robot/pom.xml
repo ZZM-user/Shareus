@@ -71,9 +71,9 @@
         <dependency>
             <groupId>xyz.cssxsh.mirai</groupId>
             <artifactId>fix-protocol-version</artifactId>
-            <version>1.8.0</version>
+            <version>1.8.2</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/fix-protocol-version-1.8.0.mirai2.jar</systemPath>
+            <systemPath>${basedir}/lib/fix-protocol-version-1.8.2.mirai2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
