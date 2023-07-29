@@ -143,6 +143,7 @@
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>${redisson.version}</version>
         </dependency>
+
     </dependencies>
 
 </project>

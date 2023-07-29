@@ -28,7 +28,7 @@
         <kotlin.version>1.8.0</kotlin.version>
         <hutool.version>5.8.11</hutool.version>
         <jedis.verison>4.3.1</jedis.verison>
-        <redisson.version>3.23.0</redisson.version>
+        <redisson.version>3.18.0</redisson.version>
         <junit.version>5.9.2</junit.version>
         <junit-platform.version>1.9.2</junit-platform.version>
     </properties>
