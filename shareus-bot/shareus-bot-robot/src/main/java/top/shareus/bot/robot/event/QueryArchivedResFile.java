@@ -60,6 +60,7 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 				return;
 			}
 			
+			
 			// 提取书名
 			String bookName = queryArchivedResFileService.extractBookInfo(plainText);
 			

@@ -1,7 +1,8 @@
 package top.shareus.bot.robot.config;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.kasukusakura.mlss.resolver.SakuraLoginSolver;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
@@ -9,6 +10,7 @@ import net.mamoe.mirai.utils.BotConfiguration;
 import org.springframework.stereotype.Component;
 import top.shareus.common.core.exception.mirai.bot.BotException;
 import xyz.cssxsh.mirai.tool.FixProtocolVersion;
+import xyz.cssxsh.mirai.tool.KFCFactory;
 
 /**
  * 机器人管理
@@ -20,6 +22,16 @@ import xyz.cssxsh.mirai.tool.FixProtocolVersion;
 @Component
 public class BotManager {
 	private volatile static Bot BOT = null;
+	public static final String KFC_CONFIG = """
+											{
+											    "8.9.63": {
+											        "base_url": "http://124.220.67.51:12780",
+											        "type": "fuqiuluo/unidbg-fetch-qsign",
+											        "key": "114514"
+											    }
+											}
+											
+											""";
 	
 	/**
 	 * 创建机器人
@@ -32,6 +44,8 @@ public class BotManager {
 			return BOT;
 		}
 		
+		saveKFCConfig();
+		
 		BOT = BotFactory.INSTANCE.newBot(botConfig.getAccount(), botConfig.getPassword(), new BotConfiguration() {
 			{
 				// 设置心跳检测
@@ -43,15 +57,16 @@ public class BotManager {
 				// 更多操作自己看代码补全吧
 				setAutoReconnectOnForceOffline(true);
 //				setHighwayUploadCoroutineCount()
-				setLoginSolver(SakuraLoginSolver.Default);
 			}
 		});
 		
 		log.info("开始升级协议……");
-		FixProtocolVersion.sync(BotConfiguration.MiraiProtocol.ANDROID_PAD);
+//		FixProtocolVersion.sync(BotConfiguration.MiraiProtocol.ANDROID_PHONE);
+		FixProtocolVersion.fetch(BotConfiguration.MiraiProtocol.ANDROID_PAD, "8.9.63");
 		FixProtocolVersion.load(BotConfiguration.MiraiProtocol.ANDROID_PAD);
 //		FixProtocolVersion.update();
 		System.out.println(FixProtocolVersion.info());
+		KFCFactory.install();
 		
 		BOT.login();
 		if (BOT.isOnline()) {
@@ -76,5 +91,24 @@ public class BotManager {
 			}
 			return BOT;
 		}
+	}
+	
+	
+	/**
+	 * 保存kfcconfig
+	 */
+	public static void saveKFCConfig() {
+		log.info("写入KFC配置文件……");
+		
+		String filePath = "/config/KFCFactory.json";
+		FileUtil.touch(filePath);
+		FileUtil.writeString(KFC_CONFIG, filePath, CharsetUtil.UTF_8);
+		
+		if (FileUtil.exist(filePath)) {
+			log.info("写入KFC配置文件成功");
+			return;
+		}
+		
+		log.error("写入KFC配置文件失败！");
 	}
 }

@@ -3,9 +3,16 @@ COPY ./target/*.jar /shareus-bot-robot.jar
 ENV TZ Asia/Shanghai
 ENV LANG C.UTF-8
 CMD ["mkdir","/upload"]
+CMD ["mkdir","/config"]
 CMD ["-server.port=9999"]
 EXPOSE 9999
-VOLUME ["/opt/download/mirai/groupFile//opt/download/mirai/groupFile/:/upload"]
-ENTRYPOINT ["java","-Dmirai.slider.captcha.supported","-Dmirai.no-desktop=true","-jar","-Xms256m", "-Xmx256m","/shareus-bot-robot.jar"]
+VOLUME ["/opt/download/mirai/config:/config"]
+VOLUME ["/opt/download/mirai/groupFile/:/upload"]
+ENTRYPOINT ["java","-Dmirai.slider.captcha.supported","-Dxyz.cssxsh.mirai.tool.KFCFactory.config=/config/KFCFactory.json","-jar","-Xms256m", "-Xmx256m","/shareus-bot-robot.jar"]
 # ls
 # java -Dmirai.slider.captcha.supported -Dmirai.no-desktop=true -jar -Xms256m -Xmx256m shareus-bot-robot.jar
+#,"-Dxyz.cssxsh.mirai.tool.KFCFactory.config=/config/KFCFactory.json"
+# java -Dmirai.slider.captcha.supported -Dxyz.cssxsh.mirai.tool.KFCFactory.config=/config/KFCFactory.json -jar -Xms256m -Xmx256m shareus-bot-robot.jar
+
+# docker run -d --restart=always --name qsign -p {12780}:12780
+# docker run -d --restart=always --name qsign -p 12780:8080 -e BASE_PATH=/srv/qsign/qsign/txlib/8.9.63 xzhouqd/qsign:core-1.1.5

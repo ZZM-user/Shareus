@@ -13,6 +13,17 @@
     <name>shareus-bot-robot</name>
     <description>shareus-bot-robot</description>
 
+    <!--    <dependencyManagement>-->
+    <!--        <dependencies>-->
+    <!--            <dependency>-->
+    <!--                <groupId>io.netty</groupId>-->
+    <!--                <artifactId>netty-bom</artifactId>-->
+    <!--                <version>4.1.94.Final</version>-->
+    <!--                <type>pom</type>-->
+    <!--                <scope>import</scope>-->
+    <!--            </dependency>-->
+    <!--        </dependencies>-->
+    <!--    </dependencyManagement>-->
 
     <dependencies>
         <dependency>
@@ -29,11 +40,23 @@
         </dependency>
 
         <!--mirai-->
+        <!--        <dependency>-->
+        <!--            <groupId>net.mamoe</groupId>-->
+        <!--            <artifactId>mirai-core-all</artifactId>-->
+        <!--            <version>${mirai.version}</version>-->
+        <!--            <classifier>all</classifier>-->
+        <!--        </dependency>-->
+
         <dependency>
             <groupId>net.mamoe</groupId>
-            <artifactId>mirai-core-all</artifactId>
+            <artifactId>mirai-core-jvm</artifactId>
             <version>${mirai.version}</version>
-            <classifier>all</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-utils</artifactId>
+            <version>${mirai.version}</version>
         </dependency>
 
         <dependency>
@@ -50,36 +73,30 @@
         </dependency>
 
         <dependency>
-            <groupId>net.mamoe</groupId>
-            <artifactId>mirai-login-solver-selenium</artifactId>
-            <version>1.0-dev-17</version>
-        </dependency>
-
-        <dependency>
             <groupId>xyz.cssxsh.mirai</groupId>
             <artifactId>mirai-device-generator</artifactId>
             <version>1.2.0</version>
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>com.kasukusakura.mlss</groupId>
-            <artifactId>mirai-login-solver-sakura</artifactId>
-            <version>0.0.10</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/mirai-login-solver-sakura-0.0.10.mirai2.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>xyz.cssxsh.mirai</groupId>
             <artifactId>fix-protocol-version</artifactId>
-            <version>1.8.2</version>
+            <version>1.9.10</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/fix-protocol-version-1.8.2.mirai2.jar</systemPath>
+            <systemPath>${basedir}/lib/fix-protocol-version-1.9.10.mirai2.jar</systemPath>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-test</artifactId>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <groupId>org.asynchttpclient</groupId>
+            <artifactId>async-http-client</artifactId>
+            <version>2.12.3</version>
         </dependency>
+
     </dependencies>
 
 
@@ -103,6 +120,17 @@
                 </executions>
             </plugin>
         </plugins>
+        <!--打包时将resource下的文件一起打包-->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+
     </build>
 
 </project>
