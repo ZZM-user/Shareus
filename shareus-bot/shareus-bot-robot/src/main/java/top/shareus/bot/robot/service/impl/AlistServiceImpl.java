@@ -114,8 +114,8 @@ public class AlistServiceImpl implements AlistService {
 			log.info("流：" + bytes.length + "\t编码串：" + encodePath);
 			
 			HttpResponse response = HttpRequest.put(AlistConstant.UPLOAD_FILE_API)
-					.header("file-path", encodePath)
-					.header("authorization", getAuthorization())
+					.header("File-Path", encodePath)
+					.header("Authorization", getAuthorization())
 					.body(bytes)
 					.execute().sync();
 			
@@ -129,7 +129,7 @@ public class AlistServiceImpl implements AlistService {
 			log.error("Alist文件上传失败:" + uploadPath + "\t" + response.body());
 			throw new RuntimeException("Alist文件上传失败:" + uploadPath + "\t" + response.body());
 		} catch (Exception e) {
-			log.error("归档文件异常：{}", e.getCause().getMessage());
+			log.error("归档文件异常：{1}", e);
 		}
 		
 		throw new RuntimeException();
