@@ -34,7 +34,7 @@ public class RecallQueryArchivedEvent extends SimpleListenerHost {
 	private Polling polling;
 	
 	@EventHandler
-	@GroupAuth(allowGroupList = {GroupEnum.TEST})
+	@GroupAuth(allowGroupList = {GroupEnum.TEST, GroupEnum.RES})
 	public void onRecallQueryArchivedEvent(MessageRecallEvent.GroupRecall event) {
 		Member operator = event.getOperator();
 		NormalMember author = event.getAuthor();
