@@ -105,7 +105,7 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 			archivedFiles.forEach(a ->
 								  {
 									  // 这里等域名恢复了需要删除
-									  String newUrl = a.getArchiveUrl().replace("https://pan.shareus.top", "http://124.220.67.51:5244/");
+									  String newUrl = a.getArchiveUrl().replace("https://pan.shareus.top", "http://124.220.67.51:5244");
 									  builder.add("\n名称：" + a.getName() + "\n" + "下载地址：" + ShortUrlUtils.generateShortUrl(newUrl));
 								  }
 								 );
