@@ -40,6 +40,8 @@ public class RegisterEvents {
 	private AtMeTalkEvent atMeTalkEvent;
 	@Autowired
 	private BlackListManager blacklistManager;
+	@Autowired
+	private TalkativeHonorChangeEvent talkativeHonorChangeEvent;
 	
 	/**
 	 * 注册群组消息事件
@@ -110,5 +112,14 @@ public class RegisterEvents {
 		log.info("开始注册-加入新群事件");
 		EventChannel<BotEvent> channel = getBotChannel();
 		channel.subscribeAlways(BotJoinGroupEvent.class, joinGroupEvent::onJoinGroupEvent);
+	}
+	
+	/**
+	 * 注册群成员荣誉变更事件
+	 */
+	public void registerMemberHonorChangeEvent() {
+		log.info("开始注册-群成员荣誉变更事件");
+		EventChannel<BotEvent> channel = getBotChannel();
+		channel.subscribeAlways(MemberHonorChangeEvent.class, talkativeHonorChangeEvent::onTalkativeHonorChangeEvent);
 	}
 }

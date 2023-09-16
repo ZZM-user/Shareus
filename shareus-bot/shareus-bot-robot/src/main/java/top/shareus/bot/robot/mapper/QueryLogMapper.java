@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import top.shareus.bot.common.domain.QueryLog;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 查询日志映射器
@@ -58,4 +59,6 @@ public interface QueryLogMapper extends BaseMapper<QueryLog> {
 	 * @return {@link List}<{@link QueryLog}>
 	 */
 	List<QueryLog> selectUnfinishedQueryBySender(@Param("senderId") long id, @Param("sendTime") DateTime date);
+	
+	Map<Long, QueryLog> selectOfNDayHotQueryRank(int days);
 }

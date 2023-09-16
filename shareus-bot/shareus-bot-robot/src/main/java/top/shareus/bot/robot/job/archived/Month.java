@@ -1,5 +1,7 @@
 package top.shareus.bot.robot.job.archived;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
@@ -15,8 +17,6 @@ import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.mapper.ArchivedFileMapper;
 
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -34,24 +34,23 @@ public class Month {
 	@Autowired
 	private GroupsConfig groupsConfig;
 	
-	@Scheduled(cron = "0 0 22 28-31 * ?")
+	//	@Scheduled(cron = "0 0 22 28-31 * ?")
+	@Scheduled(cron = "0 0 8 15 * ?")
 	public void execute() {
-		final Calendar c = Calendar.getInstance();
-		if (c.get(Calendar.DATE) != c.getActualMaximum(Calendar.DATE)) {
-			return;
-		}
-		
 		// 每月发送统计信息
-		int dayOfMonth = LocalDateTime.now().getDayOfMonth();
+		int lastMonthDays = DateUtil.lastMonth().getLastDayOfMonth();
+		int thisMonthDays = DateTime.now().getLastDayOfMonth();
+		int computedDays = lastMonthDays - 15 + thisMonthDays;
 		
-		Integer hasArchived = archivedFileMapper.countByDaysOfBefore(dayOfMonth);
-		List<ShareFileStar> stars = archivedFileMapper.computedFileStar(dayOfMonth);
+		Integer hasArchived = archivedFileMapper.countByDaysOfBefore(computedDays);
+		List<ShareFileStar> stars = archivedFileMapper.computedFileStar(computedDays);
 		
 		Assert.notNull(hasArchived, "获取本月归档信息失败!");
 		Assert.notNull(stars, "获取本月分享之星失败!");
 		
 		MessageChainBuilder builder = new MessageChainBuilder();
-		builder.append("本月总结：");
+		builder.append(Character.highSurrogate(DateUtil.lastMonth().monthBaseOne()));
+		builder.append("月总结：");
 		builder.add("\n本月资源群归档文件数量：" + hasArchived);
 		builder.add("----------------------");
 		builder.add("\n本月分享之星：");

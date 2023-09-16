@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.shareus.bot.robot.mapper.QueryLogMapper">
-
     <resultMap type="top.shareus.bot.common.domain.QueryLog" id="QueryLogResult">
         <result property="id" column="id"/>
         <result property="senderName" column="sender_name"/>
@@ -17,6 +16,19 @@
         <result property="finishTime" column="finish_time"/>
     </resultMap>
 
+    <sql id="BaseField">
+        id
+        ,
+               sender_name,
+               sender_id,
+               content,
+               extract,
+               status,
+               answer_id,
+               result,
+               send_time,
+               finish_time
+    </sql>
     <sql id="selectQueryLogVo">
         select id,
                sender_name,
@@ -58,5 +70,23 @@
         where sender_id = #{senderId}
           and send_time = #{date}
           and `status` = 1
+    </select>
+
+    <select id="selectOfNDayHotQueryRank" resultType="map">
+        SELECT COUNT(1) as rank,
+               id,
+               sender_name,
+               sender_id,
+               content,
+               extract,
+               status,
+               answer_id,
+               result,
+               send_time,
+               finish_time
+        from query_log
+        WHERE DATEDIFF(NOW(), send_time)  <![CDATA[<=]]> #{day}
+        GROUP BY extract
+        ORDER BY rank desc limit 10
     </select>
 </mapper>
