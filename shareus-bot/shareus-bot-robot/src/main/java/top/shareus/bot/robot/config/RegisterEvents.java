@@ -42,6 +42,8 @@ public class RegisterEvents {
 	private BlackListManager blacklistManager;
 	@Autowired
 	private TalkativeHonorChangeEvent talkativeHonorChangeEvent;
+	@Autowired
+	private BotIsOfflineEvent botIsOfflineEvent;
 	
 	/**
 	 * 注册群组消息事件
@@ -121,5 +123,14 @@ public class RegisterEvents {
 		log.info("开始注册-群成员荣誉变更事件");
 		EventChannel<BotEvent> channel = getBotChannel();
 		channel.subscribeAlways(MemberHonorChangeEvent.class, talkativeHonorChangeEvent::onTalkativeHonorChangeEvent);
+	}
+	
+	/**
+	 * 注册机器人离线事件
+	 */
+	public void registerBotOfflineEvent() {
+		log.info("开始注册-机器人离线事件");
+		EventChannel<BotEvent> channel = getBotChannel();
+		channel.subscribeAlways(BotOfflineEvent.class, botIsOfflineEvent::onBotIsOfflineEvent);
 	}
 }

@@ -37,6 +37,7 @@ public class BotConfig {
 		registerEvents.registerGroupRecall();
 		registerEvents.registerBotJoinGroupEvent();
 		registerEvents.registerMemberHonorChangeEvent();
+		registerEvents.registerBotOfflineEvent();
 		
 		return bot;
 	}
