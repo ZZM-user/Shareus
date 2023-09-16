@@ -33,10 +33,6 @@ public class ExmailServiceImpl implements MailService {
 	@Value("${spring.mail.username}")
 	private String mailSender;
 	
-	//邮件接收送方邮箱
-	@Value("${spring.mail.mailRecipient}")
-	private List<String> mailReceiver;
-	
 	/**
 	 * @param mailRecipient 邮件接收方
 	 * @param subject       邮件主题
