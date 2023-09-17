@@ -4,6 +4,8 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.net.URLEncodeUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import top.shareus.bot.common.constant.AlistConstant;
 import top.shareus.bot.common.redis.service.RedisService;
 import top.shareus.bot.robot.service.AlistService;
+import top.shareus.common.core.exception.mirai.bot.BotException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -129,7 +132,7 @@ public class AlistServiceImpl implements AlistService {
 			log.error("Alist文件上传失败:" + uploadPath + "\t" + response.body());
 			throw new RuntimeException("Alist文件上传失败:" + uploadPath + "\t" + response.body());
 		} catch (Exception e) {
-			log.error("归档文件异常：{1}", e);
+			log.error("归档文件异常：{0}", e);
 		}
 		
 		throw new RuntimeException();
@@ -198,7 +201,7 @@ public class AlistServiceImpl implements AlistService {
 			}
 			log.info("需要更新 token");
 			// token已经失效 需要重新登录 登录后再存到redis里
-			token = login().trim();
+			token = login();
 			log.info("获取Alist Token：" + token);
 			
 			redisService.set(AlistConstant.AUTH_REDIS_KEY, token, AlistConstant.AUTH_REDIS_EXPIRE);
@@ -221,18 +224,34 @@ public class AlistServiceImpl implements AlistService {
 			put("password", AlistConstant.PASSWORD);
 		}};
 		
-		HttpResponse response = HttpRequest.post(AlistConstant.LOGIN_API)
-				.body(JSONUtil.toJsonPrettyStr(map), JSON)
-				.execute().sync();
-		
-		if (HttpStatus.HTTP_OK == response.getStatus()) {
-			String body = response.body();
+		String token = "";
+		HttpResponse response = null;
+		try {
+			log.warn(AlistConstant.LOGIN_API);
+			response = HttpRequest.post(AlistConstant.LOGIN_API)
+					.body(JSONUtil.toJsonPrettyStr(map), JSON)
+					.execute();
 			
-			log.info("登录成功 " + body);
-			return ReUtil.get(JWT_REGEX, body, 0).replace("\"", "");
+			if (HttpStatus.HTTP_OK == response.getStatus()) {
+				String body = response.body();
+				
+				log.info("登录成功 " + body);
+				token = ReUtil.get(JWT_REGEX, body, 0).replace("\"", "");
+			}
+			
+			if (CharSequenceUtil.isEmpty(token)) {
+				log.error("登录失败 " + response.body());
+			}
+		} catch (Exception e) {
+			log.error("Alist登录失败-获取token失败:{}", response.body());
+			throw new BotException("Alist登录失败-获取token失败", e);
+		} finally {
+			if (ObjectUtil.isNotNull(response)) {
+				response.close();
+			}
 		}
 		
-		throw new RuntimeException("Alist登录失败-获取token失败:" + response.body());
+		return token.trim();
 	}
 	
 	/**
