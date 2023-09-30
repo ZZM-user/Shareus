@@ -5,11 +5,9 @@ import net.mamoe.mirai.data.GroupHonorType;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.MemberHonorChangeEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.common.eumn.bot.GroupEnum;
 import top.shareus.bot.robot.annotation.GroupAuth;
-import top.shareus.common.redis.service.RedisService;
 
 /**
  * 龙王-群荣誉变更事件
@@ -20,9 +18,6 @@ import top.shareus.common.redis.service.RedisService;
 @Slf4j
 @Component
 public class TalkativeHonorChangeEvent extends SimpleListenerHost {
-	
-	@Autowired
-	private RedisService redisService;
 	
 	@EventHandler
 	@GroupAuth(allowGroupList = {GroupEnum.CHAT})

@@ -72,7 +72,7 @@
           and `status` = 1
     </select>
 
-    <select id="selectOfNDayHotQueryRank" resultType="map">
+    <select id="selectOfNDayHotQueryRank" resultType="java.util.HashMap">
         SELECT COUNT(1) as rank,
                id,
                sender_name,

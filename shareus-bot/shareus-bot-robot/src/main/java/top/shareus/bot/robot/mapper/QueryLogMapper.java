@@ -60,5 +60,5 @@ public interface QueryLogMapper extends BaseMapper<QueryLog> {
 	 */
 	List<QueryLog> selectUnfinishedQueryBySender(@Param("senderId") long id, @Param("sendTime") DateTime date);
 	
-	Map<Long, QueryLog> selectOfNDayHotQueryRank(int days);
+	List<Map<String, QueryLog>> selectOfNDayHotQueryRank(int days);
 }

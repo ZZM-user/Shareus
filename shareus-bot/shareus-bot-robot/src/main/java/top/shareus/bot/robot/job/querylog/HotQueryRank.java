@@ -10,6 +10,7 @@ import top.shareus.bot.robot.config.BotManager;
 import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.mapper.QueryLogMapper;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,14 +33,14 @@ public class HotQueryRank {
 	@Scheduled(cron = "0 0 9 ? * 2 ")
 	public void execute() {
 		int days = 7;
-		Map<Long, QueryLog> hotQueryRank = queryLogMapper.selectOfNDayHotQueryRank(days);
+		List<Map<String, QueryLog>> hotQueryRank = queryLogMapper.selectOfNDayHotQueryRank(days);
 		StringBuilder builder = new StringBuilder();
 		AtomicInteger rank = new AtomicInteger(1);
 		
 		builder.append("上周热门求文排行榜:\n");
-		hotQueryRank.forEach((k, v) -> builder.append(rank.getAndIncrement()).append("、").append(v.getExtract()).append("|").append(k).append("次\n"));
+		hotQueryRank.forEach(q -> builder.append(rank.getAndIncrement()).append("、").append(q.get("extract")).append("|").append(q.get("rank")).append("次\n"));
 		
-		log.info("上周热门求文排行榜:{}", builder);
+		log.info("{}", builder);
 		Bot bot = BotManager.getBot();
 		groupsConfig.getAdmin().forEach(group -> bot.getGroup(group).sendMessage(builder.toString()));
 	}
