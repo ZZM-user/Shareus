@@ -61,6 +61,12 @@
         </dependency>
 
         <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-mock</artifactId>
+            <version>${mirai.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>xyz.cssxsh.mirai</groupId>
             <artifactId>mirai-device-generator</artifactId>
             <version>1.2.0</version>
@@ -83,6 +89,21 @@
             <groupId>org.asynchttpclient</groupId>
             <artifactId>async-http-client</artifactId>
             <version>2.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

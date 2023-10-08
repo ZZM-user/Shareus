@@ -11,8 +11,8 @@ public class AlistConstant {
 	/**
 	 * 源站
 	 */
-//	public static final String DOMAIN = "https://pan.shareus.top";
-	public static final String DOMAIN = "http://124.220.67.51:5244";
+	public static final String DOMAIN = "https://pan.shareus.top";
+	// public static final String DOMAIN = "http://124.220.67.51:5244";
 	
 	/**
 	 * 用户名
