@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>top.shareus</groupId>
+        <artifactId>shareus-bot</artifactId>
+        <version>3.6.1</version>
+    </parent>
+
+    <artifactId>shareus-bot-miniapp</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>top.shareus</groupId>
+            <artifactId>shareus-bot-common</artifactId>
+            <version>0.0.9</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.binarywang/wx-java-miniapp-spring-boot-starter -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>wx-java-miniapp-spring-boot-starter</artifactId>
+            <version>4.5.0</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <!-- 打包时是否包含scope为system的依赖 -->
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <!--打包时将resource下的文件一起打包-->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+
+    </build>
+
+</project>

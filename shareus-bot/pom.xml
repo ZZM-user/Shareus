@@ -16,6 +16,7 @@
         <module>shareus-bot-common</module>
         <module>shareus-bot-robot</module>
         <module>shareus-bot-web</module>
+        <module>shareus-bot-miniapp</module>
     </modules>
 
     <packaging>pom</packaging>

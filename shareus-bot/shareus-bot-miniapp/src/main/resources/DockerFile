@@ -1,0 +1,9 @@
+FROM openjdk:17
+COPY ./target/*.jar /shareus-bot-miniapp.jar
+ENV TZ Asia/Shanghai
+ENV LANG C.UTF-8
+CMD ["mkdir","/upload"]
+CMD ["mkdir","/config"]
+CMD ["-server.port=9997"]
+EXPOSE 9997
+ENTRYPOINT ["java","-jar","-Xms256m", "-Xmx256m","/shareus-bot-miniapp.jar"]
