@@ -21,17 +21,17 @@ import xyz.cssxsh.mirai.tool.KFCFactory;
 @Slf4j
 @Component
 public class BotManager {
-	private volatile static Bot BOT = null;
 	public static final String KFC_CONFIG = """
 											{
 											    "8.9.63": {
-											        "base_url": "http://124.220.67.51:12780",
+											        "base_url": "http://8.137.57.245:12780",
 											        "type": "fuqiuluo/unidbg-fetch-qsign",
 											        "key": "114514"
 											    }
 											}
 											
 											""";
+	private static volatile Bot BOT = null;
 	
 	/**
 	 * 创建机器人
