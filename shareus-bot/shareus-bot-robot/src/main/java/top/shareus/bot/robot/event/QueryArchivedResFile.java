@@ -1,7 +1,7 @@
 package top.shareus.bot.robot.event;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import kotlin.coroutines.CoroutineContext;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.event.EventHandler;
@@ -25,6 +25,7 @@ import top.shareus.bot.robot.util.MessageChainUtils;
 import top.shareus.bot.robot.util.ShortUrlUtils;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 查询归档res文件
@@ -65,7 +66,7 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 			String bookName = queryArchivedResFileService.extractBookInfo(plainText);
 			
 			// 规范错误
-			if (StrUtil.isEmpty(bookName)) {
+			if (CharSequenceUtil.isEmpty(bookName)) {
 				log.info("求文规范错误！");
 				MessageSource.recall(event.getMessage());
 				queryArchivedResFileService.checkTemplateError(senderId, event.getSenderName());
@@ -85,26 +86,31 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 			// 查询
 			List<ArchivedFile> archivedFiles = archivedFileService.findBookInfoByName(bookName);
 			
-			// 求文记录
-			queryLogService.recordLog(event, plainText.getContent(), bookName, archivedFiles);
+			CompletableFuture.runAsync(() -> {
+				// 求文记录
+				queryLogService.recordLog(event, plainText.getContent(), bookName, archivedFiles);
+				// 求文次数 + 1
+				String key = QiuWenConstant.QIU_WEN_REDIS_KEY + senderId;
+				queryArchivedResFileService.incrTimes(key, QiuWenConstant.getExpireTime());
+			}).whenComplete((v, e) -> log.error("求文日志记录异常!", e));
 			
 			if (CollUtil.isEmpty(archivedFiles)) {
 				log.info("没查到关于 [" + bookName + "] 的库存信息");
 				return;
 			}
 			
-			// 求文次数 + 1
-			String key = QiuWenConstant.QIU_WEN_REDIS_KEY + senderId;
-			queryArchivedResFileService.incrTimes(key, QiuWenConstant.getExpireTime());
-			
 			// 查到了书目信息 构建消息链
 			MessageChainBuilder builder = new MessageChainBuilder();
 			builder.add(new At(senderId));
 			builder.add("\n小度为你找到了以下内容：");
 			
-			archivedFiles.forEach(a ->
-										  builder.add("\n名称：" + a.getName() + "\n" + "下载地址：" + ShortUrlUtils.generateShortUrl(a.getArchiveUrl()))
-								 );
+			archivedFiles.forEach(a -> {
+				CompletableFuture.supplyAsync(() -> ShortUrlUtils.generateShortUrl(a.getArchiveUrl())).thenAccept(shortUrl -> {
+					if (CharSequenceUtil.isNotEmpty(shortUrl)) {
+						builder.add("\n名称：" + a.getName() + "\n" + "下载地址：" + shortUrl);
+					}
+				});
+			});
 			
 			event.getGroup().sendMessage(builder.build());
 		} catch (Exception e) {
