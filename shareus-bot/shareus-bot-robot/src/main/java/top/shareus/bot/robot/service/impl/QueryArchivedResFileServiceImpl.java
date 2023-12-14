@@ -1,5 +1,6 @@
 package top.shareus.bot.robot.service.impl;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -164,13 +165,13 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 				.replace("》", "")
 				.trim();
 		
-		bookName = StrUtil.cleanBlank(bookName);
+		bookName = CharSequenceUtil.cleanBlank(bookName);
 		
 		// 去除 [类型]
 		int indexOf = bookName.indexOf("[");
 		if (indexOf != - 1) {
 			int indexOf1 = bookName.indexOf("]");
-			bookName = StrUtil.replace(bookName, indexOf, indexOf1 + 1, "");
+			bookName = CharSequenceUtil.replace(bookName, indexOf, indexOf1 + 1, "");
 		}
 		
 		log.info("最终求文拆分结果：" + bookName);

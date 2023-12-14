@@ -1,10 +1,10 @@
 package top.shareus.bot.robot.event;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import kotlin.coroutines.CoroutineContext;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +76,7 @@ public class ArchivedResFile extends SimpleListenerHost {
 				
 				try {
 					String uploadFilePath = alistService.uploadFile(file);
-					if (StrUtil.isNotBlank(uploadFilePath)) {
+					if (CharSequenceUtil.isNotBlank(uploadFilePath)) {
 						archivedFile.setArchiveUrl(uploadFilePath);
 						log.info(archivedFile.toString());
 						// 将信息 写入数据库
