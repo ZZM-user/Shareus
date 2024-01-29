@@ -1,12 +1,11 @@
 package top.shareus.bot.miniapp.contrroller;
 
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import top.shareus.bot.miniapp.entity.WxUserInfo;
+import org.springframework.web.bind.annotation.*;
+import top.shareus.bot.miniapp.config.aspect.TokenAuth;
+import top.shareus.bot.miniapp.pojo.dto.UpdateUserInfoDTO;
 import top.shareus.bot.miniapp.pojo.dto.WxLoginDTO;
+import top.shareus.bot.miniapp.pojo.vo.WxUserInfoVO;
 import top.shareus.bot.miniapp.service.WxUserInfoService;
 import top.shareus.common.core.domain.R;
 
@@ -20,8 +19,22 @@ public class WxUserController {
 	private WxUserInfoService wxUserInfoService;
 	
 	@PostMapping("/login")
-	public R<WxUserInfo> login(@RequestBody @Validated WxLoginDTO loginDTO) {
-		WxUserInfo wxUserInfo = wxUserInfoService.login(loginDTO);
+	public R<WxUserInfoVO> login(@RequestBody @Validated WxLoginDTO loginDTO) {
+		WxUserInfoVO wxUserInfo = wxUserInfoService.login(loginDTO);
+		return R.ok(wxUserInfo);
+	}
+	
+	@TokenAuth
+	@GetMapping("/getUserInfo")
+	public R<WxUserInfoVO> getInfo() {
+		WxUserInfoVO wxUserInfo = wxUserInfoService.getInfo();
+		return R.ok(wxUserInfo);
+	}
+	
+	@TokenAuth
+	@PostMapping("/update")
+	public R<WxUserInfoVO> updateUserInfo(@RequestBody @Validated UpdateUserInfoDTO updateUserInfoDTO) {
+		WxUserInfoVO wxUserInfo = wxUserInfoService.updateUserInfo(updateUserInfoDTO);
 		return R.ok(wxUserInfo);
 	}
 }

@@ -31,14 +31,31 @@ public class WxUserInfo implements Serializable {
 	 * 手机号
 	 */
 	private String phone;
-	/**
-	 *
-	 */
+	
+	@TableField("`description`")
+	private String description;
+	
+	@TableField("unionid")
 	private String unionid;
 	/**
 	 *
 	 */
+	@TableField("openid")
 	private String openid;
+	
+	/**
+	 * 状态 0正常 1停用
+	 */
+	private Integer enabled;
+	
+	@TableLogic(value = "0", delval = "1")
+	private Integer delFlag;
+	
+	/**
+	 * 最后登录时间
+	 */
+	private Date lastLoginTime;
+	
 	/**
 	 *
 	 */
@@ -47,6 +64,6 @@ public class WxUserInfo implements Serializable {
 	/**
 	 *
 	 */
-	@TableField(fill = FieldFill.UPDATE)
+	@TableField(fill = FieldFill.INSERT_UPDATE)
 	private Date updateTime;
 }

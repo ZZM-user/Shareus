@@ -8,15 +8,19 @@
         <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
         <result property="avatarUrl" column="avatar_url" jdbcType="VARCHAR"/>
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="unionid" column="unionid" jdbcType="VARCHAR"/>
         <result property="openid" column="openid" jdbcType="VARCHAR"/>
+        <result property="enabled" column="enabled" jdbcType="BIGINT"/>
+        <result property="delFlag" column="delFlag" jdbcType="BIGINT"/>
+        <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,nick_name,avatar_url,
-        phone,unionid,openid,
+        id,nick_name,avatar_url,`description`,
+        phone,unionid,openid,enabled,delFlag,last_login_time,
         create_time,update_time
     </sql>
 </mapper>

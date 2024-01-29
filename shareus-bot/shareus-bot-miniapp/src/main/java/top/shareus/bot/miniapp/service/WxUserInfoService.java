@@ -2,7 +2,9 @@ package top.shareus.bot.miniapp.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.shareus.bot.miniapp.entity.WxUserInfo;
+import top.shareus.bot.miniapp.pojo.dto.UpdateUserInfoDTO;
 import top.shareus.bot.miniapp.pojo.dto.WxLoginDTO;
+import top.shareus.bot.miniapp.pojo.vo.WxUserInfoVO;
 
 /**
  * @author 17602
@@ -11,5 +13,10 @@ import top.shareus.bot.miniapp.pojo.dto.WxLoginDTO;
  */
 public interface WxUserInfoService extends IService<WxUserInfo> {
 	
-	WxUserInfo login(WxLoginDTO loginDTO);
+	WxUserInfoVO login(WxLoginDTO loginDTO);
+	
+	WxUserInfoVO updateUserInfo(UpdateUserInfoDTO updateUserInfoDTO);
+	
+	WxUserInfoVO getInfo();
+	
 }
