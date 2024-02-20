@@ -27,6 +27,9 @@ public class CommandEvent {
 	@GroupAuth(allowGroupList = {GroupEnum.ADMIN, GroupEnum.TEST})
 	public void exec(GroupMessageEvent event) {
 		PlainText command = MessageChainUtils.fetchPlainText(event.getMessage());
+		if (command == null) {
+			return;
+		}
 		
 		String content = command.getContent();
 		if ("/help".equals(content)) {

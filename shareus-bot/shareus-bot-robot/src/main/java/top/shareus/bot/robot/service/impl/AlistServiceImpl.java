@@ -14,7 +14,8 @@ import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.MessageSourceBuilder;
 import net.mamoe.mirai.message.data.MessageSourceKind;
 import org.redisson.api.RLock;
@@ -300,19 +301,19 @@ public class AlistServiceImpl implements AlistService {
 		// 结果通知
 		String finalMsg = msg;
 		Bot bot = BotManager.getBot();
-		groupsConfig.getTest().forEach(groupId -> bot.getGroup(groupId).sendMessage(finalMsg));
+		groupsConfig.getTest().forEach(groupId -> {
+			bot.getGroup(groupId).sendMessage(finalMsg);
+		});
 		
 		if (Boolean.TRUE.equals(dto.getNotifyAdminGroup())) {
 			groupsConfig.getAdmin().forEach(groupId -> bot.getGroup(groupId).sendMessage(finalMsg));
 		}
 		
 		if (Boolean.TRUE.equals(dto.getNotifyResourceGroup()) && httpResponse.isOk()) {
-			String finalPassword = password;
 			groupsConfig.getRes().forEach(groupId -> {
-				bot.getGroup(groupId).sendMessage(finalMsg);
-				MessageSourceBuilder sourceBuilder = new MessageSourceBuilder();
-				sourceBuilder.messages(new MessageChainBuilder().append("当前云盘密码为：").append(finalPassword));
-				bot.getGroup(groupId).setEssenceMessage(sourceBuilder.build(bot.getId(), MessageSourceKind.GROUP));
+				MessageReceipt<Group> messageReceipt = bot.getGroup(groupId).sendMessage(finalMsg);
+				// 设置精华消息
+				bot.getGroup(groupId).setEssenceMessage(new MessageSourceBuilder().allFrom(messageReceipt.getSource()).build(bot.getId(), MessageSourceKind.GROUP));
 			});
 		}
 	}
