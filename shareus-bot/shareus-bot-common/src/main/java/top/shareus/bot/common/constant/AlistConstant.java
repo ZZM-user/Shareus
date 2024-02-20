@@ -35,6 +35,11 @@ public class AlistConstant {
 	public static final String AUTH_REDIS_KEY = "alist-auth-token";
 	
 	/**
+	 * 群文件元数据密码 redis Key值
+	 */
+	public static final String GROUP_META_PWD_REDIS_KEY = "group_meta_pwd";
+	
+	/**
 	 * 登录token redis 有效期
 	 * 默认 48h，缩小一定时间为 47
 	 */
@@ -55,4 +60,9 @@ public class AlistConstant {
 	 */
 	public static final String MKDIR_API = DOMAIN + "/api/fs/mkdir";
 	public static final String LS_API = DOMAIN + "/api/fs/list";
+	
+	/**
+	 * 更新meta资源信息
+	 */
+	public static final String ADMIN_META_UPDATE = DOMAIN + "/api/admin/meta/update";
 }

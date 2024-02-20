@@ -44,6 +44,8 @@ public class RegisterEvents {
 	private TalkativeHonorChangeEvent talkativeHonorChangeEvent;
 	@Autowired
 	private BotIsOfflineEvent botIsOfflineEvent;
+	@Autowired
+	private CommandEvent commandEvent;
 	
 	/**
 	 * 注册群组消息事件
@@ -57,6 +59,7 @@ public class RegisterEvents {
 		channel.subscribeAlways(GroupMessageEvent.class, queryArchivedResFile::onQueryArchivedResFile);
 		channel.subscribeAlways(GroupMessageEvent.class, atMeTalkEvent::onAtMeTalkEvent);
 		channel.subscribeAlways(GroupMessageEvent.class, blacklistManager::onBlackListManager);
+		channel.subscribeAlways(GroupMessageEvent.class, commandEvent::exec);
 	}
 	
 	/**

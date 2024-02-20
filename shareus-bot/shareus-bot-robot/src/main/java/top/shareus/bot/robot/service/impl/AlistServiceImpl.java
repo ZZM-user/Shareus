@@ -13,17 +13,26 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.message.data.MessageSourceBuilder;
+import net.mamoe.mirai.message.data.MessageSourceKind;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.shareus.bot.common.constant.AlistConstant;
+import top.shareus.bot.common.pojo.dto.ResetMetaPasswordDTO;
 import top.shareus.bot.common.redis.service.RedisService;
+import top.shareus.bot.common.utils.RandomStringGeneratorUtil;
+import top.shareus.bot.robot.config.BotManager;
+import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.service.AlistService;
 import top.shareus.common.core.exception.mirai.bot.BotException;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Alist服务impl
@@ -45,58 +54,8 @@ public class AlistServiceImpl implements AlistService {
 	private RedisService redisService;
 	@Autowired
 	private RedissonClient redissonClient;
-
-//    public static void main(String[] args) {
-//        ArrayList<String> pathList = new ArrayList() {{
-////            add("/OneDrive/群文件/2022/2022.5");
-////            add("/OneDrive/群文件/2022/06");
-////            add("/OneDrive/群文件/2022/07");
-////            add("/OneDrive/群文件/2022/08");
-////            add("/OneDrive/群文件/2022/09");
-////            add("/OneDrive/群文件/小说");
-//        }};
-//
-//        ArchivedFileMapper mapper = MybatisPlusUtils.getMapper(ArchivedFileMapper.class);
-//
-//        pathList.forEach(path -> {
-//            for (int i = 1; i < 50; i++) {
-//                String body = ls(path, i);
-//                Map map = JSONUtil.toBean(body, Map.class);
-//                Map data = (Map) map.get("data");
-////                Integer total = (Integer) data.get("total");
-//                List<Map> content;
-//                try {
-//                    content = (List<Map>) data.get("content");
-//                } catch (Exception e) {
-//                    System.out.println(body);
-//                    return;
-//                }
-//                if (content == null) {
-//                    return;
-//                }
-//                content.forEach(c -> {
-//                    String name = (String) c.get("name");
-//                    ArchivedFile file = new ArchivedFile();
-//                    file.setName(name);
-//                    String modified = (String) c.get("modified");
-//                    String format = LocalDateTimeUtil.format(LocalDateTime.parse(modified.substring(0, modified.length() - 1)), DatePattern.NORM_DATETIME_PATTERN);
-//                    file.setArchiveDate(DateUtil.parse(format));
-//                    file.setArchiveUrl(AlistConstant.DOMAIN + path + '/' + name);
-//                    Integer size = (Integer) c.get("size");
-//                    file.setSize(Long.valueOf(size));
-//
-//                    QueryWrapper<ArchivedFile> wrapper = new QueryWrapper<>();
-//                    wrapper.eq("name", name);
-//                    List<ArchivedFile> archivedFiles = mapper.selectList(wrapper);
-//                    if (CollUtil.isEmpty(archivedFiles)) {
-//                        mapper.insert(file);
-//                    }
-//                    System.out.println(file);
-//                });
-//            }
-//
-//        });
-//    }
+	@Autowired
+	private GroupsConfig groupsConfig;
 	
 	/**
 	 * 上传文件
@@ -294,5 +253,67 @@ public class AlistServiceImpl implements AlistService {
 		
 		log.info("组建归档目录：" + archivedPath);
 		return archivedPath;
+	}
+	
+	@Override
+	public void resetMetaPassword(ResetMetaPasswordDTO dto) {
+		// 设计密码
+		String password = dto.getPassword();
+		if (CharSequenceUtil.isBlank(password)) {
+			password = RandomStringGeneratorUtil.generateRandomString(8);
+		}
+		
+		// 是否取消加密
+		if (Boolean.TRUE.equals(dto.getCancelPassword())) {
+			password = "";
+		}
+		
+		// 构建结果集
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", 1);
+		map.put("p_sub", true);
+		map.put("password", password);
+		map.put("h_sub", false);
+		map.put("header", "");
+		map.put("header_sub", false);
+		map.put("hide", "");
+		map.put("path", "/OneDrive/群文件");
+		map.put("r_sub", false);
+		map.put("readme", "");
+		map.put("w_sub", true);
+		map.put("write", true);
+		
+		HttpResponse httpResponse = HttpRequest.post(AlistConstant.ADMIN_META_UPDATE)
+				.body(JSONUtil.toJsonPrettyStr(map), JSON)
+				.header("authorization", getAuthorization())
+				.execute().sync();
+		
+		log.info("重置资源云盘密码结果：{}", httpResponse.body());
+		
+		String msg = "资源云盘密码已重置为：" + password;
+		if (! httpResponse.isOk()) {
+			msg = "重置资源云盘密码失败！";
+		} else {
+			redisService.set(AlistConstant.GROUP_META_PWD_REDIS_KEY, password);
+		}
+		
+		// 结果通知
+		String finalMsg = msg;
+		Bot bot = BotManager.getBot();
+		groupsConfig.getTest().forEach(groupId -> bot.getGroup(groupId).sendMessage(finalMsg));
+		
+		if (Boolean.TRUE.equals(dto.getNotifyAdminGroup())) {
+			groupsConfig.getAdmin().forEach(groupId -> bot.getGroup(groupId).sendMessage(finalMsg));
+		}
+		
+		if (Boolean.TRUE.equals(dto.getNotifyResourceGroup()) && httpResponse.isOk()) {
+			String finalPassword = password;
+			groupsConfig.getRes().forEach(groupId -> {
+				bot.getGroup(groupId).sendMessage(finalMsg);
+				MessageSourceBuilder sourceBuilder = new MessageSourceBuilder();
+				sourceBuilder.messages(new MessageChainBuilder().append("当前云盘密码为：").append(finalPassword));
+				bot.getGroup(groupId).setEssenceMessage(sourceBuilder.build(bot.getId(), MessageSourceKind.GROUP));
+			});
+		}
 	}
 }

@@ -92,7 +92,11 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 				// 求文次数 + 1
 				String key = QiuWenConstant.QIU_WEN_REDIS_KEY + senderId;
 				queryArchivedResFileService.incrTimes(key, QiuWenConstant.getExpireTime());
-			}).whenComplete((v, e) -> log.error("求文日志记录异常!", e));
+			}).whenComplete((v, e) -> {
+				if (e != null) {
+					log.error("求文日志记录异常!", e);
+				}
+			});
 			
 			if (CollUtil.isEmpty(archivedFiles)) {
 				log.info("没查到关于 [" + bookName + "] 的库存信息");
@@ -104,12 +108,12 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 			builder.add(new At(senderId));
 			builder.add("\n小度为你找到了以下内容：");
 			
-			archivedFiles.forEach(a -> {
-				CompletableFuture.supplyAsync(() -> ShortUrlUtils.generateShortUrl(a.getArchiveUrl())).thenAccept(shortUrl -> {
-					if (CharSequenceUtil.isNotEmpty(shortUrl)) {
-						builder.add("\n名称：" + a.getName() + "\n" + "下载地址：" + shortUrl);
-					}
-				});
+			archivedFiles.parallelStream().forEachOrdered(a -> {
+				String shortUrl = ShortUrlUtils.generateShortUrl(a.getArchiveUrl());
+				log.info("生成的短链：{}", shortUrl);
+				if (CharSequenceUtil.isNotEmpty(shortUrl)) {
+					builder.add("\n名称：" + a.getName() + "\n" + "下载地址：" + shortUrl);
+				}
 			});
 			
 			event.getGroup().sendMessage(builder.build());

@@ -1,5 +1,7 @@
 package top.shareus.bot.robot.service;
 
+import top.shareus.bot.common.pojo.dto.ResetMetaPasswordDTO;
+
 import java.io.File;
 
 /**
@@ -11,4 +13,6 @@ import java.io.File;
 public interface AlistService {
 	
 	String uploadFile(File file);
+	
+	void resetMetaPassword(ResetMetaPasswordDTO dto);
 }
