@@ -65,7 +65,7 @@ public class AtMeTalkEvent extends SimpleListenerHost {
 		
 		HttpResponse execute = null;
 		try {
-			execute = HttpRequest.post("http://127.0.0.1:8459/ChatGPT/api")
+			execute = HttpRequest.post("http://8.137.57.245:8459/ChatGPT/api")
 					.body(JSONUtil.toJsonStr(map))
 					.timeout(500000)
 					.execute();
