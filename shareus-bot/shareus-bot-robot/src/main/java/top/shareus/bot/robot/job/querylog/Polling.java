@@ -6,7 +6,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -76,7 +75,7 @@ public class Polling {
 	 */
 	public void finishQuery(QueryLog queryLog, ArchivedFile archivedFile) {
 		if (ObjectUtil.isNotNull(archivedFile)) {
-			finishQuery(queryLog, Lists.newArrayList(archivedFile));
+			finishQuery(queryLog, CollUtil.newArrayList(archivedFile));
 		}
 	}
 	

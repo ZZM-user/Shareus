@@ -3,7 +3,7 @@ COPY ./target/*.jar /shareus-bot-robot.jar
 ENV TZ Asia/Shanghai
 ENV LANG C.UTF-8
 CMD ["mkdir","/upload"]
-CMD ["mkdir","/config"]
+CMD ["mkdir","/botConfig"]
 CMD ["-server.port=9999"]
 EXPOSE 9999
 VOLUME ["/opt/download/mirai/groupFile/:/upload"]

@@ -12,6 +12,7 @@ import top.shareus.common.core.exception.mirai.bot.BotException;
 import xyz.cssxsh.mirai.tool.FixProtocolVersion;
 import xyz.cssxsh.mirai.tool.KFCFactory;
 
+
 /**
  * 机器人管理
  *
@@ -22,15 +23,14 @@ import xyz.cssxsh.mirai.tool.KFCFactory;
 @Component
 public class BotManager {
 	public static final String KFC_CONFIG = """
-											{
-											    "8.9.63": {
-											        "base_url": "http://8.137.57.245:12780",
-											        "type": "fuqiuluo/unidbg-fetch-qsign",
-											        "key": "114514"
-											    }
-											}
-											
-											""";
+	                                        {
+	                                            "8.9.63": {
+	                                                "base_url": "http://8.137.57.245:12780",
+	                                                "type": "fuqiuluo/unidbg-fetch-qsign",
+	                                                "key": "114514"
+	                                            }
+	                                        }
+	                                        """;
 	private static volatile Bot BOT = null;
 	
 	/**
@@ -100,7 +100,7 @@ public class BotManager {
 	public static void saveKFCConfig() {
 		log.info("写入KFC配置文件……");
 		
-		String filePath = "/config/KFCFactory.json";
+		String filePath = "KFCFactory.json";
 		FileUtil.touch(filePath);
 		FileUtil.writeString(KFC_CONFIG, filePath, CharsetUtil.UTF_8);
 		

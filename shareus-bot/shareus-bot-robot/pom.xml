@@ -18,6 +18,20 @@
             <groupId>top.shareus</groupId>
             <artifactId>shareus-bot-common</artifactId>
             <version>0.0.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>nacos-client</artifactId>
+                    <groupId>com.alibaba.nacos</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                    <groupId>com.alibaba.cloud</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                    <groupId>com.alibaba.cloud</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -78,6 +92,13 @@
             <version>1.9.10</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/fix-protocol-version-1.9.10.mirai2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.kasukusakura.mlss</groupId>
+            <artifactId>mirai-login-solver-sakura</artifactId>
+            <version>0.0.12</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/mirai-login-solver-sakura-0.0.12.mirai2.jar</systemPath>
         </dependency>
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.boot</groupId>-->
