@@ -1,6 +1,8 @@
 package top.shareus.bot.robot.util;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,26 @@ public class FileProcessor {
 	                                               ---------------------------分割线-------------------------
 	                                               """;
 	
+	public static final List<String> WATERMARK_LIST = ListUtil.of(
+			"""
+			----------------------------分割线-------------------------
+			  本文由深入海潮探海棠整理
+			  bl看文汁源加群：325459601
+			  【附:文章源自网络，版权归原作者所有，不可用于收费】
+			---------------------------分割线-------------------------
+			""",
+			"扣扣之元裙③②⑤④⑤⑨⑥零①",
+			"【QQ资源群325459601】",
+			"b l 看 文 汁 源 加 裙：3 2 5 4 5 9 6 0 1"
+	                                                             );
+	
+	public static void main(String[] args) {
+		File file = new File("F:\\Download\\《百年不合》by北南（桃心骑士）.txt");
+		FileProcessor.insertWatermark(file, 10);
+		// File zipFile = new File("C:\\Users\\17602\\Desktop\\压缩包.zip");
+		// insertWatermark(zipFile, 10);
+	}
+	
 	/**
 	 * 插入默认水印
 	 *
@@ -43,7 +65,7 @@ public class FileProcessor {
 	 * @param times 次数
 	 */
 	public static void insertWatermark(File file, Integer times) {
-		FileProcessor.insertWatermark(file, times, DEFAULT_WATERMARK);
+		FileProcessor.insertWatermark(file, times, "");
 	}
 	
 	/**
@@ -57,7 +79,7 @@ public class FileProcessor {
 		log.info("开始插入水印：{}", file.getName());
 		
 		try {
-			String filePath = file.getAbsolutePath(); // 替换为你的文件路径
+			String filePath = file.getAbsolutePath();
 			
 			if (isTxtFile(filePath)) {
 				insertToText(times, insertText, filePath);
@@ -71,58 +93,6 @@ public class FileProcessor {
 		}
 		
 		log.info("水印：处理完成: {}", file.getAbsoluteFile());
-	}
-	
-	/**
-	 * 插入文本到文本文件
-	 *
-	 * @param times      插入次数
-	 * @param insertText 插入的文本
-	 * @param filePath   文件路径
-	 */
-	private static void insertToText(Integer times, String insertText, String filePath) {
-		List<String> lines = readLines(filePath);
-		
-		boolean already = String.join("", lines).contains(DEFAULT_WATERMARK);
-		if (already) {
-			return;
-		}
-		
-		// 查找空行的索引
-		List<Integer> emptyLineIndices = IntStream.range(0, lines.size())
-				.filter(i -> lines.get(i).trim().isEmpty())
-				.boxed()
-				.collect(Collectors.toList());
-		
-		if (emptyLineIndices.size() < times) {
-			log.debug("文件中的空行数量不足。");
-			return;
-		}
-		
-		Random random = new Random();
-		
-		// 随机插入文本
-		for (int i = 0; i < times; i++) {
-			int randomIndex = random.nextInt(emptyLineIndices.size());
-			int insertIndex = emptyLineIndices.get(randomIndex);
-			lines.add(insertIndex, insertText);
-			emptyLineIndices.remove(randomIndex);
-		}
-		
-		// 在头部和尾部添加文本
-//		lines.add(0, insertText);
-		lines.add(insertText);
-		
-		// 构建修改后的内容
-		StringBuilder modifiedContent = new StringBuilder();
-		for (String line : lines) {
-			modifiedContent.append(line).append("\n");
-		}
-		
-		// 将修改后的内容写回文件
-		FileUtil.writeString(modifiedContent.toString(), filePath, StandardCharsets.UTF_8);
-		
-		log.info("文本已成功插入文件中。{}", filePath);
 	}
 	
 	private static void insertToZip(Integer times, String insertText, String zipFilePath) {
@@ -288,12 +258,58 @@ public class FileProcessor {
 		return StrUtil.equalsAnyIgnoreCase(extension, "zip", "rar", "7z");
 	}
 	
-	
-	public static void main(String[] args) {
-		File file = new File("F:\\Download\\《百年不合》by北南（桃心骑士）.txt");
-		FileProcessor.insertWatermark(file, 1);
-		// File zipFile = new File("C:\\Users\\17602\\Desktop\\压缩包.zip");
-		// insertWatermark(zipFile, 10);
+	/**
+	 * 插入文本到文本文件
+	 *
+	 * @param times      插入次数
+	 * @param insertText 插入的文本
+	 * @param filePath   文件路径
+	 */
+	private static void insertToText(Integer times, String insertText, String filePath) {
+		List<String> lines = readLines(filePath);
+		
+		// 查找空行的索引
+		List<Integer> emptyLineIndices = IntStream.range(0, lines.size())
+				.filter(i -> lines.get(i).trim().isEmpty())
+				.boxed()
+				.collect(Collectors.toList());
+		
+		if (emptyLineIndices.size() < times) {
+			log.debug("文件中的空行数量不足。");
+			return;
+		}
+		
+		Random random = new Random();
+		String fullContent = String.join("", lines);
+		
+		// 随机插入文本
+		for (int i = 0; i < times; i++) {
+			insertText = RandomUtil.randomEle(WATERMARK_LIST);
+			boolean already = fullContent.contains(insertText);
+			if (already) {
+				return;
+			}
+			
+			int randomIndex = random.nextInt(emptyLineIndices.size());
+			int insertIndex = emptyLineIndices.get(randomIndex);
+			lines.add(insertIndex, insertText);
+			emptyLineIndices.remove(randomIndex);
+		}
+		
+		// 在头部和尾部添加文本
+//		lines.add(0, insertText);
+		lines.add(insertText);
+		
+		// 构建修改后的内容
+		StringBuilder modifiedContent = new StringBuilder();
+		for (String line : lines) {
+			modifiedContent.append(line).append("\n");
+		}
+		
+		// 将修改后的内容写回文件
+		FileUtil.writeString(modifiedContent.toString(), filePath, StandardCharsets.UTF_8);
+		
+		log.info("文本已成功插入文件中。{}", filePath);
 	}
 	
 }
