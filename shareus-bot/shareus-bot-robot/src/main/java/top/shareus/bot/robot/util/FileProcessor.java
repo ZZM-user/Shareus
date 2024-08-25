@@ -29,12 +29,12 @@ import java.util.stream.IntStream;
 public class FileProcessor {
 	
 	public static final String DEFAULT_WATERMARK = """
-												   ----------------------------分割线-------------------------
-												     本文由深入海潮探海棠整理
-												     bl看文汁源加群：325459601
-												     【附:文章源自网络，版权归原作者所有，不可用于收费】
-												   ---------------------------分割线-------------------------
-												     												    """;
+	                                               ----------------------------分割线-------------------------
+	                                                 本文由深入海潮探海棠整理
+	                                                 bl看文汁源加群：325459601
+	                                                 【附:文章源自网络，版权归原作者所有，不可用于收费】
+	                                               ---------------------------分割线-------------------------
+	                                               """;
 	
 	/**
 	 * 插入默认水印
@@ -70,39 +70,7 @@ public class FileProcessor {
 			log.error("{}->加水印处理失败：{}:{}", file.getAbsoluteFile(), e.getMessage(), e.getCause().getMessage());
 		}
 		
-	}
-	
-	private static void insertToZip(Integer times, String insertText, String zipFilePath) {
-		try {
-			// 创建临时文件夹来解压缩
-			Path tempFolder = Files.createTempDirectory("temp_unzip");
-			
-			// 解压缩压缩包文件到临时文件夹
-			ZipUtil.unzip(zipFilePath, tempFolder.toString(), Charset.forName(getFileCharsetName(zipFilePath)));
-			
-			// 获取临时文件夹中的所有文件
-			File[] files = new File(tempFolder.toString()).listFiles();
-			
-			if (files != null) {
-				// 遍历每个文件并添加内容
-				for (File file : files) {
-					String absolutePath = file.getAbsolutePath();
-					if (file.isFile() && isTxtFile(absolutePath)) {
-						insertToText(times, insertText, absolutePath);
-					}
-				}
-				
-				// 将修改后的文件重新压缩为新的压缩包文件
-				ZipUtil.zip(tempFolder.toString(), zipFilePath);
-				
-				log.debug("水印内容已成功添加到压缩包文件中。");
-			}
-		} catch (IOException e) {
-			log.error(e.getMessage());
-			e.printStackTrace();
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
+		log.info("水印：处理完成: {}", file.getAbsoluteFile());
 	}
 	
 	/**
@@ -115,7 +83,7 @@ public class FileProcessor {
 	private static void insertToText(Integer times, String insertText, String filePath) {
 		List<String> lines = readLines(filePath);
 		
-		boolean already = lines.parallelStream().anyMatch(DEFAULT_WATERMARK::contains);
+		boolean already = String.join("", lines).contains(DEFAULT_WATERMARK);
 		if (already) {
 			return;
 		}
@@ -154,7 +122,40 @@ public class FileProcessor {
 		// 将修改后的内容写回文件
 		FileUtil.writeString(modifiedContent.toString(), filePath, StandardCharsets.UTF_8);
 		
-		System.out.println("文本已成功插入文件中。");
+		log.info("文本已成功插入文件中。{}", filePath);
+	}
+	
+	private static void insertToZip(Integer times, String insertText, String zipFilePath) {
+		try {
+			// 创建临时文件夹来解压缩
+			Path tempFolder = Files.createTempDirectory("temp_unzip");
+			
+			// 解压缩压缩包文件到临时文件夹
+			ZipUtil.unzip(zipFilePath, tempFolder.toString(), Charset.forName(getFileCharsetName(zipFilePath)));
+			
+			// 获取临时文件夹中的所有文件
+			File[] files = new File(tempFolder.toString()).listFiles();
+			
+			if (files != null) {
+				// 遍历每个文件并添加内容
+				for (File file : files) {
+					String absolutePath = file.getAbsolutePath();
+					if (file.isFile() && isTxtFile(absolutePath)) {
+						insertToText(times, insertText, absolutePath);
+					}
+				}
+				
+				// 将修改后的文件重新压缩为新的压缩包文件
+				ZipUtil.zip(tempFolder.toString(), zipFilePath);
+				
+				log.info("水印内容已成功添加到压缩包文件中。{}", zipFilePath);
+			}
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
 	}
 	
 	/**
@@ -198,22 +199,22 @@ public class FileProcessor {
 			bis.mark(0);
 			int read = bis.read(first3Bytes, 0, 3);
 			if (read == - 1) {
-				//文件编码为 ANSI
+				// 文件编码为 ANSI
 				return charset;
 			} else if (first3Bytes[0] == (byte) 0xFF
 					&& first3Bytes[1] == (byte) 0xFE) {
-				//文件编码为 Unicode
+				// 文件编码为 Unicode
 				charset = "UTF-16LE";
 				checked = true;
 			} else if (first3Bytes[0] == (byte) 0xFE
 					&& first3Bytes[1] == (byte) 0xFF) {
-				//文件编码为 Unicode big endian
+				// 文件编码为 Unicode big endian
 				charset = "UTF-16BE";
 				checked = true;
 			} else if (first3Bytes[0] == (byte) 0xEF
 					&& first3Bytes[1] == (byte) 0xBB
 					&& first3Bytes[2] == (byte) 0xBF) {
-				//文件编码为 UTF-8
+				// 文件编码为 UTF-8
 				charset = "UTF-8";
 				checked = true;
 			}
@@ -289,10 +290,10 @@ public class FileProcessor {
 	
 	
 	public static void main(String[] args) {
-//		File file = new File("C:\\Users\\17602\\Desktop\\叫妈妈 作者：故自山里来.txt");
-//		FileProcessor.insertWatermark(file, 5);
-		File zipFile = new File("C:\\Users\\17602\\Desktop\\压缩包.zip");
-		insertWatermark(zipFile, 10);
+		File file = new File("F:\\Download\\《百年不合》by北南（桃心骑士）.txt");
+		FileProcessor.insertWatermark(file, 1);
+		// File zipFile = new File("C:\\Users\\17602\\Desktop\\压缩包.zip");
+		// insertWatermark(zipFile, 10);
 	}
 	
 }
