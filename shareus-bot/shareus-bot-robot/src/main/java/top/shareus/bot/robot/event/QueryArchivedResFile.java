@@ -77,12 +77,6 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 				return;
 			}
 			
-			if ("晋江".equals(bookName)) {
-				log.info("检测到晋江作品求文！\t准备撤回");
-				MessageSource.recall(event.getMessage());
-				return;
-			}
-			
 			// 查询
 			List<ArchivedFile> archivedFiles = archivedFileService.findBookInfoByName(bookName);
 			
