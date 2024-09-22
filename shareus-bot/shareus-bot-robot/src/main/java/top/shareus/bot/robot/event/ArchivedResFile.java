@@ -68,7 +68,7 @@ public class ArchivedResFile extends SimpleListenerHost {
 		// 获取文件
 		FileMessage fileMessage = MessageChainUtils.fetchFileMessage(event.getMessage());
 		
-		if (! System.getProperty("os.name").contains("Windows") || ObjectUtil.isNull(fileMessage)) {
+		if (System.getProperty("os.name").contains("Windows") || ObjectUtil.isNull(fileMessage)) {
 			return;
 		}
 		
