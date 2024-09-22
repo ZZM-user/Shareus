@@ -25,9 +25,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mirai.version>2.15.0</mirai.version>
+        <mirai.version>2.16.0</mirai.version>
         <kotlin.version>1.8.0</kotlin.version>
-        <hutool.version>5.8.11</hutool.version>
+        <hutool.version>5.8.32</hutool.version>
         <jedis.verison>4.3.1</jedis.verison>
         <redisson.version>3.18.0</redisson.version>
         <junit.version>5.9.2</junit.version>

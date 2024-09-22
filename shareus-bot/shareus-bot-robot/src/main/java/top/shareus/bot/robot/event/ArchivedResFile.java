@@ -13,22 +13,27 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.FileMessage;
-import net.mamoe.mirai.message.data.MessageChain;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.shareus.bot.common.domain.ArchivedFile;
 import top.shareus.bot.common.eumn.bot.GroupEnum;
+import top.shareus.bot.common.eumn.meilisearch.MeilisearchIndexEnums;
 import top.shareus.bot.robot.annotation.GroupAuth;
+import top.shareus.bot.robot.config.MeilisearchConfig;
 import top.shareus.bot.robot.mapper.ArchivedFileMapper;
 import top.shareus.bot.robot.service.AlistService;
 import top.shareus.bot.robot.service.QueryLogService;
 import top.shareus.bot.robot.util.FileProcessor;
+import top.shareus.bot.robot.util.MeilisearchUtil;
 import top.shareus.bot.robot.util.MessageChainUtils;
 
+import javax.annotation.Resource;
 import java.io.File;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 转存资源群文件、并做记录
@@ -53,45 +58,52 @@ public class ArchivedResFile extends SimpleListenerHost {
 	private AlistService alistService;
 	@Autowired
 	private QueryLogService queryLogService;
+	@Resource
+	private MeilisearchConfig meilisearchConfig;
 	
 	@EventHandler
 	@GroupAuth(allowGroupList = {GroupEnum.RES, GroupEnum.TEST})
 	public void onArchivedResFileEvent(GroupMessageEvent event) {
 		// 监听 【所有】 文件
-		MessageChain message = event.getMessage();
 		// 获取文件
-		FileMessage fileMessage = MessageChainUtils.fetchFileMessage(message);
+		FileMessage fileMessage = MessageChainUtils.fetchFileMessage(event.getMessage());
 		
-		if (! System.getProperty("os.name").contains("Windows") && ObjectUtil.isNotNull(fileMessage)) {
-			// 下载文件
-			ArchivedFile archivedFile = downloadFile(event, fileMessage);
-			
-			if (ObjectUtil.isNotNull(archivedFile)) {
-				// 转存文件，存放盘，获取连接
-				log.info("文件下载成功：" + archivedFile.getName());
-				File file = new File(archivedFile.getArchiveUrl());
-				
-				FileProcessor.insertWatermark(file, 3);
-				log.info("归档路径：" + archivedFile.getArchiveUrl());
-				
-				try {
-					String uploadFilePath = alistService.uploadFile(file);
-					if (CharSequenceUtil.isNotBlank(uploadFilePath)) {
-						archivedFile.setArchiveUrl(uploadFilePath);
-						log.info(archivedFile.toString());
-						// 将信息 写入数据库
-						archivedFileMapper.insert(archivedFile);
-						// 判断 是否完成求文
-						queryLogService.queryLogByBookName(archivedFile);
-					}
-					log.info(archivedFile.getName() + " 存档完成！");
-					return;
-				} catch (Exception e) {
-					log.error("归档文件异常", e);
-				}
-			}
-			log.info(archivedFile + " 存档失败！");
+		if (! System.getProperty("os.name").contains("Windows") || ObjectUtil.isNull(fileMessage)) {
+			return;
 		}
+		
+		// 下载文件
+		ArchivedFile archivedFile = downloadFile(event, fileMessage);
+		if (ObjectUtil.isNull(archivedFile)) {
+			return;
+		}
+		
+		// 转存文件，存放盘，获取连接
+		log.info("文件下载成功：{}", archivedFile.getName());
+		File file = new File(archivedFile.getArchiveUrl());
+		
+		FileProcessor.insertWatermark(file, 3);
+		log.info("归档路径：{}", archivedFile.getArchiveUrl());
+		
+		CompletableFuture.runAsync(() -> {
+			String uploadFilePath = alistService.uploadFile(file);
+			if (CharSequenceUtil.isNotBlank(uploadFilePath)) {
+				archivedFile.setArchiveUrl(uploadFilePath);
+				log.info(archivedFile.toString());
+				// 将信息 写入数据库
+				archivedFileMapper.insert(archivedFile);
+				MeilisearchUtil.addDocuments(meilisearchConfig.getClient(), MeilisearchIndexEnums.ARCHIVED_FILE, Collections.singletonList(archivedFile));
+				// 判断 是否完成求文
+				queryLogService.queryLogByBookName(archivedFile);
+			}
+		}).whenComplete((r, e) -> {
+			if (e != null) {
+				log.error("归档文件异常: {}", file.getName(), e);
+				log.info("{} 存档失败！", archivedFile);
+			} else {
+				log.info("{} 存档完成！", archivedFile.getName());
+			}
+		});
 	}
 	
 	/**
@@ -109,7 +121,7 @@ public class ArchivedResFile extends SimpleListenerHost {
 		// 下载文件
 		long len = HttpUtil.downloadFile(file.getUrl(), new File(archiveUrl));
 		
-		log.info(fileMessage.getName() + ": len = " + len);
+		log.info("{}: len = {}", fileMessage.getName(), len);
 		
 		if (len > 0) {
 			// 碰撞先关
@@ -135,6 +147,6 @@ public class ArchivedResFile extends SimpleListenerHost {
 	
 	@Override
 	public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-		log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());
+		log.error("{}\n{}\n{}", context, exception.getMessage(), exception.getCause().getMessage());
 	}
 }

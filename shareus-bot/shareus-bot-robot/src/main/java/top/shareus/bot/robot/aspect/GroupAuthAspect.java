@@ -39,7 +39,6 @@ public class GroupAuthAspect {
 				}
 			}
 		}
-//		throw new BotException("非管辖范围");
 		return null;
 	}
 	

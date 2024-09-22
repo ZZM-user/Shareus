@@ -78,8 +78,8 @@ public class BlackListManager extends SimpleListenerHost {
 			return null;
 		}
 		String content = plainText.contentToString().replace(ORDER, "");
-		String targetQQ = ReUtil.get("([0-9]{5,})", content, 1);
-		long targetQQId = Long.parseLong(targetQQ);
+		String targetQq = ReUtil.get("([0-9]{5,})", content, 1);
+		long targetQQId = Long.parseLong(targetQq);
 		if (ObjectUtil.isNull(targetQQId) || isIdAdmin(targetQQId)) {
 			log.info("拉黑：提取QQ失败 或 为管理员");
 			return null;
@@ -89,8 +89,8 @@ public class BlackListManager extends SimpleListenerHost {
 		if (ObjectUtil.isNotNull(normalMember)) {
 			dto.setNickName(normalMember.getNick() + " " + normalMember.getNameCard());
 		}
-		dto.setQqId(targetQQ);
-		dto.setRemark(content.replace(targetQQ, ""));
+		dto.setQqId(targetQq);
+		dto.setRemark(content.replace(targetQq, ""));
 		
 		BlackList blackList = blackListService.saveBlack(dto);
 		
@@ -101,14 +101,14 @@ public class BlackListManager extends SimpleListenerHost {
 				Group group = bot.getGroupOrFail(id);
 				NormalMember member = group.getOrFail(targetQQId);
 				member.kick("已经拉黑", true);
-				log.info("拉黑踢：{}->{}", id, targetQQ);
+				log.info("拉黑踢：{}->{}", id, targetQq);
 			});
 		} catch (PermissionDeniedException permissionDeniedException) {
 			log.info("没权限踢：{}", permissionDeniedException.getMessage());
 		} finally {
 			groupsConfig.getAdmin().forEach(id -> {
 				Group group = bot.getGroupOrFail(id);
-				group.sendMessage("已拉黑，记得踢：" + targetQQ);
+				group.sendMessage("已拉黑，记得踢：" + targetQq);
 			});
 		}
 		

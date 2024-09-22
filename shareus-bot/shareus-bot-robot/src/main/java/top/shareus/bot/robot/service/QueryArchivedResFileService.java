@@ -2,6 +2,8 @@ package top.shareus.bot.robot.service;
 
 import net.mamoe.mirai.message.data.PlainText;
 
+import java.util.List;
+
 /**
  * 查询归档res文件服务
  *
@@ -19,5 +21,5 @@ public interface QueryArchivedResFileService {
 	
 	boolean isQiuWen(PlainText plainText);
 	
-	String extractBookInfo(PlainText plainText);
+	List<String> extractBookInfo(PlainText plainText);
 }

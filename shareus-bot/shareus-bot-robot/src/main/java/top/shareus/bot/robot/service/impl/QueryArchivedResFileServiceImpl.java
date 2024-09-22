@@ -1,5 +1,6 @@
 package top.shareus.bot.robot.service.impl;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
@@ -18,6 +19,7 @@ import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.service.QueryArchivedResFileService;
 import top.shareus.bot.robot.util.MuteUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -134,30 +136,31 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 	 * @return {@code String}
 	 */
 	@Override
-	public String extractBookInfo(PlainText plainText) {
+	public List<String> extractBookInfo(PlainText plainText) {
 		if (ObjectUtil.isNull(plainText)) {
-			return "";
+			return ListUtil.of("");
 		}
 		
 		String content = plainText.getContent();
 		
 		if (StrUtil.contains(content, "晋江")) {
-			return "晋江";
+			return Collections.singletonList("晋江");
 		}
 		
 		// 获取求文信息
 		List<String> infoGroupList = ReUtil.getAllGroups(Pattern.compile(QIU_WEN_INFO_REGEXP), content, false);
-		log.info("拆分出的信息：" + String.join(",", infoGroupList));
+		log.info("拆分出的信息：{}", String.join(",", infoGroupList));
 		
 		// 信息不全
 		boolean hasEmptyInfo = infoGroupList.stream().anyMatch(String::isEmpty);
 		if (hasEmptyInfo) {
-			return "";
+			return ListUtil.of("");
 		}
 		
 		// 新规则
 		// 书名：静夜思\n作者：李白\n平台：未知
 		String bookName = infoGroupList.get(0);
+		String author = infoGroupList.get(1);
 		bookName = bookName
 				.replace("：", "")
 				.replace(":", "")
@@ -174,9 +177,8 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 			bookName = CharSequenceUtil.replace(bookName, indexOf, indexOf1 + 1, "");
 		}
 		
-		log.info("最终求文拆分结果：" + bookName);
-		
-		return bookName;
+		log.info("最终求文拆分结果：{}-{}", bookName, author);
+		return ListUtil.of(bookName, author);
 	}
 	
 	/**

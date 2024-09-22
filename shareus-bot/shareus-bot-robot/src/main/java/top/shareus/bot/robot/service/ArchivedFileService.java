@@ -21,4 +21,6 @@ public interface ArchivedFileService extends IService<ArchivedFile> {
 	 * @return {@link List}<{@link ArchivedFile}>
 	 */
 	public List<ArchivedFile> findBookInfoByName(String bookName);
+	
+	List<ArchivedFile> meiliSearch(String query);
 }

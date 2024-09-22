@@ -21,12 +21,12 @@ public class MuteUtils {
 	public static boolean mute(Group group, Long id, Long seconds) {
 		NormalMember member = group.getMembers().get(id);
 		if (ObjectUtil.isNull(member)) {
-			log.info("在 " + group.getName() + " 中找不到该用户：" + id + "\t禁言失败！");
+			log.info("在 {} 中找不到该用户：{}\t禁言失败！", group.getName(), id);
 			return false;
 		}
 		
 		member.mute(Math.toIntExact(seconds));
-		log.info("禁言" + id + (seconds + "s"));
+		log.info("禁言{}{}", id, seconds + "s");
 		
 		return member.isMuted();
 	}
@@ -37,12 +37,12 @@ public class MuteUtils {
 	
 	public static boolean mute(NormalMember member, Long seconds) {
 		if (ObjectUtil.isNull(member)) {
-			log.info("找不到该用户：" + member + "\t禁言失败！");
+			log.info("找不到该用户：{}\t禁言失败！", member);
 			return false;
 		}
 		
 		member.mute(Math.toIntExact(seconds));
-		log.info("禁言" + member.getId() + (seconds + "s"));
+		log.info("禁言{}{}", member.getId(), seconds + "s");
 		
 		return member.isMuted();
 	}

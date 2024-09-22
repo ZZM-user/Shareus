@@ -53,17 +53,17 @@ public class ShortUrlUtils {
 		
 		if (response.getStatus() == HttpStatus.HTTP_OK) {
 			String body = response.body();
-			log.info("获取短连接成功：" + body);
+			log.info("获取短连接成功：{}", body);
 			
 			String shortUrl = ReUtil.get(REGEX, body, 0).trim();
 			shortUrl = shortUrl.substring(0, shortUrl.length() - 2)
 					.replace("\\", "");
 			
-			log.info("生产短连接成功：" + shortUrl);
+			log.info("生产短连接成功：{}", shortUrl);
 			return shortUrl;
 		}
 		
-		log.error("生产短连接失败！" + longUrl);
+		log.error("生产短连接失败！{}", longUrl);
 		
 		throw new RuntimeException("生产短连接失败！");
 	}

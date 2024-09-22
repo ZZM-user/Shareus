@@ -57,13 +57,14 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 			}
 			
 			if (queryArchivedResFileService.checkWarring(senderId, event.getSenderName())) {
-				log.error(event.getSender().getNameCard() + "/" + senderId + " 求文次数异常！");
+				log.error("{}/{} 求文次数异常！", event.getSender().getNameCard(), senderId);
 				return;
 			}
 			
-			
 			// 提取书名
-			String bookName = queryArchivedResFileService.extractBookInfo(plainText);
+			List<String> bookInfo = queryArchivedResFileService.extractBookInfo(plainText);
+			String bookName = bookInfo.get(0);
+			String author = bookInfo.size() >= 2 ? bookInfo.get(1) : "";
 			
 			// 规范错误
 			if (CharSequenceUtil.isEmpty(bookName)) {
@@ -78,7 +79,11 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 			}
 			
 			// 查询
-			List<ArchivedFile> archivedFiles = archivedFileService.findBookInfoByName(bookName);
+			List<ArchivedFile> archivedFiles = archivedFileService.meiliSearch(bookName + " " + author);
+			if (CollUtil.isEmpty(archivedFiles)) {
+				log.info("没查到关于 [{}] 的库存信息", bookName);
+				return;
+			}
 			
 			CompletableFuture.runAsync(() -> {
 				// 求文记录
@@ -86,16 +91,12 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 				// 求文次数 + 1
 				String key = QiuWenConstant.QIU_WEN_REDIS_KEY + senderId;
 				queryArchivedResFileService.incrTimes(key, QiuWenConstant.getExpireTime());
-			}).whenComplete((v, e) -> {
+			}).exceptionally(e -> {
 				if (e != null) {
 					log.error("求文日志记录异常!", e);
 				}
+				return null;
 			});
-			
-			if (CollUtil.isEmpty(archivedFiles)) {
-				log.info("没查到关于 [" + bookName + "] 的库存信息");
-				return;
-			}
 			
 			// 查到了书目信息 构建消息链
 			MessageChainBuilder builder = new MessageChainBuilder();
@@ -118,6 +119,6 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 	
 	@Override
 	public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-		log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());
+		log.error("{}\n{}\n{}", context, exception.getMessage(), exception.getCause().getMessage());
 	}
 }

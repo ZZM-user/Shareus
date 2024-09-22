@@ -50,7 +50,7 @@ public class BanResWordConstant {
 	 * @return
 	 */
 	public static Boolean hasBanWord(String word) {
-		log.debug("裁决言论：" + word);
+		log.debug("裁决言论：{}", word);
 		List<String> banWord = new ArrayList<String>() {{
 			addAll(ZAO);
 			addAll(WU);
@@ -59,7 +59,7 @@ public class BanResWordConstant {
 		}};
 		
 		String ban = banWord.stream().filter(word::equals).findAny().orElse(null);
-		log.debug("裁决结果：" + ban);
+		log.debug("裁决结果：{}", ban);
 		return StrUtil.isNotBlank(ban);
 	}
 }

@@ -139,7 +139,7 @@ public class FileProcessor {
 		try {
 			String fileCharsetName = getFileCharsetName(filePath);
 			List<String> lines = FileUtil.readLines(filePath, fileCharsetName);
-			boolean ok = lines.parallelStream().filter(line -> line.length() > 0).noneMatch(line -> StrUtil.containsAny(line, "�", "拷锟"));
+			boolean ok = lines.parallelStream().filter(line -> ! line.isEmpty()).noneMatch(line -> StrUtil.containsAny(line, "�", "拷锟"));
 			if (ok) {
 				return lines;
 			}
@@ -235,7 +235,9 @@ public class FileProcessor {
 		return charset;
 	}
 	
-	// 判断文件是否为txt文件
+	/**
+	 * 判断文件是否为txt文件
+	 */
 	private static boolean isTxtFile(String filePath) {
 		String extension = "";
 		int index = filePath.lastIndexOf(".");
@@ -246,7 +248,13 @@ public class FileProcessor {
 		return extension.equalsIgnoreCase("txt");
 	}
 	
-	// 判断文件是否为压缩文件
+	/**
+	 * 判断文件是否为压缩文件
+	 *
+	 * @param filePath
+	 *
+	 * @return
+	 */
 	private static boolean isZipFile(String filePath) {
 		
 		String extension = "";
@@ -297,7 +305,6 @@ public class FileProcessor {
 		}
 		
 		// 在头部和尾部添加文本
-//		lines.add(0, insertText);
 		lines.add(insertText);
 		
 		// 构建修改后的内容

@@ -43,7 +43,7 @@ public class RecallQueryArchivedEvent extends SimpleListenerHost {
 		
 		String cause = "由 " + operator.getNameCard() + " 主动撤回";
 		queryLogs.forEach(q -> polling.stopQuery(q, cause));
-		log.info(cause + " - " + queryLogs.size());
+		log.info("{} - {}", cause, queryLogs.size());
 	}
 	
 	@Override

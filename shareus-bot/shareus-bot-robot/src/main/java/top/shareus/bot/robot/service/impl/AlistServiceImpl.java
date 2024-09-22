@@ -74,7 +74,7 @@ public class AlistServiceImpl implements AlistService {
 			String uploadPath = buildPathOfArchive(file.getName());
 			// url编码路径
 			String encodePath = URLEncodeUtil.encode(uploadPath);
-			log.info("流：" + bytes.length + "\t编码串：" + encodePath);
+			log.info("流：{}\t编码串：{}", bytes.length, encodePath);
 			
 			HttpResponse response = HttpRequest.put(AlistConstant.UPLOAD_FILE_API)
 					.header("File-Path", encodePath)
@@ -82,14 +82,14 @@ public class AlistServiceImpl implements AlistService {
 					.body(bytes)
 					.execute().sync();
 			
-			log.info("上传文件 结束 " + response.body());
+			log.info("上传文件 结束 {}", response.body());
 			
 			if (HttpStatus.HTTP_OK == response.getStatus()) {
 				log.info(uploadPath + " 上传成功");
 				return AlistConstant.DOMAIN + uploadPath;
 			}
 			
-			log.error("Alist文件上传失败:" + uploadPath + "\t" + response.body());
+			log.error("Alist文件上传失败:{}\t{}", uploadPath, response.body());
 			throw new RuntimeException("Alist文件上传失败:" + uploadPath + "\t" + response.body());
 		} catch (Exception e) {
 			log.error("归档文件异常：{0}", e);
@@ -136,7 +136,7 @@ public class AlistServiceImpl implements AlistService {
 				.execute().sync();
 		
 		if (HttpStatus.HTTP_OK == response.getStatus()) {
-			log.info("获取文件夹：" + dir + "\n" + response.body());
+			log.info("获取文件夹：{}\n{}", dir, response.body());
 			return response.body();
 		}
 		
@@ -162,7 +162,7 @@ public class AlistServiceImpl implements AlistService {
 			log.info("需要更新 token");
 			// token已经失效 需要重新登录 登录后再存到redis里
 			token = login();
-			log.info("获取Alist Token：" + token);
+			log.info("获取Alist Token：{}", token);
 			
 			redisService.set(AlistConstant.AUTH_REDIS_KEY, token, AlistConstant.AUTH_REDIS_EXPIRE);
 			return token;
@@ -195,12 +195,12 @@ public class AlistServiceImpl implements AlistService {
 			if (HttpStatus.HTTP_OK == response.getStatus()) {
 				String body = response.body();
 				
-				log.info("登录成功 " + body);
+				log.info("登录成功 {}", body);
 				token = ReUtil.get(JWT_REGEX, body, 0).replace("\"", "");
 			}
 			
 			if (CharSequenceUtil.isEmpty(token)) {
-				log.error("登录失败 " + response.body());
+				log.error("登录失败 {}", response.body());
 			}
 		} catch (Exception e) {
 			log.error("Alist登录失败-获取token失败:{}", response.body());
@@ -231,7 +231,7 @@ public class AlistServiceImpl implements AlistService {
 				.header("authorization", getAuthorization())
 				.execute().sync();
 		
-		log.info("创建文件夹：" + dir);
+		log.info("创建文件夹：{}", dir);
 	}
 	
 	/**
@@ -252,7 +252,7 @@ public class AlistServiceImpl implements AlistService {
 			mkdir(archivedPath);
 		}
 		
-		log.info("组建归档目录：" + archivedPath);
+		log.info("组建归档目录：{}", archivedPath);
 		return archivedPath;
 	}
 	

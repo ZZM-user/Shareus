@@ -39,6 +39,6 @@ public class HasMemberJoinEvent extends SimpleListenerHost {
 	
 	@Override
 	public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-		log.error(context + "\n" + exception.getMessage() + "\n" + exception.getCause().getMessage());
+		log.error("{}\n{}\n{}", context, exception.getMessage(), exception.getCause().getMessage());
 	}
 }

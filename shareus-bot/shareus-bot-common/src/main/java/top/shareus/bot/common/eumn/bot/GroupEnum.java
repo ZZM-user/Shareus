@@ -1,5 +1,6 @@
 package top.shareus.bot.common.eumn.bot;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -9,8 +10,13 @@ import lombok.Getter;
  * @date 2023/02/25
  */
 
+@Getter
+@AllArgsConstructor
 public enum GroupEnum {
 	
+	/**
+	 *
+	 */
 	ALL("all"),
 	
 	/**
@@ -32,12 +38,9 @@ public enum GroupEnum {
 	 * GPT组
 	 */
 	TEST("test"),
+	
 	GPT("gpt");
 	
-	@Getter
-	private String type;
+	private final String type;
 	
-	GroupEnum(String type) {
-		this.type = type;
-	}
 }

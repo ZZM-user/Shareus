@@ -22,10 +22,10 @@ public class GroupUploadFileUtils {
 		MessageReceipt<Contact> uploadAndSend = filesRoot.uploadAndSend(new File(filePath));
 		
 		if (uploadAndSend.isToGroup()) {
-			log.info(filePath + " 上传至 " + group.getName() + " 成功！");
+			log.info("{} 上传至 {} 成功！", filePath, group.getName());
 			return;
 		}
 		
-		log.error(filePath + " 上传至 " + group.getName() + " 失败！");
+		log.error("{} 上传至 {} 失败！", filePath, group.getName());
 	}
 }
