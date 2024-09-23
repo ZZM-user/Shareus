@@ -4,7 +4,6 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
@@ -19,7 +18,6 @@ import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.service.QueryArchivedResFileService;
 import top.shareus.bot.robot.util.MuteUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -142,10 +140,6 @@ public class QueryArchivedResFileServiceImpl implements QueryArchivedResFileServ
 		}
 		
 		String content = plainText.getContent();
-		
-		if (StrUtil.contains(content, "晋江")) {
-			return Collections.singletonList("晋江");
-		}
 		
 		// 获取求文信息
 		List<String> infoGroupList = ReUtil.getAllGroups(Pattern.compile(QIU_WEN_INFO_REGEXP), content, false);
