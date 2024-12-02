@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import top.shareus.bot.common.domain.ArchivedFile;
 import top.shareus.bot.common.domain.ShareFileStar;
+import top.shareus.bot.robot.pojo.vo.ArchivedFileVO;
+import top.shareus.bot.robot.pojo.vo.RankVO;
 
 import java.util.List;
 
@@ -60,4 +62,9 @@ public interface ArchivedFileMapper extends BaseMapper<ArchivedFile> {
 	List<ArchivedFile> selectRepeatFileByMd5(String md5);
 	
 	List<ArchivedFile> selectBookByNameFullText(String bookName);
+	
+	List<ArchivedFileVO> selectRecentFile(int limit);
+	
+	List<RankVO> contributionRank();
+	
 }

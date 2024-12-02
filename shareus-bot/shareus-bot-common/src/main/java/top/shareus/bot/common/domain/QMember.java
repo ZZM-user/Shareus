@@ -1,7 +1,8 @@
 package top.shareus.bot.common.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import top.shareus.common.core.annotation.Excel;
 import top.shareus.common.core.web.domain.BaseEntity;
 
@@ -11,6 +12,8 @@ import top.shareus.common.core.web.domain.BaseEntity;
  * @author zhaojl
  * @date 2023-04-02
  */
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class QMember extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 	
@@ -35,7 +38,7 @@ public class QMember extends BaseEntity {
 	 * 头像
 	 */
 	@Excel(name = "头像")
-	private String avatrarUrl;
+	private String avatarUrl;
 	
 	/**
 	 * 特殊头衔
@@ -46,70 +49,6 @@ public class QMember extends BaseEntity {
 	/**
 	 * 删除标记 0未删；1删
 	 */
+	@TableLogic(value = "0", delval = "1")
 	private Integer delFlag;
-	
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-				.append("id", getId())
-				.append("qq", getQq())
-				.append("nickName", getNickName())
-				.append("avatrarUrl", getAvatrarUrl())
-				.append("specialTitle", getSpecialTitle())
-				.append("remark", getRemark())
-				.append("delFlag", getDelFlag())
-				.append("createBy", getCreateBy())
-				.append("createTime", getCreateTime())
-				.append("updateBy", getUpdateBy())
-				.append("updateTime", getUpdateTime())
-				.toString();
-	}
-	
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public Long getQq() {
-		return qq;
-	}
-	
-	public void setQq(Long qq) {
-		this.qq = qq;
-	}
-	
-	public String getNickName() {
-		return nickName;
-	}
-	
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-	
-	public String getAvatrarUrl() {
-		return avatrarUrl;
-	}
-	
-	public void setAvatrarUrl(String avatrarUrl) {
-		this.avatrarUrl = avatrarUrl;
-	}
-	
-	public String getSpecialTitle() {
-		return specialTitle;
-	}
-	
-	public void setSpecialTitle(String specialTitle) {
-		this.specialTitle = specialTitle;
-	}
-	
-	public Integer getDelFlag() {
-		return delFlag;
-	}
-	
-	public void setDelFlag(Integer delFlag) {
-		this.delFlag = delFlag;
-	}
 }

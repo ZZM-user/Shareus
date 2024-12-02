@@ -1,4 +1,4 @@
-package top.shareus.bot.robot.controller;
+package top.shareus.bot.robot.controller.job;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

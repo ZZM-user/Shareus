@@ -1,11 +1,18 @@
 package top.shareus.bot.robot.event;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ByteUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ZipUtil;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.extra.compress.CompressUtil;
 import cn.hutool.http.HttpUtil;
+import com.meilisearch.sdk.Client;
 import kotlin.coroutines.CoroutineContext;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.contact.file.AbsoluteFile;
@@ -16,6 +23,7 @@ import net.mamoe.mirai.message.data.FileMessage;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import top.shareus.bot.common.constant.AlistConstant;
 import top.shareus.bot.common.domain.ArchivedFile;
 import top.shareus.bot.common.eumn.bot.GroupEnum;
 import top.shareus.bot.common.eumn.meilisearch.MeilisearchIndexEnums;
@@ -30,6 +38,7 @@ import top.shareus.bot.robot.util.MessageChainUtils;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -104,6 +113,76 @@ public class ArchivedResFile extends SimpleListenerHost {
 				log.info("{} 存档完成！", archivedFile.getName());
 			}
 		});
+	}
+	
+	private void upload() {
+		Client meilisearchClient = meilisearchConfig.getClient();
+		// String path = "E:\\WorkSpace\\Spider\\BookSpider\\BookSpider\\file";
+		String path = "F:\\Download\\books\\bak-local";
+		FileUtil.loopFiles(path).parallelStream().forEachOrdered(file -> {
+			List<File> loopFile = List.of(file);
+			if (! file.getName().endsWith("txt")) {
+				try {
+					CompressUtil.createExtractor(Charset.defaultCharset(), file).extract(FileUtil.file(path));
+					log.info("解压文件：{}", file.getName());
+				} catch (Exception e) {
+					log.error("解压文件异常：{}", file.getName(), e);
+				}
+				File unzip = ZipUtil.unzip(file);
+				loopFile = FileUtil.loopFiles(unzip);
+				return;
+				
+			}
+			
+			loopFile.parallelStream().forEachOrdered(lf -> {
+				String md5 = SecureUtil.md5(lf);
+				ArchivedFile archivedFile = new ArchivedFile();
+				archivedFile.setMd5(md5);
+				archivedFile.setName(lf.getName());
+				archivedFile.setSize(lf.length());
+				archivedFile.setId(IdUtil.simpleUUID());
+				archivedFile.setEnabled(0);
+				archivedFile.setArchiveUrl(lf.getAbsolutePath());
+				archivedFile.setArchiveDate(new Date());
+				
+				FileProcessor.insertWatermark(lf, 3);
+				log.info("归档路径：{}", archivedFile.getArchiveUrl());
+				
+				
+				String uploadFilePath;
+				try {
+					uploadFilePath = alistService.uploadFile(lf);
+				} catch (Exception e) {
+					log.error("归档文件异常: {}", lf.getName(), e);
+					return;
+				}
+				// String uploadFilePath = buildPathOfArchive(lf.getName());
+				log.info("{} 存档完成！", lf.getName());
+				
+				CompletableFuture.runAsync(() -> {
+					if (FileUtil.exist(lf)) {
+						FileUtil.move(lf, new File("F:\\Download\\books\\bak-local2\\" + lf.getName()), true);
+					}
+					if (CharSequenceUtil.isNotBlank(uploadFilePath)) {
+						archivedFile.setArchiveUrl(uploadFilePath);
+						log.info(archivedFile.toString());
+						// 将信息 写入数据库
+						archivedFileMapper.insert(archivedFile);
+						// MeilisearchUtil.addDocuments(meilisearchClient, MeilisearchIndexEnums.ARCHIVED_FILE, Collections.singletonList(archivedFile));
+					}
+				});
+			});
+		});
+	}
+	
+	private String buildPathOfArchive(String fileName) {
+		DateTime date = DateUtil.date();
+		int year = date.year();
+		int month = date.month();
+		String archivedPath = AlistConstant.UPLOAD_ALIST_PATH_DOMAIN + year + "/" + (month + 1) + "/" + fileName.trim();
+		
+		log.info("组建归档目录：{}", archivedPath);
+		return archivedPath;
 	}
 	
 	/**

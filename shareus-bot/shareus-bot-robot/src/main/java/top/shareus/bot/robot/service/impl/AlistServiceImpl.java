@@ -1,5 +1,6 @@
 package top.shareus.bot.robot.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -29,6 +30,7 @@ import top.shareus.bot.common.utils.RandomStringGeneratorUtil;
 import top.shareus.bot.robot.config.BotManager;
 import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.service.AlistService;
+import top.shareus.common.core.exception.ServiceException;
 import top.shareus.common.core.exception.mirai.bot.BotException;
 
 import java.io.File;
@@ -82,15 +84,16 @@ public class AlistServiceImpl implements AlistService {
 					.body(bytes)
 					.execute().sync();
 			
-			log.info("上传文件 结束 {}", response.body());
+			String body = response.body();
+			log.info("上传文件 结束 {}", body);
 			
-			if (HttpStatus.HTTP_OK == response.getStatus()) {
+			if (HttpStatus.HTTP_OK == response.getStatus() && ! StrUtil.containsAnyIgnoreCase(body, "\"code\":500", "error", "失败")) {
 				log.info(uploadPath + " 上传成功");
 				return AlistConstant.DOMAIN + uploadPath;
 			}
 			
-			log.error("Alist文件上传失败:{}\t{}", uploadPath, response.body());
-			throw new RuntimeException("Alist文件上传失败:" + uploadPath + "\t" + response.body());
+			log.error("Alist文件上传失败:{}\t{}", uploadPath, body);
+			throw new RuntimeException("Alist文件上传失败:" + uploadPath + "\t" + body);
 		} catch (Exception e) {
 			log.error("归档文件异常：{0}", e);
 		}
@@ -269,20 +272,20 @@ public class AlistServiceImpl implements AlistService {
 			password = "";
 		}
 		
+		HttpResponse response = HttpRequest.get(AlistConstant.ADMIN_META_INFO)
+				.form("id", 1)
+				.header("authorization", getAuthorization())
+				.execute();
+		
+		if (! response.isOk()) {
+			throw new ServiceException("获取资源云盘meta信息失败");
+		}
+		
+		HashMap body = JSONUtil.toBean(response.body(), HashMap.class);
+		Map<String, Object> map = JSONUtil.toBean(Convert.toStr(body.get("data")), HashMap.class);
+		
 		// 构建结果集
-		Map<String, Object> map = new HashMap<>();
-		map.put("id", 1);
-		map.put("p_sub", true);
 		map.put("password", password);
-		map.put("h_sub", false);
-		map.put("header", "");
-		map.put("header_sub", false);
-		map.put("hide", "");
-		map.put("path", "/OneDrive/群文件");
-		map.put("r_sub", false);
-		map.put("readme", "");
-		map.put("w_sub", true);
-		map.put("write", true);
 		
 		HttpResponse httpResponse = HttpRequest.post(AlistConstant.ADMIN_META_UPDATE)
 				.body(JSONUtil.toJsonPrettyStr(map), JSON)

@@ -1,2 +1,3 @@
 #top.shareus.bot.common.redis.configure.RedisConfig
 top.shareus.bot.common.redis.service.RedisService
+top.shareus.bot.common.aspect.CacheAspect
