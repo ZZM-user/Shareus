@@ -261,6 +261,15 @@ public class AlistServiceImpl implements AlistService {
 	
 	@Override
 	public void resetMetaPassword(ResetMetaPasswordDTO dto) {
+		// 检查机器人是否掉线
+		Bot bot = BotManager.getBot();
+		try {
+			bot.getGroup(groupsConfig.getTest().get(0)).sendMessage("重置密码开始");
+		} catch (Exception e) {
+			log.error("重置密码失败：机器人掉线", e);
+			throw new ServiceException("重置密码失败：机器人掉线");
+		}
+		
 		// 设计密码
 		String password = dto.getPassword();
 		if (CharSequenceUtil.isBlank(password)) {
@@ -303,7 +312,6 @@ public class AlistServiceImpl implements AlistService {
 		
 		// 结果通知
 		String finalMsg = msg;
-		Bot bot = BotManager.getBot();
 		groupsConfig.getTest().forEach(groupId -> {
 			bot.getGroup(groupId).sendMessage(finalMsg);
 		});
