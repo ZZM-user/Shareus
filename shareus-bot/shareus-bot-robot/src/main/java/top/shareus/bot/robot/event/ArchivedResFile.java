@@ -5,10 +5,8 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.ByteUtil;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ZipUtil;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.compress.CompressUtil;
 import cn.hutool.http.HttpUtil;
@@ -119,7 +117,12 @@ public class ArchivedResFile extends SimpleListenerHost {
 		Client meilisearchClient = meilisearchConfig.getClient();
 		// String path = "E:\\WorkSpace\\Spider\\BookSpider\\BookSpider\\file";
 		String path = "F:\\Download\\books\\bak-local";
-		FileUtil.loopFiles(path).parallelStream().forEachOrdered(file -> {
+		FileUtil.loopFiles(path).forEach(file -> {
+			
+			int sleep = RandomUtil.randomInt(100, 1000);
+			log.info("sleep: {}", sleep);
+			ThreadUtil.sleep(sleep);
+			
 			List<File> loopFile = List.of(file);
 			if (! file.getName().endsWith("txt")) {
 				try {
@@ -134,7 +137,7 @@ public class ArchivedResFile extends SimpleListenerHost {
 				
 			}
 			
-			loopFile.parallelStream().forEachOrdered(lf -> {
+			loopFile.forEach(lf -> {
 				String md5 = SecureUtil.md5(lf);
 				ArchivedFile archivedFile = new ArchivedFile();
 				archivedFile.setMd5(md5);
@@ -168,7 +171,7 @@ public class ArchivedResFile extends SimpleListenerHost {
 						log.info(archivedFile.toString());
 						// 将信息 写入数据库
 						archivedFileMapper.insert(archivedFile);
-						// MeilisearchUtil.addDocuments(meilisearchClient, MeilisearchIndexEnums.ARCHIVED_FILE, Collections.singletonList(archivedFile));
+						MeilisearchUtil.addDocuments(meilisearchClient, MeilisearchIndexEnums.ARCHIVED_FILE, Collections.singletonList(archivedFile));
 					}
 				});
 			});
