@@ -75,7 +75,7 @@ public class ArchivedFileServiceImpl extends ServiceImpl<ArchivedFileMapper, Arc
 				.attributesToSearchOn(new String[]{"name"})
 				.matchingStrategy(MatchingStrategy.FREQUENCY)
 				.rankingScoreThreshold(0.2)
-				.filterArray(new String[][]{new String[]{"delFlag = 0", "enabled = 0"}})
+				.filterArray(new String[][]{new String[]{"enabled = 0", "enabled = 0"}})
 				.q(query)
 				.build();
 		

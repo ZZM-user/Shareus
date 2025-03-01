@@ -71,4 +71,18 @@ public class MeilisearchUtil {
 		}
 		meilisearchClient.deleteIndex(indexEnums.getIndex());
 	}
+	
+	public static void createIndex(Client meilisearchClient, MeilisearchIndexEnums indexEnums) {
+		if (ObjectUtil.hasNull(meilisearchClient, indexEnums)) {
+			return;
+		}
+		meilisearchClient.createIndex(indexEnums.getIndex());
+	}
+	
+	public static void refreshIndex(Client meilisearchClient) {
+		Index index = meilisearchClient.index(MeilisearchIndexEnums.ARCHIVED_FILE.getIndex());
+		meilisearchClient.deleteIndex(MeilisearchIndexEnums.ARCHIVED_FILE.getIndex());
+		TaskInfo taskInfo = index.updateFilterableAttributesSettings(new String[]{"name", "delFlag", "enabled", "archiveDate"});
+		taskInfo = index.updateSortableAttributesSettings(new String[]{"archiveDate"});
+	}
 }

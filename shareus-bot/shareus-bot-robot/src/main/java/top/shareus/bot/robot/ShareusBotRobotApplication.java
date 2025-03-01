@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import top.shareus.bot.robot.config.GroupsConfig;
+import top.shareus.bot.robot.config.r2.S3Config;
 import top.shareus.common.security.annotation.EnableCustomConfig;
 import top.shareus.common.security.annotation.EnableRyFeignClients;
 import top.shareus.common.swagger.annotation.EnableCustomSwagger2;
@@ -15,7 +16,7 @@ import top.shareus.common.swagger.annotation.EnableCustomSwagger2;
 @EnableCustomConfig
 @EnableCustomSwagger2
 @EnableRyFeignClients
-@EnableConfigurationProperties({GroupsConfig.class})
+@EnableConfigurationProperties({GroupsConfig.class, S3Config.class})
 @SpringBootApplication
 public class ShareusBotRobotApplication {
 	

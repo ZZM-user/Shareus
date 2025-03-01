@@ -5,11 +5,12 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.ByteUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.extra.compress.CompressUtil;
 import cn.hutool.http.HttpUtil;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.meilisearch.sdk.Client;
 import kotlin.coroutines.CoroutineContext;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import top.shareus.bot.robot.annotation.GroupAuth;
 import top.shareus.bot.robot.config.MeilisearchConfig;
 import top.shareus.bot.robot.mapper.ArchivedFileMapper;
 import top.shareus.bot.robot.service.AlistService;
+import top.shareus.bot.robot.service.CloudflareR2Service;
 import top.shareus.bot.robot.service.QueryLogService;
 import top.shareus.bot.robot.util.FileProcessor;
 import top.shareus.bot.robot.util.MeilisearchUtil;
@@ -36,7 +38,6 @@ import top.shareus.bot.robot.util.MessageChainUtils;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -67,6 +68,8 @@ public class ArchivedResFile extends SimpleListenerHost {
 	private QueryLogService queryLogService;
 	@Resource
 	private MeilisearchConfig meilisearchConfig;
+	@Resource
+	private CloudflareR2Service cloudflareR2Service;
 	
 	@EventHandler
 	@GroupAuth(allowGroupList = {GroupEnum.RES, GroupEnum.TEST})
@@ -93,7 +96,7 @@ public class ArchivedResFile extends SimpleListenerHost {
 		log.info("归档路径：{}", archivedFile.getArchiveUrl());
 		
 		CompletableFuture.runAsync(() -> {
-			String uploadFilePath = alistService.uploadFile(file);
+			String uploadFilePath = cloudflareR2Service.uploadFile(file);
 			if (CharSequenceUtil.isNotBlank(uploadFilePath)) {
 				archivedFile.setArchiveUrl(uploadFilePath);
 				log.info(archivedFile.toString());
@@ -113,29 +116,29 @@ public class ArchivedResFile extends SimpleListenerHost {
 		});
 	}
 	
-	private void upload() {
+	private void upload(String path) {
 		Client meilisearchClient = meilisearchConfig.getClient();
 		// String path = "E:\\WorkSpace\\Spider\\BookSpider\\BookSpider\\file";
-		String path = "F:\\Download\\books\\bak-local";
+		// String path = "F:\\Download\\books\\bak-local";
 		FileUtil.loopFiles(path).forEach(file -> {
 			
-			int sleep = RandomUtil.randomInt(100, 1000);
-			log.info("sleep: {}", sleep);
-			ThreadUtil.sleep(sleep);
+			// int sleep = RandomUtil.randomInt(100, 1000);
+			// log.info("sleep: {}", sleep);
+			// ThreadUtil.sleep(sleep);
 			
 			List<File> loopFile = List.of(file);
-			if (! file.getName().endsWith("txt")) {
-				try {
-					CompressUtil.createExtractor(Charset.defaultCharset(), file).extract(FileUtil.file(path));
-					log.info("解压文件：{}", file.getName());
-				} catch (Exception e) {
-					log.error("解压文件异常：{}", file.getName(), e);
-				}
-				File unzip = ZipUtil.unzip(file);
-				loopFile = FileUtil.loopFiles(unzip);
-				return;
-				
-			}
+			// if (! file.getName().endsWith("txt")) {
+			// 	try {
+			// 		CompressUtil.createExtractor(Charset.defaultCharset(), file).extract(FileUtil.file(path));
+			// 		log.info("解压文件：{}", file.getName());
+			// 	} catch (Exception e) {
+			// 		log.error("解压文件异常：{}", file.getName(), e);
+			// 	}
+			// 	File unzip = ZipUtil.unzip(file);
+			// 	loopFile = FileUtil.loopFiles(unzip);
+			// 	return;
+			//
+			// }
 			
 			loopFile.forEach(lf -> {
 				String md5 = SecureUtil.md5(lf);
@@ -148,13 +151,13 @@ public class ArchivedResFile extends SimpleListenerHost {
 				archivedFile.setArchiveUrl(lf.getAbsolutePath());
 				archivedFile.setArchiveDate(new Date());
 				
-				FileProcessor.insertWatermark(lf, 3);
+				// FileProcessor.insertWatermark(lf, 3);
 				log.info("归档路径：{}", archivedFile.getArchiveUrl());
 				
 				
 				String uploadFilePath;
 				try {
-					uploadFilePath = alistService.uploadFile(lf);
+					uploadFilePath = cloudflareR2Service.uploadFile(lf);
 				} catch (Exception e) {
 					log.error("归档文件异常: {}", lf.getName(), e);
 					return;
@@ -164,18 +167,29 @@ public class ArchivedResFile extends SimpleListenerHost {
 				
 				CompletableFuture.runAsync(() -> {
 					if (FileUtil.exist(lf)) {
-						FileUtil.move(lf, new File("F:\\Download\\books\\bak-local2\\" + lf.getName()), true);
+						FileUtil.move(lf, new File("F:\\Download\\books\\bak-local3\\" + lf.getName()), true);
 					}
 					if (CharSequenceUtil.isNotBlank(uploadFilePath)) {
 						archivedFile.setArchiveUrl(uploadFilePath);
 						log.info(archivedFile.toString());
 						// 将信息 写入数据库
 						archivedFileMapper.insert(archivedFile);
-						MeilisearchUtil.addDocuments(meilisearchClient, MeilisearchIndexEnums.ARCHIVED_FILE, Collections.singletonList(archivedFile));
+						// MeilisearchUtil.addDocuments(meilisearchClient, MeilisearchIndexEnums.ARCHIVED_FILE, Collections.singletonList(archivedFile));
 					}
 				});
 			});
 		});
+	}
+	
+	public void clear() {
+		Client meilisearchClient = meilisearchConfig.getClient();
+		MeilisearchUtil.refreshIndex(meilisearchClient);
+		
+		archivedFileMapper.selectList(new QueryChainWrapper<>(archivedFileMapper).eq("del_flag", 0).getWrapper())
+				.forEach(archivedFile -> {
+					MeilisearchUtil.addDocuments(meilisearchClient, MeilisearchIndexEnums.ARCHIVED_FILE, Collections.singletonList(archivedFile));
+					log.info("{} 存档完成！", archivedFile.getName());
+				});
 	}
 	
 	private String buildPathOfArchive(String fileName) {

@@ -54,7 +54,8 @@ public class AlistConstant {
 	 * Alist 上传源路径
 	 */
 	// public static final String UPLOAD_ALIST_PATH_DOMAIN = "/OneDrive/群文件/";
-	public static final String UPLOAD_ALIST_PATH_DOMAIN = "/115/";
+	// public static final String UPLOAD_ALIST_PATH_DOMAIN = "/115/";
+	public static final String UPLOAD_ALIST_PATH_DOMAIN = "/r2/";
 	
 	/**
 	 * 新建目录 api
