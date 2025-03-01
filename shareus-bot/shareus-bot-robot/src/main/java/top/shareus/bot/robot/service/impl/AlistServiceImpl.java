@@ -282,7 +282,7 @@ public class AlistServiceImpl implements AlistService {
 		}
 		
 		HttpResponse response = HttpRequest.get(AlistConstant.ADMIN_META_INFO)
-				.form("id", 1)
+				.form("id", 5)
 				.header("authorization", getAuthorization())
 				.execute();
 		
