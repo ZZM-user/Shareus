@@ -22,7 +22,7 @@ import top.shareus.bot.robot.service.ArchivedFileService;
 import top.shareus.bot.robot.service.QueryArchivedResFileService;
 import top.shareus.bot.robot.service.QueryLogService;
 import top.shareus.bot.robot.util.MessageChainUtils;
-import top.shareus.bot.robot.util.ShortUrlUtils;
+import top.shareus.bot.robot.util.SinkShortUrlUtil;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -104,7 +104,7 @@ public class QueryArchivedResFile extends SimpleListenerHost {
 			builder.add("\n小度为你找到了以下内容：");
 			
 			archivedFiles.parallelStream().forEachOrdered(a -> {
-				String shortUrl = ShortUrlUtils.generateShortUrl(a.getArchiveUrl());
+				String shortUrl = SinkShortUrlUtil.generateShortUrl(a.getArchiveUrl());
 				log.info("生成的短链：{}", shortUrl);
 				if (CharSequenceUtil.isNotEmpty(shortUrl)) {
 					builder.add("\n名称：" + a.getName() + "\n" + "下载地址：" + shortUrl);
