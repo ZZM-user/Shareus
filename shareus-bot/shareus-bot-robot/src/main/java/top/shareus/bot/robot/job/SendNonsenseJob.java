@@ -18,6 +18,7 @@ import top.shareus.bot.common.domain.Nonsense;
 import top.shareus.bot.robot.config.BotManager;
 import top.shareus.bot.robot.config.GroupsConfig;
 import top.shareus.bot.robot.service.NonsenseService;
+import top.shareus.bot.robot.util.PushPlusUtil;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -59,6 +60,7 @@ public class SendNonsenseJob {
 				botGroup.sendMessage(chainBuilder.build());
 			} catch (Exception e) {
 				log.error("发送内容失败", e);
+				PushPlusUtil.pushMsg("机器人被风控了", "请稍后再试！");
 			}
 		});
 	}
