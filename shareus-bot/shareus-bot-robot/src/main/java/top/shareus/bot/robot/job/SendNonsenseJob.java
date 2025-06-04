@@ -77,7 +77,7 @@ public class SendNonsenseJob {
 			String requestContent;
 			String nonsenseContent = null;
 			for (int i = 0; i < maxRequestTimes; i++) {
-				requestContent = requestNonsenseApi();
+				requestContent = requestNonsenseApi2();
 				String sensitiveWord = SensitiveWordHelper.findFirst(nonsenseContent);
 				if (StrUtil.isNotBlank(sensitiveWord)) {
 					log.error("随机内容包含敏感词：{}", sensitiveWord);
@@ -115,6 +115,20 @@ public class SendNonsenseJob {
 	 *
 	 * @return
 	 */
+	public String requestNonsenseApi2() {
+		String content = HttpUtil.get("https://api.uomg.com/api/rand.qinghua?format=text");
+		if (StrUtil.isBlank(content)) {
+			throw new RuntimeException("随机内容获取失败");
+		}
+		return content;
+	}
+	
+	/**
+	 * 请求随机内容
+	 *
+	 * @return
+	 */
+	@Deprecated(since = "已弃用，域名于25年6月到期了")
 	public String requestNonsenseApi() {
 		String content = HttpUtil.get("https://api.lovelive.tools/api/SweetNothings");
 		if (StrUtil.isBlank(content)) {
@@ -122,6 +136,7 @@ public class SendNonsenseJob {
 		}
 		return content;
 	}
+	
 	
 	/**
 	 * 从数据库获取随机内容
