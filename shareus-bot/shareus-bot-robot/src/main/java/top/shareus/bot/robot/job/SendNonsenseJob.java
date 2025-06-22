@@ -3,6 +3,9 @@ package top.shareus.bot.robot.job;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpStatus;
 import cn.hutool.http.HttpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Component;
 import top.shareus.bot.common.domain.Nonsense;
 import top.shareus.bot.robot.config.BotManager;
 import top.shareus.bot.robot.config.GroupsConfig;
+import top.shareus.bot.robot.service.MailService;
 import top.shareus.bot.robot.service.NonsenseService;
 import top.shareus.bot.robot.util.PushPlusUtil;
 
@@ -33,6 +37,9 @@ public class SendNonsenseJob {
 	
 	@Resource
 	private GroupsConfig groupsConfig;
+	
+	@Resource
+	private MailService mailService;
 	
 	@Scheduled(cron = "0 0 9,11,14,18,20,23 * * *")
 	// @Scheduled(cron = "0 * * * * *")
@@ -116,11 +123,17 @@ public class SendNonsenseJob {
 	 * @return
 	 */
 	public String requestNonsenseApi2() {
-		String content = HttpUtil.get("https://api.uomg.com/api/rand.qinghua?format=text");
-		if (StrUtil.isBlank(content)) {
-			throw new RuntimeException("随机内容获取失败");
+		
+		try (HttpResponse response = HttpRequest.get("https://api.uomg.com/api/rand.qinghua?format=text").execute()) {
+			
+			// 不等于200算失败
+			if (response.getStatus() != HttpStatus.HTTP_OK ||
+					StrUtil.isBlank(response.body())) {
+				throw new RuntimeException("随机内容获取失败");
+			}
+			
+			return response.body();
 		}
-		return content;
 	}
 	
 	/**
@@ -128,7 +141,7 @@ public class SendNonsenseJob {
 	 *
 	 * @return
 	 */
-	@Deprecated(since = "已弃用，域名于25年6月到期了")
+	@Deprecated(since = "已弃用，域名于25年6月到期了，后续有恢复了")
 	public String requestNonsenseApi() {
 		String content = HttpUtil.get("https://api.lovelive.tools/api/SweetNothings");
 		if (StrUtil.isBlank(content)) {
