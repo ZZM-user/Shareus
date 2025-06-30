@@ -3,6 +3,7 @@ package top.shareus.bot.robot.config;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 import top.shareus.common.core.exception.mirai.bot.BotException;
 import xyz.cssxsh.mirai.tool.FixProtocolVersion;
 import xyz.cssxsh.mirai.tool.KFCFactory;
+
+import java.util.List;
 
 
 /**
@@ -22,6 +25,7 @@ import xyz.cssxsh.mirai.tool.KFCFactory;
 @Slf4j
 @Component
 public class BotManager {
+	
 	public static final String KFC_CONFIG = """
 	                                        {
 	                                            "8.9.63": {
@@ -69,12 +73,7 @@ public class BotManager {
 		KFCFactory.install();
 		
 		BOT.login();
-		if (BOT.isOnline()) {
-			log.info("{}-机器人上线成功！", BOT.getId());
-		} else {
-			log.error("{}-机器人上线失败！", BOT.getId());
-			throw new BotException("机器人登录状态异常！");
-		}
+		botOnlineStatusNotify(BOT);
 		return BOT;
 	}
 	
@@ -110,5 +109,25 @@ public class BotManager {
 		}
 		
 		log.error("写入KFC配置文件失败！");
+	}
+	
+	/**
+	 * 机器人上线状态通知
+	 *
+	 * @param bot
+	 */
+	private static void botOnlineStatusNotify(Bot bot) {
+		String msg = bot != null && bot.isOnline() ? "已上线" : "上线失败！";
+		
+		log.info("机器人{}，开始发布通知……", msg);
+		// 群通知
+		try {
+			List<Long> testGroups = SpringUtil.getBean(GroupsConfig.class).getTest();
+			testGroups.forEach(
+					groupId -> bot.getGroup(groupId).sendMessage("机器人 " + msg)
+			                  );
+		} catch (Exception e) {
+			log.warn("尝试发出 机器人群通知时发生错误……", e);
+		}
 	}
 }
