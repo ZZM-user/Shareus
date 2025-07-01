@@ -21,7 +21,7 @@ public class RestGroupMetaPwdTask {
 		log.info("开始重置云盘群文件元数据密码……");
 		ResetMetaPasswordDTO metaPasswordDTO = new ResetMetaPasswordDTO();
 		metaPasswordDTO.setCancelPassword(false);
-		metaPasswordDTO.setNotifyAdminGroup(true);
+		metaPasswordDTO.setNotifyAdminGroup(false);
 		metaPasswordDTO.setNotifyResourceGroup(true);
 		
 		alistService.resetMetaPassword(metaPasswordDTO);
